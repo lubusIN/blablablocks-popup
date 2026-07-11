@@ -1,10 +1,10 @@
+<!-- @format -->
+
 # BlaBlaBlocks Popup
 
 ## Overview
 
 BlaBlaBlocks Popup is a WordPress plugin for creating and managing popups with the native Block Editor.
-
-Popup content is built with blocks, so you can use the editing tools you already know. Popup settings, triggers, conditions, layout, and design controls are handled through a focused admin interface made for managing popups.
 
 ## Features
 
@@ -57,17 +57,6 @@ Then activate `BlaBlaBlocks Popup` from the WordPress plugins screen.
 6. Configure popup layout and styles from the popup editor sidebar.
 7. Return to the popup admin page to configure settings, triggers, conditions, and rules.
 8. Publish the popup when it is ready.
-
-## Popup Settings
-
-Popup settings are organized into clear groups:
-
-- Layout: size, position, overlay, close button, and animation.
-- Style: background, overlay color, spacing, border, radius, and close button appearance.
-- Advanced: close behavior, scroll lock, multiple popup handling, and manual open selectors.
-- Conditions: where the popup can appear.
-- Triggers: what opens the popup.
-- Rules: limits and audience targeting.
 
 ## Development
 
