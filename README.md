@@ -1,26 +1,21 @@
 # BlaBlaBlocks Popup
 
-[![Documentation](https://img.shields.io/badge/Documentation-000?style=for-the-badge&logo=googledocs&logoColor=fff)](https://github.com/lubusIN/blablablocks-popup)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=fff)](https://github.com/lubusIN/blablablocks-popup)
-
 ## Overview
 
-BlaBlaBlocks Popup is a WordPress plugin for creating popups with the native Block Editor and managing them through a modern DataViews admin experience.
+BlaBlaBlocks Popup is a WordPress plugin for creating and managing popups with the native Block Editor.
 
-Popup content is designed with blocks, while popup behavior, display rules, triggers, and design settings are managed through purpose-built React interfaces. The plugin avoids the classic custom post type list table as the primary UI and gives popup management its own focused admin screen.
+Popup content is built with blocks, so you can use the editing tools you already know. Popup settings, triggers, conditions, layout, and design controls are handled through a focused admin interface made for managing popups.
 
 ## Features
 
-- Native Block Editor popup content editing.
-- Custom post type powered popup storage with revisions and REST-visible meta.
-- Modern admin table built with WordPress DataViews.
-- DataForm-powered popup settings modal.
-- Starter variation chooser after creating a popup.
-- Popup types: Modal Popup, Slide-in Popup, Floating Bar, Fullscreen Popup, and Toast / Small Notification.
-- Editor sidebar for layout, style, dimensions, border, color, and animation controls.
-- Frontend rendering with WordPress Interactivity API.
-- Elementor-inspired conditions, triggers, and advanced rules.
-- Trash workflow with restore and permanent delete actions.
+- Design popup content with the native WordPress Block Editor.
+- Manage popups from a dedicated admin screen.
+- Start quickly with popup variations: Modal Popup, Slide-in Popup, Floating Bar, Fullscreen Popup, and Toast / Small Notification.
+- Configure layout, position, size, spacing, colors, borders, radius, and animations.
+- Control when popups appear with triggers such as page load, scroll, inactivity, click count, and exit intent.
+- Choose where popups appear with site, front page, singular content, archive, and selected ID conditions.
+- Add display rules for page views, sessions, max displays, referrers, logged-in users, roles, and devices.
+- Duplicate, trash, restore, and permanently delete popups.
 
 ## Requirements
 
@@ -31,14 +26,9 @@ Popup content is designed with blocks, while popup behavior, display rules, trig
 
 ## Installation
 
-### Manual
+### From GitHub
 
-1. Download or clone this repository.
-2. Place the plugin folder in `wp-content/plugins/blablablocks-popup`.
-3. If installing from source, run `npm install` and `npm run build`.
-4. Activate `BlaBlaBlocks Popup` from `Plugins` in the WordPress dashboard.
-
-### Git
+Clone the repository into your WordPress plugins directory:
 
 ```bash
 cd wp-content/plugins
@@ -47,6 +37,15 @@ cd blablablocks-popup
 npm install
 npm run build
 ```
+
+Then activate `BlaBlaBlocks Popup` from the WordPress plugins screen.
+
+### Manual
+
+1. Download the plugin source.
+2. Place the plugin folder in `wp-content/plugins/blablablocks-popup`.
+3. Run `npm install` and `npm run build` if the build files are not already included.
+4. Activate `BlaBlaBlocks Popup` from the WordPress plugins screen.
 
 ## Usage
 
@@ -59,83 +58,36 @@ npm run build
 7. Return to the popup admin page to configure settings, triggers, conditions, and rules.
 8. Publish the popup when it is ready.
 
-## Popup Management
-
-The admin screen uses DataViews for searching, sorting, filtering, pagination, and actions.
-
-Available row actions include:
-
-- Edit
-- Edit settings
-- Duplicate
-- Trash
-- Restore
-- Permanently delete
-
-Trash is hidden from the default table view. Use the Status filter and select `Trash` to view trashed popups.
-
 ## Popup Settings
 
-Popup behavior is stored as REST-exposed post meta under `_popup_block_settings`.
+Popup settings are organized into clear groups:
 
-Settings are grouped by:
-
-- Layout: width, height, position, overlay, close button, and animations.
-- Style: colors, spacing, border, radius, and close button styling.
-- Advanced: close behavior, scroll locking, multiple popup handling, and manual selectors.
-- Conditions: entire site, front page, singular content, archives, and selected IDs.
-- Triggers: page load, scroll, scroll-to-selector, click count, inactivity, and exit intent.
-- Rules: page views, sessions, display limits, referrers, logged-in users, roles, and devices.
-
-## Frontend Runtime
-
-Published popups are filtered server-side by conditions before output. Frontend behavior is handled with the WordPress Interactivity API and evaluates triggers, display limits, browser state, close behavior, scroll locking, and manual open selectors.
-
-Manual selector openings bypass automatic trigger and rule checks so links or buttons can intentionally open a popup.
+- Layout: size, position, overlay, close button, and animation.
+- Style: background, overlay color, spacing, border, radius, and close button appearance.
+- Advanced: close behavior, scroll lock, multiple popup handling, and manual open selectors.
+- Conditions: where the popup can appear.
+- Triggers: what opens the popup.
+- Rules: limits and audience targeting.
 
 ## Development
 
-### Install Dependencies
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-### Build Assets
+Build the plugin assets:
 
 ```bash
 npm run build
 ```
 
-### Watch Assets
+Watch files during development:
 
 ```bash
 npm run start
 ```
-
-## Project Structure
-
-```text
-assets/             Static images and variation previews
-build/              Compiled plugin assets
-includes/           PHP plugin classes
-src/admin/          DataViews admin app
-src/editor/         Block Editor sidebar and variation chooser
-src/frontend/       Frontend runtime and Interactivity API module
-src/shared/         Shared JavaScript utilities
-```
-
-## Release Checklist
-
-Before publishing a release:
-
-1. Run `npm install`.
-2. Run `npm run build`.
-3. Check PHP syntax for files in `includes/`.
-4. Activate the plugin in a local WordPress install.
-5. Create, edit, publish, trash, restore, and permanently delete a popup.
-6. Test frontend triggers, conditions, and manual selectors.
-7. Confirm `build/` assets are committed for installable ZIP usage.
 
 ## Meet Your Artisans
 
