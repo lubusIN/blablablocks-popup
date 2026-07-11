@@ -1,0 +1,422 @@
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/frontend/styles.scss ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+.blablablocks-popup-scroll-locked {
+  overflow: hidden;
+}
+
+.blablablocks-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.blablablocks-popup[data-state=opening],
+.blablablocks-popup[data-state=open],
+.blablablocks-popup[data-state=closing] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.blablablocks-popup[data-state=opening],
+.blablablocks-popup[data-state=open] {
+  pointer-events: auto;
+}
+
+.blablablocks-popup[data-state=closing],
+.blablablocks-popup--hidden {
+  pointer-events: none;
+}
+
+.blablablocks-popup__overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.blablablocks-popup__dialog {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.blablablocks-popup[data-state=open] .blablablocks-popup__overlay,
+.blablablocks-popup[data-state=open] .blablablocks-popup__dialog {
+  opacity: 1;
+}
+
+.blablablocks-popup[data-state=open] .blablablocks-popup__dialog {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.blablablocks-popup[data-state=opening] .blablablocks-popup__overlay {
+  animation: blablablocks-popup-overlay-in var(--blablablocks-popup-duration, 0.3s) ease both;
+}
+
+.blablablocks-popup[data-state=closing] .blablablocks-popup__overlay {
+  animation: blablablocks-popup-overlay-out var(--blablablocks-popup-duration, 0.3s) ease both;
+}
+
+.blablablocks-popup[data-state=opening] .blablablocks-popup__dialog {
+  animation: blablablocks-popup-fade-in var(--blablablocks-popup-duration, 0.3s) ease both;
+}
+
+.blablablocks-popup[data-state=closing] .blablablocks-popup__dialog {
+  animation: blablablocks-popup-fade-out var(--blablablocks-popup-duration, 0.3s) ease both;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=zoom] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-zoom-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=zoom] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-zoom-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=zoom-out] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-zoom-out-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=zoom-out] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-zoom-out-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=slide-up] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-up-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=slide-up] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-up-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=slide-down] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-down-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=slide-down] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-down-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=slide-left] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-left-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=slide-left] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-left-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=slide-right] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-right-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=slide-right] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-slide-right-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=flip-up] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-flip-up-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=flip-up] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-flip-up-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=flip-down] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-flip-down-in;
+}
+
+.blablablocks-popup[data-state=closing][data-exit-animation=flip-down] .blablablocks-popup__dialog {
+  animation-name: blablablocks-popup-flip-down-out;
+}
+
+.blablablocks-popup[data-state=opening][data-entrance-animation=none] .blablablocks-popup__overlay,
+.blablablocks-popup[data-state=opening][data-entrance-animation=none] .blablablocks-popup__dialog,
+.blablablocks-popup[data-state=closing][data-exit-animation=none] .blablablocks-popup__overlay,
+.blablablocks-popup[data-state=closing][data-exit-animation=none] .blablablocks-popup__dialog {
+  animation: none;
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.blablablocks-popup__content > :first-child {
+  margin-top: 0;
+}
+
+.blablablocks-popup__content > :last-child {
+  margin-bottom: 0;
+}
+
+.blablablocks-popup__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.blablablocks-popup__close[data-position=outside] {
+  top: -14px;
+  right: -14px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+.blablablocks-popup[data-horizontal=left] {
+  justify-content: flex-start;
+}
+
+.blablablocks-popup[data-horizontal=right] {
+  justify-content: flex-end;
+}
+
+.blablablocks-popup[data-vertical=top] {
+  align-items: flex-start;
+}
+
+.blablablocks-popup[data-vertical=bottom] {
+  align-items: flex-end;
+}
+
+@keyframes blablablocks-popup-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blablablocks-popup-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes blablablocks-popup-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blablablocks-popup-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes blablablocks-popup-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blablablocks-popup-zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes blablablocks-popup-zoom-out-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blablablocks-popup-zoom-out-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes blablablocks-popup-slide-up-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-up-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -32px, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-down-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -32px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-down-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-left-in {
+  from {
+    opacity: 0;
+    transform: translate3d(32px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-left-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(-32px, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-right-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-32px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-slide-right-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(32px, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-flip-up-in {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateX(-12deg) translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-flip-up-out {
+  from {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: perspective(900px) rotateX(12deg) translate3d(0, -16px, 0);
+  }
+}
+
+@keyframes blablablocks-popup-flip-down-in {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateX(12deg) translate3d(0, -16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes blablablocks-popup-flip-down-out {
+  from {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: perspective(900px) rotateX(-12deg) translate3d(0, 16px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blablablocks-popup,
+  .blablablocks-popup__overlay,
+  .blablablocks-popup__dialog {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*# sourceMappingURL=frontend.css.map*/

@@ -1,0 +1,324 @@
+@import "../../node_modules/@wordpress/dataviews/build-style/style.css";
+
+.blablablocks-popup-admin-wrap {
+	margin-right: 24px;
+}
+
+.blablablocks-popup-admin__header {
+	margin: 24px 0 18px;
+}
+
+.blablablocks-popup-admin__header h1 {
+	margin: 0;
+	font-size: 24px;
+	line-height: 1.3;
+}
+
+.blablablocks-popup-admin__loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 240px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+}
+
+.blablablocks-popup-snackbar-list {
+	position: fixed;
+	left: 50%;
+	bottom: 24px;
+	width: min(360px, calc(100vw - 48px));
+	transform: translateX(-50%);
+}
+
+.blablablocks-popup-modal-actions {
+	margin-top: 24px;
+}
+
+.blablablocks-popup-create-modal .components-modal__content {
+	width: min(480px, calc(100vw - 48px));
+}
+
+.blablablocks-popup-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 260px;
+	text-align: center;
+}
+
+.blablablocks-popup-empty-state__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 54px;
+	height: 54px;
+	margin-bottom: 20px;
+	border-radius: 50%;
+	color: #757575;
+	background: #f0f0f1;
+}
+
+.blablablocks-popup-empty-state__icon svg {
+	fill: currentColor;
+}
+
+.blablablocks-popup-empty-state .blablablocks-popup-empty-state__title {
+	margin: 0 0 8px;
+	color: #1e1e1e;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.blablablocks-popup-empty-state__description {
+	margin: 0 0 24px;
+	color: #757575;
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+.blablablocks-popup-empty-state__button.components-button {
+	min-height: 36px;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.blablablocks-popup-settings-modal .components-modal__content {
+	width: min(1040px, calc(100vw - 48px));
+	overflow: hidden;
+}
+
+.blablablocks-popup-settings-modal .components-modal__children-container {
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 120px);
+	min-height: 0;
+	overflow: hidden;
+}
+
+.blablablocks-popup-settings-tabs-root {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.blablablocks-popup-settings-layout {
+	display: grid;
+	grid-template-columns: 180px minmax(0, 1fr);
+	gap: 40px;
+	height: min(640px, calc(100vh - 220px));
+	min-height: 0;
+	overflow: hidden;
+	padding-bottom: 100px;
+}
+
+.blablablocks-popup-settings-layout [role="tabpanel"] {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.blablablocks-popup-settings-tabs {
+	align-self: start;
+	height: max-content;
+	max-height: 100%;
+	overflow: visible;
+	padding-top: 8px;
+}
+
+.blablablocks-popup-settings-tabs[role="tablist"] {
+	width: 100%;
+}
+
+.blablablocks-popup-settings-tabs [role="tab"] {
+	min-height: 44px;
+	padding-inline: 16px;
+	font-size: 15px;
+}
+
+.blablablocks-popup-settings-tabs [role="tab"][aria-selected="true"] {
+	background: color-mix(in srgb, var(--wp-admin-theme-color), transparent 94%);
+}
+
+.blablablocks-popup-settings-panel {
+	box-sizing: border-box;
+	height: 100%;
+	min-width: 0;
+	max-width: 680px;
+	overflow-y: auto;
+	padding: 0 16px 88px 0;
+}
+
+.blablablocks-popup-settings-panel__header {
+	margin-bottom: 28px;
+}
+
+.blablablocks-popup-settings-panel .blablablocks-popup-settings-panel__title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.3;
+	letter-spacing: 0;
+}
+
+.blablablocks-popup-settings-panel .blablablocks-popup-settings-panel__description {
+	margin: 0;
+	color: #757575;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.blablablocks-popup-settings-panel .dataviews-form {
+	max-width: 100%;
+}
+
+.blablablocks-popup-condition-singular-row {
+	width: 100%;
+}
+
+.blablablocks-popup-condition-singular-row__type {
+	flex: 0 0 140px;
+}
+
+.blablablocks-popup-condition-singular-row__values {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.blablablocks-popup-settings-modal .blablablocks-popup-modal-actions {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	margin-top: 0;
+	padding: 24px;
+	background: #fff;
+}
+
+.blablablocks-popup-admin .dataviews-view-table tbody td {
+	color: #757575;
+}
+
+.blablablocks-popup-admin .dataviews-view-table tbody td .components-text {
+	color: #757575;
+}
+
+.blablablocks-popup-admin .dataviews-view-table tbody td a,
+.blablablocks-popup-admin .dataviews-view-table tbody td button.is-link {
+	color: #757575;
+}
+
+.blablablocks-popup-admin .dataviews-view-table tbody td .blablablocks-popup-title-link {
+	color: #1e1e1e;
+	font-weight: 500;
+}
+
+.blablablocks-popup-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: #1e1e1e;
+	font-weight: 400;
+	line-height: 1.4;
+}
+
+.blablablocks-popup-status svg {
+	fill: currentColor;
+}
+
+.blablablocks-popup-status--publish {
+	color: #008a20;
+}
+
+.blablablocks-popup-status--draft {
+	color: #757575;
+}
+
+.blablablocks-popup-status--pending {
+	color: #996800;
+}
+
+.blablablocks-popup-status--future {
+	color: #3858e9;
+}
+
+.blablablocks-popup-status--private {
+	color: #cc1818;
+}
+
+.blablablocks-popup-author {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: #757575;
+	font-weight: 400;
+	line-height: 1.4;
+}
+
+.blablablocks-popup-author__avatar,
+.blablablocks-popup-author__icon {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	flex: 0 0 24px;
+}
+
+.blablablocks-popup-author__avatar {
+	display: block;
+	object-fit: cover;
+}
+
+.blablablocks-popup-author__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: #757575;
+	background: #f0f0f0;
+}
+
+.blablablocks-popup-author__icon svg {
+	fill: currentColor;
+}
+
+.blablablocks-popup-date {
+	color: #1e1e1e;
+	font-weight: 400;
+	line-height: 1.4;
+}
+
+.blablablocks-popup-token-field .components-form-token-field__label {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal;
+}
+
+.blablablocks-popup-token-field__help {
+	margin: 8px 0 0;
+	color: #757575;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+@media (max-width: 782px) {
+	.blablablocks-popup-settings-layout {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.blablablocks-popup-settings-tabs {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.blablablocks-popup-settings-tabs[role="tablist"] {
+		overflow-x: visible;
+	}
+}
