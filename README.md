@@ -1,6 +1,8 @@
 <!-- @format -->
 
-# BlaBlaBlocks Popup
+<p align="center"><img width="250" src=".github/logo.svg"></p>
+
+![BlaBlaBlocks Popup](.github/banner-image.png)
 
 ## Overview
 
