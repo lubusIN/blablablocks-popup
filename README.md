@@ -24,7 +24,6 @@ BlaBlaBlocks Popup is a WordPress plugin for creating and managing popups with t
 - WordPress 6.9+
 - PHP 7.4+
 - Node.js 20+ for development
-- npm for dependency management
 
 ## Installation
 
