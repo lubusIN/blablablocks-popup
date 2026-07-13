@@ -2,7 +2,9 @@
 	"name": "blablablocks-popup",
 	"version": "0.1.0",
 	"description": "Block-editor powered popup manager for WordPress.",
-	"license": "GPL-2.0-or-later",
+	"license": "MIT",
+	"author": "Lubus",
+	"authorUri": "https://lubus.in",
 	"scripts": {
 		"build": "wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
 		"start": "wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules"
