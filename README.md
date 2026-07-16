@@ -1,6 +1,6 @@
 <!-- @format -->
 
-<p align="center"><img width="250" src=".github/logo.svg"></p>
+<p align="center"><img width="160" src=".github/logo.svg"></p>
 
 ![BlaBlaBlocks Popup](.github/banner-image.png)
 
@@ -78,6 +78,11 @@ Watch files during development:
 
 ```bash
 npm run start
+```
+Start WordPress playground:
+
+```bash
+npm run playground
 ```
 
 ## Meet Your Artisans
