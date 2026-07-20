@@ -10,6 +10,13 @@
 		"start": "wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
 		"playground": "npx @wp-playground/cli@latest start"
 	},
+	"files": [
+		"popup-block.php",
+		"includes",
+		"build",
+		"assets",
+		"README.md"
+	],
 	"dependencies": {
 		"@wordpress/dataviews": "^17.1.0",
 		"@wordpress/ui": "^0.17.0",
