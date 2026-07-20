@@ -1,36 +1,46 @@
 <!-- @format -->
 
-<p align="center"><img width="160" src=".github/logo.svg"></p>
+<p align="center">
+  <img width="160" src=".github/logo.svg" alt="BlaBlaBlocks Logo">
+</p>
 
 ![BlaBlaBlocks Popup](.github/banner-image.png)
 
 ## Overview
 
-BlaBlaBlocks Popup is a WordPress plugin for creating and managing popups with the native Block Editor.
+**BlaBlaBlocks Popup** is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg). No third-party page builders needed!
 
 ## Features
 
-- Design popup content with the native WordPress Block Editor.
-- Manage popups from a dedicated admin screen.
-- Start quickly with popup variations: Modal Popup, Slide-in Popup, Floating Bar, Fullscreen Popup, and Toast / Small Notification.
-- Configure layout, position, size, spacing, colors, borders, radius, and animations.
-- Control when popups appear with triggers such as page load, scroll, inactivity, click count, and exit intent.
-- Choose where popups appear with site, front page, singular content, archive, and selected ID conditions.
-- Add display rules for page views, sessions, max displays, referrers, logged-in users, roles, and devices.
-- Duplicate, trash, restore, and permanently delete popups.
+- **Block Editor Integration**: Design your popup content entirely within the native WordPress Block Editor.
+- **Dedicated Management**: Easily manage all your popups from a clean, dedicated admin screen.
+- **Starter Templates**: Jumpstart your design with pre-built variations: 
+  - Modal Popup
+  - Slide-in Popup
+  - Floating Bar
+  - Fullscreen Popup
+  - Toast / Small Notification
+- **Extensive Styling**: Fine-tune layout, position, size, spacing, colors, borders, border radius, and entrance/exit animations.
+- **Smart Triggers**: Control exactly *when* popups appear (e.g., page load, scroll depth, inactivity, click count, exit intent).
+- **Targeted Display Conditions**: Control *where* popups appear (e.g., entire site, front page, specific posts/pages, archives).
+- **Advanced Rules**: Add conditional logic based on page views, sessions, max displays, referrers, login status, user roles, and device types.
+- **Popup Lifecycle**: Duplicate, trash, restore, and permanently delete popups with ease.
 
 ## Requirements
 
-- WordPress 6.9+
-- PHP 7.4+
-- Node.js 20+ for development
-- npm for dependency management
+### Minimum Requirements
+- **WordPress**: 6.9 or higher
+- **PHP**: 7.4 or higher
+
+### For Development
+- **Node.js**: 20.x or higher
+- **npm**: for dependency management
 
 ## Installation
 
-### From GitHub
+### Via GitHub (Development / Bleeding Edge)
 
-Clone the repository into your WordPress plugins directory:
+Clone the repository directly into your WordPress plugins directory:
 
 ```bash
 cd wp-content/plugins
@@ -40,47 +50,46 @@ npm install
 npm run build
 ```
 
-Then activate `BlaBlaBlocks Popup` from the WordPress plugins screen.
+Then, activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
 
-### Manual
+### Manual Installation
 
-1. Download the plugin source.
-2. Place the plugin folder in `wp-content/plugins/blablablocks-popup`.
-3. Run `npm install` and `npm run build` if the build files are not already included.
-4. Activate `BlaBlaBlocks Popup` from the WordPress plugins screen.
+1. Download the latest release or plugin source.
+2. Extract and place the plugin folder inside `wp-content/plugins/blablablocks-popup`.
+3. If build files are not included, run `npm install` and `npm run build`.
+4. Activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
 
-## Usage
+## Usage Guide
 
-1. Go to `BlaBlaBlocks Popup` in the WordPress admin menu.
-2. Click `Add Popup`.
-3. Enter a popup title.
-4. Choose a starter popup type in the editor.
-5. Design the popup content with blocks.
-6. Configure popup layout and styles from the popup editor sidebar.
-7. Return to the popup admin page to configure settings, triggers, conditions, and rules.
-8. Publish the popup when it is ready.
+1. Navigate to **BlaBlaBlocks Popup** in the WordPress admin sidebar.
+2. Click **Add Popup** to create a new one.
+3. Enter a descriptive title for your popup.
+4. Choose a **starter popup type** to get a base layout.
+5. Design the content using your favorite blocks.
+6. Use the popup editor sidebar to configure layout, styles, and behavior.
+7. Return to the popup admin page to fine-tune settings, triggers, conditions, and display rules.
+8. **Publish** the popup when you're ready for it to go live!
 
 ## Development
 
-Install dependencies:
+We welcome contributions! Here are the commands you'll need to get started:
 
+Install dependencies:
 ```bash
 npm install
 ```
 
-Build the plugin assets:
-
+Build the plugin assets for production:
 ```bash
 npm run build
 ```
 
-Watch files during development:
-
+Watch files and re-compile during development:
 ```bash
 npm run start
 ```
-Start WordPress playground:
 
+Start a local WordPress playground environment:
 ```bash
 npm run playground
 ```
@@ -90,9 +99,9 @@ npm run playground
 [LUBUS](https://lubus.in/?utm_source=github&utm_medium=open-source&utm_campaign=blablablocks-popup) is a web design agency based in Mumbai.
 
 <a href="https://cal.com/lubus">
-<img src="https://raw.githubusercontent.com/lubusIN/.github/refs/heads/main/profile/banner.png" />
+  <img src="https://raw.githubusercontent.com/lubusIN/.github/refs/heads/main/profile/banner.png" alt="Book a call with LUBUS" />
 </a>
 
 ## License
 
-BlaBlaBlocks Popup is open-sourced software. See [LICENSE](LICENSE) for license details.
+BlaBlaBlocks Popup is open-source software licensed under the terms in the [LICENSE](LICENSE) file.
