@@ -34230,24 +34230,75 @@ const DEFAULT_VIEW = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   cleanTokens: () => (/* binding */ cleanTokens),
-/* harmony export */   defaults: () => (/* binding */ defaults),
-/* harmony export */   flattenSettings: () => (/* binding */ flattenSettings),
-/* harmony export */   fromCsv: () => (/* binding */ fromCsv),
-/* harmony export */   numericTokenFieldIds: () => (/* binding */ numericTokenFieldIds),
+/* harmony export */   cleanTokens: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.cleanTokens),
+/* harmony export */   defaults: () => (/* reexport safe */ _settings_defaults__WEBPACK_IMPORTED_MODULE_0__.defaults),
+/* harmony export */   flattenSettings: () => (/* reexport safe */ _settings_transformers__WEBPACK_IMPORTED_MODULE_4__.flattenSettings),
+/* harmony export */   fromCsv: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.fromCsv),
+/* harmony export */   numericTokenFieldIds: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.numericTokenFieldIds),
+/* harmony export */   settingsFields: () => (/* reexport safe */ _settings_fields__WEBPACK_IMPORTED_MODULE_1__.settingsFields),
+/* harmony export */   settingsTabs: () => (/* reexport safe */ _settings_tabs__WEBPACK_IMPORTED_MODULE_2__.settingsTabs),
+/* harmony export */   titleField: () => (/* reexport safe */ _settings_fields__WEBPACK_IMPORTED_MODULE_1__.titleField),
+/* harmony export */   toCsv: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.toCsv),
+/* harmony export */   tokenFieldIds: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.tokenFieldIds),
+/* harmony export */   tokenFieldSuggestions: () => (/* reexport safe */ _settings_tokens__WEBPACK_IMPORTED_MODULE_3__.tokenFieldSuggestions),
+/* harmony export */   unflattenSettings: () => (/* reexport safe */ _settings_transformers__WEBPACK_IMPORTED_MODULE_4__.unflattenSettings)
+/* harmony export */ });
+/* harmony import */ var _settings_defaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./settings/defaults */ "./src/admin/config/settings/defaults.js");
+/* harmony import */ var _settings_fields__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings/fields */ "./src/admin/config/settings/fields.js");
+/* harmony import */ var _settings_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./settings/tabs */ "./src/admin/config/settings/tabs.js");
+/* harmony import */ var _settings_tokens__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./settings/tokens */ "./src/admin/config/settings/tokens.js");
+/* harmony import */ var _settings_transformers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./settings/transformers */ "./src/admin/config/settings/transformers.js");
+/**
+ * Internal dependencies
+ */
+
+
+
+
+
+
+/***/ },
+
+/***/ "./src/admin/config/settings/defaults.js"
+/*!***********************************************!*\
+  !*** ./src/admin/config/settings/defaults.js ***!
+  \***********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   defaults: () => (/* binding */ defaults)
+/* harmony export */ });
+/* harmony import */ var _wordpress__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../wordpress */ "./src/admin/config/wordpress.js");
+/**
+ * Internal dependencies
+ */
+
+
+/**
+ * Popup defaults localized by WordPress for the admin application.
+ */
+const defaults = _wordpress__WEBPACK_IMPORTED_MODULE_0__.config.defaults || {};
+
+/***/ },
+
+/***/ "./src/admin/config/settings/fields.js"
+/*!*********************************************!*\
+  !*** ./src/admin/config/settings/fields.js ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   settingsFields: () => (/* binding */ settingsFields),
-/* harmony export */   settingsTabs: () => (/* binding */ settingsTabs),
-/* harmony export */   titleField: () => (/* binding */ titleField),
-/* harmony export */   toCsv: () => (/* binding */ toCsv),
-/* harmony export */   tokenFieldIds: () => (/* binding */ tokenFieldIds),
-/* harmony export */   tokenFieldSuggestions: () => (/* binding */ tokenFieldSuggestions),
-/* harmony export */   unflattenSettings: () => (/* binding */ unflattenSettings)
+/* harmony export */   titleField: () => (/* binding */ titleField)
 /* harmony export */ });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./wordpress */ "./src/admin/config/wordpress.js");
-/* harmony import */ var _shared_animation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/animation */ "./src/shared/animation.js");
-/* harmony import */ var _shared_animation_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/animation-options */ "./src/shared/animation-options.js");
+/* harmony import */ var _shared_animation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../shared/animation */ "./src/shared/animation.js");
+/* harmony import */ var _shared_animation_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../shared/animation-options */ "./src/shared/animation-options.js");
 /**
  * WordPress dependencies
  */
@@ -34258,226 +34309,6 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-
-const defaults = _wordpress__WEBPACK_IMPORTED_MODULE_1__.config.defaults || {};
-const clone = value => JSON.parse(JSON.stringify(value || {}));
-
-/**
- * Convert stored array values into the comma-separated format DataForm expects.
- *
- * @param {Array|string} value Stored value.
- * @return {string} CSV string.
- */
-const toCsv = value => Array.isArray(value) ? value.join(', ') : '';
-
-/**
- * Convert token field values back to arrays for REST persistence.
- *
- * @param {string}  value   CSV input.
- * @param {boolean} numeric Whether to cast tokens to integers.
- * @return {Array<string|number>} Parsed tokens.
- */
-const fromCsv = (value, numeric = false) => String(value || '').split(',').map(item => item.trim()).filter(Boolean).map(item => numeric ? parseInt(item, 10) : item).filter(item => !numeric || !Number.isNaN(item));
-const cleanTokens = tokens => tokens.map(token => String(token || '').trim()).filter(Boolean);
-
-/**
- * Flatten grouped popup settings into DataForm's single-record shape.
- *
- * The settings modal only edits behavior tabs now, but style fields remain in
- * this mapping so saving the modal preserves existing design values.
- *
- * @param {Object} settings Grouped popup settings.
- * @return {Object} Flat settings.
- */
-const flattenSettings = (settings = defaults) => {
-  const merged = {
-    ...clone(defaults),
-    ...clone(settings),
-    layout: {
-      ...(defaults.layout || {}),
-      ...(settings.layout || {})
-    },
-    style: {
-      ...(defaults.style || {}),
-      ...(settings.style || {})
-    },
-    advanced: {
-      ...(defaults.advanced || {}),
-      ...(settings.advanced || {})
-    },
-    conditions: {
-      ...(defaults.conditions || {}),
-      ...(settings.conditions || {})
-    },
-    triggers: {
-      ...(defaults.triggers || {}),
-      ...(settings.triggers || {})
-    },
-    rules: {
-      ...(defaults.rules || {}),
-      ...(settings.rules || {})
-    }
-  };
-  return {
-    width: merged.layout.width,
-    height: merged.layout.height,
-    horizontal: merged.layout.horizontal,
-    vertical: merged.layout.vertical,
-    overlay: merged.layout.overlay,
-    closeButton: merged.layout.closeButton,
-    entranceAnimation: merged.layout.entranceAnimation,
-    exitAnimation: merged.layout.exitAnimation,
-    animationDuration: (0,_shared_animation__WEBPACK_IMPORTED_MODULE_2__.normalizeAnimationDuration)(merged.layout.animationDuration),
-    popupBackground: merged.style.popupBackground,
-    overlayBackground: merged.style.overlayBackground,
-    border: merged.style.border,
-    borderType: merged.style.borderType,
-    borderColor: merged.style.borderColor,
-    borderWidth: merged.style.borderWidth,
-    borderRadius: merged.style.borderRadius,
-    boxShadow: merged.style.boxShadow,
-    closePosition: merged.style.closePosition,
-    closeColor: merged.style.closeColor,
-    closeBackground: merged.style.closeBackground,
-    closeSize: merged.style.closeSize,
-    margin: merged.style.margin,
-    padding: merged.style.padding,
-    customClass: merged.style.customClass,
-    closeDelay: merged.advanced.closeDelay,
-    autoClose: merged.advanced.autoClose,
-    preventOverlayClose: merged.advanced.preventOverlayClose,
-    preventEscClose: merged.advanced.preventEscClose,
-    disableScroll: merged.advanced.disableScroll,
-    avoidMultiple: merged.advanced.avoidMultiple,
-    openSelectors: merged.advanced.openSelectors,
-    includeEntireSite: merged.conditions.includeEntireSite,
-    includeFrontPage: merged.conditions.includeFrontPage,
-    includeSingular: merged.conditions.includeSingular,
-    includeSingularType: merged.conditions.includeSingularType,
-    includeSingularIds: toCsv(merged.conditions.includeSingularIds),
-    includeArchives: merged.conditions.includeArchives,
-    includeArchiveIds: toCsv(merged.conditions.includeArchiveIds),
-    includeIds: toCsv(merged.conditions.includeIds),
-    excludeFrontPage: merged.conditions.excludeFrontPage,
-    excludeIds: toCsv(merged.conditions.excludeIds),
-    pageLoad: merged.triggers.pageLoad,
-    pageLoadDelay: merged.triggers.pageLoadDelay,
-    scroll: merged.triggers.scroll,
-    scrollDirection: merged.triggers.scrollDirection,
-    scrollAmount: merged.triggers.scrollAmount,
-    scrollElement: merged.triggers.scrollElement,
-    scrollSelector: merged.triggers.scrollSelector,
-    click: merged.triggers.click,
-    clickCount: merged.triggers.clickCount,
-    inactivity: merged.triggers.inactivity,
-    inactivitySeconds: merged.triggers.inactivitySeconds,
-    exitIntent: merged.triggers.exitIntent,
-    pageViews: merged.rules.pageViews,
-    pageViewsCount: merged.rules.pageViewsCount,
-    sessions: merged.rules.sessions,
-    sessionsCount: merged.rules.sessionsCount,
-    maxDisplays: merged.rules.maxDisplays,
-    maxDisplaysCount: merged.rules.maxDisplaysCount,
-    countMode: merged.rules.countMode,
-    referrerUrl: merged.rules.referrerUrl,
-    referrerMode: merged.rules.referrerMode,
-    referrerPattern: merged.rules.referrerPattern,
-    referrerRegex: merged.rules.referrerRegex,
-    arrivingFrom: toCsv(merged.rules.arrivingFrom),
-    hideLoggedIn: merged.rules.hideLoggedIn,
-    hideRoles: toCsv(merged.rules.hideRoles),
-    devices: toCsv(merged.rules.devices)
-  };
-};
-
-/**
- * Restore the grouped settings model consumed by PHP and frontend runtime.
- *
- * @param {Object} data Flat DataForm data.
- * @return {Object} Grouped popup settings.
- */
-const unflattenSettings = data => ({
-  layout: {
-    width: data.width,
-    height: data.height,
-    horizontal: data.horizontal,
-    vertical: data.vertical,
-    overlay: !!data.overlay,
-    closeButton: !!data.closeButton,
-    entranceAnimation: data.entranceAnimation,
-    exitAnimation: data.exitAnimation,
-    animationDuration: (0,_shared_animation__WEBPACK_IMPORTED_MODULE_2__.normalizeAnimationDuration)(data.animationDuration)
-  },
-  style: {
-    popupBackground: data.popupBackground,
-    overlayBackground: data.overlayBackground,
-    border: data.border,
-    borderType: data.borderType,
-    borderColor: data.borderColor,
-    borderWidth: data.borderWidth,
-    borderRadius: data.borderRadius,
-    boxShadow: data.boxShadow,
-    closePosition: data.closePosition,
-    closeColor: data.closeColor,
-    closeBackground: data.closeBackground,
-    closeSize: Number(data.closeSize) || 0,
-    margin: data.margin,
-    padding: data.padding,
-    customClass: data.customClass
-  },
-  advanced: {
-    closeDelay: Number(data.closeDelay) || 0,
-    autoClose: Number(data.autoClose) || 0,
-    preventOverlayClose: !!data.preventOverlayClose,
-    preventEscClose: !!data.preventEscClose,
-    disableScroll: !!data.disableScroll,
-    avoidMultiple: !!data.avoidMultiple,
-    openSelectors: data.openSelectors
-  },
-  conditions: {
-    includeEntireSite: !!data.includeEntireSite,
-    includeFrontPage: !!data.includeFrontPage,
-    includeSingular: !!data.includeSingular,
-    includeSingularType: data.includeSingularType || 'post',
-    includeSingularIds: fromCsv(data.includeSingularIds, true),
-    includeArchives: !!data.includeArchives,
-    includeArchiveIds: fromCsv(data.includeArchiveIds, true),
-    includeIds: fromCsv(data.includeIds, true),
-    excludeFrontPage: false,
-    excludeIds: fromCsv(data.excludeIds, true)
-  },
-  triggers: {
-    pageLoad: !!data.pageLoad,
-    pageLoadDelay: Number(data.pageLoadDelay) || 0,
-    scroll: !!data.scroll,
-    scrollDirection: data.scrollDirection,
-    scrollAmount: Number(data.scrollAmount) || 0,
-    scrollElement: !!data.scrollElement,
-    scrollSelector: data.scrollSelector,
-    click: !!data.click,
-    clickCount: Number(data.clickCount) || 0,
-    inactivity: !!data.inactivity,
-    inactivitySeconds: Number(data.inactivitySeconds) || 0,
-    exitIntent: !!data.exitIntent
-  },
-  rules: {
-    pageViews: !!data.pageViews,
-    pageViewsCount: Number(data.pageViewsCount) || 0,
-    sessions: !!data.sessions,
-    sessionsCount: Number(data.sessionsCount) || 0,
-    maxDisplays: !!data.maxDisplays,
-    maxDisplaysCount: Number(data.maxDisplaysCount) || 0,
-    countMode: data.countMode,
-    referrerUrl: !!data.referrerUrl,
-    referrerMode: data.referrerMode,
-    referrerPattern: data.referrerPattern,
-    referrerRegex: !!data.referrerRegex,
-    arrivingFrom: fromCsv(data.arrivingFrom),
-    hideLoggedIn: !!data.hideLoggedIn,
-    hideRoles: fromCsv(data.hideRoles),
-    devices: fromCsv(data.devices)
-  }
-});
 const choice = values => values.map(([value, label]) => ({
   value,
   label
@@ -34497,13 +34328,6 @@ const secondsField = (id, label, description, options = {}) => ({
   label,
   description,
   ...options
-});
-const fieldWithoutSideLabel = id => ({
-  id,
-  layout: {
-    type: 'regular',
-    labelPosition: 'none'
-  }
 });
 
 /**
@@ -34544,14 +34368,14 @@ const settingsFields = [{
   id: 'entranceAnimation',
   type: 'text',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Entrance animation', 'blablablocks-popup'),
-  elements: _shared_animation_options__WEBPACK_IMPORTED_MODULE_3__.ANIMATION_CHOICES
+  elements: _shared_animation_options__WEBPACK_IMPORTED_MODULE_2__.ANIMATION_CHOICES
 }, {
   id: 'exitAnimation',
   type: 'text',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Exit animation', 'blablablocks-popup'),
-  elements: _shared_animation_options__WEBPACK_IMPORTED_MODULE_3__.ANIMATION_CHOICES
+  elements: _shared_animation_options__WEBPACK_IMPORTED_MODULE_2__.ANIMATION_CHOICES
 }, secondsField('animationDuration', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Animation duration', 'blablablocks-popup'), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Seconds.', 'blablablocks-popup'), {
-  default: _shared_animation__WEBPACK_IMPORTED_MODULE_2__.DEFAULT_ANIMATION_DURATION
+  default: _shared_animation__WEBPACK_IMPORTED_MODULE_1__.DEFAULT_ANIMATION_DURATION
 }), {
   id: 'popupBackground',
   type: 'color',
@@ -34582,12 +34406,6 @@ const settingsFields = [{
   id: 'boxShadow',
   type: 'text',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Box shadow', 'blablablocks-popup')
-}, {
-  id: 'closePosition',
-  type: 'text',
-  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Close position', 'blablablocks-popup'),
-  elements: choice([['inside', 'Inside'], ['outside', 'Outside']]),
-  isVisible: visibleWhen('closeButton')
 }, {
   id: 'closeColor',
   type: 'color',
@@ -34780,6 +34598,34 @@ const settingsFields = [{
   description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Allowed devices: desktop, tablet, mobile.', 'blablablocks-popup'),
   placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add device', 'blablablocks-popup')
 }];
+const titleField = settingsFields.find(field => field.id === 'title');
+
+/***/ },
+
+/***/ "./src/admin/config/settings/tabs.js"
+/*!*******************************************!*\
+  !*** ./src/admin/config/settings/tabs.js ***!
+  \*******************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   settingsTabs: () => (/* binding */ settingsTabs)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/**
+ * WordPress dependencies
+ */
+
+const fieldWithoutSideLabel = id => ({
+  id,
+  layout: {
+    type: 'regular',
+    labelPosition: 'none'
+  }
+});
 
 /**
  * Vertical settings tabs shown in the DataForm modal.
@@ -34805,7 +34651,49 @@ const settingsTabs = [{
   description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Runtime limits for page views, sessions, display counts, referrers, users, roles, and devices.', 'blablablocks-popup'),
   fields: ['pageViews', 'pageViewsCount', 'sessions', 'sessionsCount', 'maxDisplays', 'maxDisplaysCount', 'countMode', 'referrerUrl', 'referrerMode', 'referrerPattern', 'referrerRegex', 'arrivingFrom', 'hideLoggedIn', 'hideRoles', 'devices']
 }];
-const titleField = settingsFields.find(field => field.id === 'title');
+
+/***/ },
+
+/***/ "./src/admin/config/settings/tokens.js"
+/*!*********************************************!*\
+  !*** ./src/admin/config/settings/tokens.js ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   cleanTokens: () => (/* binding */ cleanTokens),
+/* harmony export */   fromCsv: () => (/* binding */ fromCsv),
+/* harmony export */   numericTokenFieldIds: () => (/* binding */ numericTokenFieldIds),
+/* harmony export */   toCsv: () => (/* binding */ toCsv),
+/* harmony export */   tokenFieldIds: () => (/* binding */ tokenFieldIds),
+/* harmony export */   tokenFieldSuggestions: () => (/* binding */ tokenFieldSuggestions)
+/* harmony export */ });
+/**
+ * Convert stored array values into the comma-separated format DataForm expects.
+ *
+ * @param {Array|string} value Stored value.
+ * @return {string} CSV string.
+ */
+const toCsv = value => Array.isArray(value) ? value.join(', ') : '';
+
+/**
+ * Convert token field values back to arrays for REST persistence.
+ *
+ * @param {string}  value   CSV input.
+ * @param {boolean} numeric Whether to cast tokens to integers.
+ * @return {Array<string|number>} Parsed tokens.
+ */
+const fromCsv = (value, numeric = false) => String(value || '').split(',').map(item => item.trim()).filter(Boolean).map(item => numeric ? parseInt(item, 10) : item).filter(item => !numeric || !Number.isNaN(item));
+
+/**
+ * Normalize token field values before serializing them.
+ *
+ * @param {Array} tokens Token field values.
+ * @return {Array<string>} Clean tokens.
+ */
+const cleanTokens = tokens => tokens.map(token => String(token || '').trim()).filter(Boolean);
 const tokenFieldIds = ['openSelectors', 'includeSingularIds', 'includeArchiveIds', 'includeIds', 'arrivingFrom', 'hideRoles', 'devices'];
 const numericTokenFieldIds = ['includeSingularIds', 'includeArchiveIds', 'includeIds'];
 const tokenFieldSuggestions = {
@@ -34813,6 +34701,228 @@ const tokenFieldSuggestions = {
   devices: ['desktop', 'tablet', 'mobile'],
   hideRoles: ['administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'shop_manager']
 };
+
+/***/ },
+
+/***/ "./src/admin/config/settings/transformers.js"
+/*!***************************************************!*\
+  !*** ./src/admin/config/settings/transformers.js ***!
+  \***************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   flattenSettings: () => (/* binding */ flattenSettings),
+/* harmony export */   unflattenSettings: () => (/* binding */ unflattenSettings)
+/* harmony export */ });
+/* harmony import */ var _shared_animation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../shared/animation */ "./src/shared/animation.js");
+/* harmony import */ var _defaults__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./defaults */ "./src/admin/config/settings/defaults.js");
+/* harmony import */ var _tokens__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tokens */ "./src/admin/config/settings/tokens.js");
+/**
+ * Internal dependencies
+ */
+
+
+
+const clone = value => JSON.parse(JSON.stringify(value || {}));
+
+/**
+ * Flatten grouped popup settings into DataForm's single-record shape.
+ *
+ * The settings modal only edits behavior tabs now, but style fields remain in
+ * this mapping so saving the modal preserves existing design values.
+ *
+ * @param {Object} settings Grouped popup settings.
+ * @return {Object} Flat settings.
+ */
+const flattenSettings = (settings = _defaults__WEBPACK_IMPORTED_MODULE_1__.defaults) => {
+  const merged = {
+    ...clone(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults),
+    ...clone(settings),
+    layout: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.layout || {}),
+      ...(settings.layout || {})
+    },
+    style: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.style || {}),
+      ...(settings.style || {})
+    },
+    advanced: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.advanced || {}),
+      ...(settings.advanced || {})
+    },
+    conditions: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.conditions || {}),
+      ...(settings.conditions || {})
+    },
+    triggers: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.triggers || {}),
+      ...(settings.triggers || {})
+    },
+    rules: {
+      ...(_defaults__WEBPACK_IMPORTED_MODULE_1__.defaults.rules || {}),
+      ...(settings.rules || {})
+    }
+  };
+  return {
+    width: merged.layout.width,
+    height: merged.layout.height,
+    horizontal: merged.layout.horizontal,
+    vertical: merged.layout.vertical,
+    overlay: merged.layout.overlay,
+    closeButton: merged.layout.closeButton,
+    entranceAnimation: merged.layout.entranceAnimation,
+    exitAnimation: merged.layout.exitAnimation,
+    animationDuration: (0,_shared_animation__WEBPACK_IMPORTED_MODULE_0__.normalizeAnimationDuration)(merged.layout.animationDuration),
+    popupBackground: merged.style.popupBackground,
+    overlayBackground: merged.style.overlayBackground,
+    border: merged.style.border,
+    borderType: merged.style.borderType,
+    borderColor: merged.style.borderColor,
+    borderWidth: merged.style.borderWidth,
+    borderRadius: merged.style.borderRadius,
+    boxShadow: merged.style.boxShadow,
+    closeColor: merged.style.closeColor,
+    closeBackground: merged.style.closeBackground,
+    closeSize: merged.style.closeSize,
+    margin: merged.style.margin,
+    padding: merged.style.padding,
+    customClass: merged.style.customClass,
+    closeDelay: merged.advanced.closeDelay,
+    autoClose: merged.advanced.autoClose,
+    preventOverlayClose: merged.advanced.preventOverlayClose,
+    preventEscClose: merged.advanced.preventEscClose,
+    disableScroll: merged.advanced.disableScroll,
+    avoidMultiple: merged.advanced.avoidMultiple,
+    openSelectors: merged.advanced.openSelectors,
+    includeEntireSite: merged.conditions.includeEntireSite,
+    includeFrontPage: merged.conditions.includeFrontPage,
+    includeSingular: merged.conditions.includeSingular,
+    includeSingularType: merged.conditions.includeSingularType,
+    includeSingularIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.conditions.includeSingularIds),
+    includeArchives: merged.conditions.includeArchives,
+    includeArchiveIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.conditions.includeArchiveIds),
+    includeIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.conditions.includeIds),
+    excludeFrontPage: merged.conditions.excludeFrontPage,
+    excludeIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.conditions.excludeIds),
+    pageLoad: merged.triggers.pageLoad,
+    pageLoadDelay: merged.triggers.pageLoadDelay,
+    scroll: merged.triggers.scroll,
+    scrollDirection: merged.triggers.scrollDirection,
+    scrollAmount: merged.triggers.scrollAmount,
+    scrollElement: merged.triggers.scrollElement,
+    scrollSelector: merged.triggers.scrollSelector,
+    click: merged.triggers.click,
+    clickCount: merged.triggers.clickCount,
+    inactivity: merged.triggers.inactivity,
+    inactivitySeconds: merged.triggers.inactivitySeconds,
+    exitIntent: merged.triggers.exitIntent,
+    pageViews: merged.rules.pageViews,
+    pageViewsCount: merged.rules.pageViewsCount,
+    sessions: merged.rules.sessions,
+    sessionsCount: merged.rules.sessionsCount,
+    maxDisplays: merged.rules.maxDisplays,
+    maxDisplaysCount: merged.rules.maxDisplaysCount,
+    countMode: merged.rules.countMode,
+    referrerUrl: merged.rules.referrerUrl,
+    referrerMode: merged.rules.referrerMode,
+    referrerPattern: merged.rules.referrerPattern,
+    referrerRegex: merged.rules.referrerRegex,
+    arrivingFrom: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.rules.arrivingFrom),
+    hideLoggedIn: merged.rules.hideLoggedIn,
+    hideRoles: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.rules.hideRoles),
+    devices: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.toCsv)(merged.rules.devices)
+  };
+};
+
+/**
+ * Restore the grouped settings model consumed by PHP and frontend runtime.
+ *
+ * @param {Object} data Flat DataForm data.
+ * @return {Object} Grouped popup settings.
+ */
+const unflattenSettings = data => ({
+  layout: {
+    width: data.width,
+    height: data.height,
+    horizontal: data.horizontal,
+    vertical: data.vertical,
+    overlay: !!data.overlay,
+    closeButton: !!data.closeButton,
+    entranceAnimation: data.entranceAnimation,
+    exitAnimation: data.exitAnimation,
+    animationDuration: (0,_shared_animation__WEBPACK_IMPORTED_MODULE_0__.normalizeAnimationDuration)(data.animationDuration)
+  },
+  style: {
+    popupBackground: data.popupBackground,
+    overlayBackground: data.overlayBackground,
+    border: data.border,
+    borderType: data.borderType,
+    borderColor: data.borderColor,
+    borderWidth: data.borderWidth,
+    borderRadius: data.borderRadius,
+    boxShadow: data.boxShadow,
+    closeColor: data.closeColor,
+    closeBackground: data.closeBackground,
+    closeSize: Number(data.closeSize) || 0,
+    margin: data.margin,
+    padding: data.padding,
+    customClass: data.customClass
+  },
+  advanced: {
+    closeDelay: Number(data.closeDelay) || 0,
+    autoClose: Number(data.autoClose) || 0,
+    preventOverlayClose: !!data.preventOverlayClose,
+    preventEscClose: !!data.preventEscClose,
+    disableScroll: !!data.disableScroll,
+    avoidMultiple: !!data.avoidMultiple,
+    openSelectors: data.openSelectors
+  },
+  conditions: {
+    includeEntireSite: !!data.includeEntireSite,
+    includeFrontPage: !!data.includeFrontPage,
+    includeSingular: !!data.includeSingular,
+    includeSingularType: data.includeSingularType || 'post',
+    includeSingularIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.includeSingularIds, true),
+    includeArchives: !!data.includeArchives,
+    includeArchiveIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.includeArchiveIds, true),
+    includeIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.includeIds, true),
+    excludeFrontPage: false,
+    excludeIds: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.excludeIds, true)
+  },
+  triggers: {
+    pageLoad: !!data.pageLoad,
+    pageLoadDelay: Number(data.pageLoadDelay) || 0,
+    scroll: !!data.scroll,
+    scrollDirection: data.scrollDirection,
+    scrollAmount: Number(data.scrollAmount) || 0,
+    scrollElement: !!data.scrollElement,
+    scrollSelector: data.scrollSelector,
+    click: !!data.click,
+    clickCount: Number(data.clickCount) || 0,
+    inactivity: !!data.inactivity,
+    inactivitySeconds: Number(data.inactivitySeconds) || 0,
+    exitIntent: !!data.exitIntent
+  },
+  rules: {
+    pageViews: !!data.pageViews,
+    pageViewsCount: Number(data.pageViewsCount) || 0,
+    sessions: !!data.sessions,
+    sessionsCount: Number(data.sessionsCount) || 0,
+    maxDisplays: !!data.maxDisplays,
+    maxDisplaysCount: Number(data.maxDisplaysCount) || 0,
+    countMode: data.countMode,
+    referrerUrl: !!data.referrerUrl,
+    referrerMode: data.referrerMode,
+    referrerPattern: data.referrerPattern,
+    referrerRegex: !!data.referrerRegex,
+    arrivingFrom: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.arrivingFrom),
+    hideLoggedIn: !!data.hideLoggedIn,
+    hideRoles: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.hideRoles),
+    devices: (0,_tokens__WEBPACK_IMPORTED_MODULE_2__.fromCsv)(data.devices)
+  }
+});
 
 /***/ },
 
@@ -34921,7 +35031,7 @@ const rememberVariationPost = postId => {
 };
 
 /**
- * Empty state displayed when DataViews has no popup rows to render.
+ * Empty state displayed when the popup collection is empty.
  */
 function EmptyPopupsState({
   onCreate
@@ -35143,7 +35253,7 @@ function App() {
     }
   }, {
     id: 'edit-settings',
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Edit settings', 'blablablocks-popup'),
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Settings', 'blablablocks-popup'),
     supportsBulk: false,
     isEligible: item => item.status !== 'trash',
     callback: items => {
@@ -35191,6 +35301,8 @@ function App() {
     })
   }], [restorePopups]);
   const processedPopups = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useMemo)(() => (0,_wordpress_dataviews_wp__WEBPACK_IMPORTED_MODULE_2__.filterSortAndPaginate)(visiblePopups, view, fields), [visiblePopups, view, fields]);
+  const hasActivePopups = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useMemo)(() => popups.some(popup => popup.status !== 'trash'), [popups]);
+  const shouldShowDataViews = hasActivePopups || hasStatusFilter;
   const confirmButtonText = confirmAction?.type === 'trash' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Trash', 'blablablocks-popup') : confirmAction?.type === 'delete' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Delete permanently', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Duplicate', 'blablablocks-popup');
   const confirmMessage = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useMemo)(() => {
     if (!confirmAction) {
@@ -35214,7 +35326,7 @@ function App() {
           level: 1,
           children: _config_constants__WEBPACK_IMPORTED_MODULE_11__.ADMIN_APP_TITLE
         })
-      }), popups.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+      }), hasActivePopups && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
           variant: "primary",
           onClick: () => setIsCreating(true),
@@ -35225,10 +35337,12 @@ function App() {
       status: "error",
       isDismissible: false,
       children: error
-    }), isLoading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalView, {
+    }), isLoading && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalView, {
       className: "blablablocks-popup-admin__loading",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {})
-    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_dataviews_wp__WEBPACK_IMPORTED_MODULE_2__.DataViews, {
+    }), !isLoading && !error && !shouldShowDataViews && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(EmptyPopupsState, {
+      onCreate: () => setIsCreating(true)
+    }), !isLoading && !error && shouldShowDataViews && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_wordpress_dataviews_wp__WEBPACK_IMPORTED_MODULE_2__.DataViews, {
       data: processedPopups.data,
       fields: fields,
       view: view,
@@ -35245,10 +35359,7 @@ function App() {
       },
       actions: actions,
       paginationInfo: processedPopups.paginationInfo,
-      search: true,
-      empty: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(EmptyPopupsState, {
-        onCreate: () => setIsCreating(true)
-      })
+      search: true
     }), isCreating && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_components_create_popup_modal__WEBPACK_IMPORTED_MODULE_8__.CreatePopupModal, {
       onClose: () => setIsCreating(false),
       onSaved: popup => {

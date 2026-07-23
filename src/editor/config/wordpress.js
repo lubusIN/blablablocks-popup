@@ -7,6 +7,7 @@ export const metaKey = config.metaKey || '_popup_block_settings';
 export const pluginUrl = config.pluginUrl || '';
 
 export const PluginSidebar = window.wp?.editor?.PluginSidebar || window.wp?.editPost?.PluginSidebar;
+export const PluginPostStatusInfo = window.wp?.editor?.PluginPostStatusInfo || window.wp?.editPost?.PluginPostStatusInfo;
 export const registerPlugin = window.wp?.plugins?.registerPlugin;
 export const BlockIcon = window.wp?.blockEditor?.BlockIcon;
 export const PanelColorSettings = window.wp?.blockEditor?.PanelColorSettings;

@@ -16,6 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Post_Type {
 	/**
+	 * Set up the popup post type and its registered meta.
+	 */
+	public static function init() {
+		self::register();
+		self::register_meta();
+	}
+
+	/**
 	 * Register popup post type.
 	 */
 	public static function register() {

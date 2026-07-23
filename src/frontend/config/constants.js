@@ -2,6 +2,7 @@
  * Frontend runtime selectors and class names.
  */
 export const STORE_NAMESPACE = 'blablablocks/popup';
+export const VIEWPORT_BRIDGE_GLOBAL = 'blablablocksPopupViewport';
 
 export const SELECTOR_POPUP = '[data-blablablocks-popup]';
 export const SELECTOR_CLOSE = '[data-popup-close]';

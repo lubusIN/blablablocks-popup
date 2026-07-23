@@ -4,7 +4,6 @@
 import {
 	AlignmentMatrixControl,
 	PanelBody,
-	SelectControl,
 	ToggleControl,
 	__experimentalNumberControl as NumberControl,
 	__experimentalText as Text,
@@ -16,7 +15,6 @@ import { Stack } from '@wordpress/ui';
  * Internal dependencies
  */
 import { PopupDimensionControl } from './dimension-control';
-import { choice } from '../utils/settings';
 
 /**
  * Popup placement, sizing, overlay, and close-button controls.
@@ -66,24 +64,14 @@ export function LayoutPanel( {
 				onChange={ ( value ) => onChangeLayout( 'closeButton', !! value ) }
 			/>
 			{ layout.closeButton && (
-				<>
-					<SelectControl
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-						label={ __( 'Close button position', 'blablablocks-popup' ) }
-						value={ style.closePosition }
-						options={ choice( [ [ 'inside', 'Inside' ], [ 'outside', 'Outside' ] ] ) }
-						onChange={ ( value ) => onChangeStyle( 'closePosition', value ) }
-					/>
-					<NumberControl
-						__next40pxDefaultSize
-						label={ __( 'Close size', 'blablablocks-popup' ) }
-						min={ 12 }
-						step={ 1 }
-						value={ style.closeSize }
-						onChange={ ( value ) => onChangeStyle( 'closeSize', Number( value ) || 0 ) }
-					/>
-				</>
+				<NumberControl
+					__next40pxDefaultSize
+					label={ __( 'Close size', 'blablablocks-popup' ) }
+					min={ 12 }
+					step={ 1 }
+					value={ style.closeSize }
+					onChange={ ( value ) => onChangeStyle( 'closeSize', Number( value ) || 0 ) }
+				/>
 			) }
 		</PanelBody>
 	);

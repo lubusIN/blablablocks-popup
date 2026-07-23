@@ -108,7 +108,6 @@ export const applyInlineStyles = ( popup ) => {
 		close.style.background = style.closeBackground || 'transparent';
 		close.style.width = `${ Number( style.closeSize || 28 ) }px`;
 		close.style.height = `${ Number( style.closeSize || 28 ) }px`;
-		close.dataset.position = style.closePosition || 'inside';
 
 		if ( ! layout.closeButton ) {
 			close.hidden = true;

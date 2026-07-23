@@ -172,13 +172,6 @@
 	cursor: pointer;
 }
 
-.blablablocks-popup__close[data-position="outside"] {
-	top: -14px;
-	right: -14px;
-	background: #fff;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-}
-
 .blablablocks-popup[data-horizontal="left"] {
 	justify-content: flex-start;
 }

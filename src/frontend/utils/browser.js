@@ -6,7 +6,7 @@ import { getConfig } from '@wordpress/interactivity';
 /**
  * Internal dependencies
  */
-import { STORE_NAMESPACE } from '../config/constants';
+import { STORE_NAMESPACE, VIEWPORT_BRIDGE_GLOBAL } from '../config/constants';
 
 /**
  * Runtime data injected by PHP when frontend assets are enqueued.
@@ -33,13 +33,13 @@ export const splitList = ( value ) => Array.isArray( value ) ? value : String( v
  * Match the responsive device buckets used by popup display rules.
  */
 export const getDevice = () => {
-	const width = window.innerWidth;
+	const { isViewportMatch } = window[ VIEWPORT_BRIDGE_GLOBAL ] || {};
 
-	if ( width < 768 ) {
+	if ( isViewportMatch?.( '< medium' ) ) {
 		return 'mobile';
 	}
 
-	if ( width < 1025 ) {
+	if ( isViewportMatch?.( '< large' ) ) {
 		return 'tablet';
 	}
 

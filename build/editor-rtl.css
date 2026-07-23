@@ -85,6 +85,11 @@
   margin-top: 8px;
 }
 
+.blablablocks-popup-editor-settings-button {
+  justify-content: center;
+  width: 100%;
+}
+
 .blablablocks-popup-variation-modal .components-modal__content {
   width: 80%;
 }

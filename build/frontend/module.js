@@ -25,12 +25,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   STATE_HIDDEN: () => (/* binding */ STATE_HIDDEN),
 /* harmony export */   STATE_OPEN: () => (/* binding */ STATE_OPEN),
 /* harmony export */   STATE_OPENING: () => (/* binding */ STATE_OPENING),
-/* harmony export */   STORE_NAMESPACE: () => (/* binding */ STORE_NAMESPACE)
+/* harmony export */   STORE_NAMESPACE: () => (/* binding */ STORE_NAMESPACE),
+/* harmony export */   VIEWPORT_BRIDGE_GLOBAL: () => (/* binding */ VIEWPORT_BRIDGE_GLOBAL)
 /* harmony export */ });
 /**
  * Frontend runtime selectors and class names.
  */
 const STORE_NAMESPACE = 'blablablocks/popup';
+const VIEWPORT_BRIDGE_GLOBAL = 'blablablocksPopupViewport';
 const SELECTOR_POPUP = '[data-blablablocks-popup]';
 const SELECTOR_CLOSE = '[data-popup-close]';
 const SELECTOR_OPEN_POPUP = '.blablablocks-popup--open';
@@ -145,7 +147,6 @@ const applyInlineStyles = popup => {
     close.style.background = style.closeBackground || 'transparent';
     close.style.width = `${Number(style.closeSize || 28)}px`;
     close.style.height = `${Number(style.closeSize || 28)}px`;
-    close.dataset.position = style.closePosition || 'inside';
     if (!layout.closeButton) {
       close.hidden = true;
     } else if (Number(advanced.closeDelay || 0) > 0) {
@@ -666,11 +667,13 @@ const splitList = value => Array.isArray(value) ? value : String(value || '').sp
  * Match the responsive device buckets used by popup display rules.
  */
 const getDevice = () => {
-  const width = window.innerWidth;
-  if (width < 768) {
+  const {
+    isViewportMatch
+  } = window[_config_constants__WEBPACK_IMPORTED_MODULE_1__.VIEWPORT_BRIDGE_GLOBAL] || {};
+  if (isViewportMatch?.('< medium')) {
     return 'mobile';
   }
-  if (width < 1025) {
+  if (isViewportMatch?.('< large')) {
     return 'tablet';
   }
   return 'desktop';

@@ -53,7 +53,7 @@ const rememberVariationPost = ( postId ) => {
 };
 
 /**
- * Empty state displayed when DataViews has no popup rows to render.
+ * Empty state displayed when the popup collection is empty.
  */
 function EmptyPopupsState( { onCreate } ) {
 	return (
@@ -293,7 +293,7 @@ function App() {
 		},
 		{
 			id: 'edit-settings',
-			label: __( 'Edit settings', 'blablablocks-popup' ),
+			label: __( 'Settings', 'blablablocks-popup' ),
 			supportsBulk: false,
 			isEligible: ( item ) => item.status !== 'trash',
 			callback: ( items ) => {
@@ -347,6 +347,11 @@ function App() {
 	], [ restorePopups ] );
 
 	const processedPopups = useMemo( () => filterSortAndPaginate( visiblePopups, view, fields ), [ visiblePopups, view, fields ] );
+	const hasActivePopups = useMemo(
+		() => popups.some( ( popup ) => popup.status !== 'trash' ),
+		[ popups ]
+	);
+	const shouldShowDataViews = hasActivePopups || hasStatusFilter;
 	const confirmButtonText = confirmAction?.type === 'trash' ?
 		__( 'Trash', 'blablablocks-popup' ) :
 		confirmAction?.type === 'delete' ?
@@ -381,7 +386,7 @@ function App() {
 				<FlexBlock>
 					<Heading level={ 1 }>{ ADMIN_APP_TITLE }</Heading>
 				</FlexBlock>
-				{ popups.length > 0 && (
+				{ hasActivePopups && (
 					<FlexItem>
 						<Button variant="primary" onClick={ () => setIsCreating( true ) }>
 							{ __( 'Add Popup', 'blablablocks-popup' ) }
@@ -391,9 +396,13 @@ function App() {
 			</Flex>
 
 			{ error && <Notice status="error" isDismissible={ false }>{ error }</Notice> }
-			{ isLoading ? (
+			{ isLoading && (
 				<View className="blablablocks-popup-admin__loading"><Spinner /></View>
-			) : (
+			) }
+			{ ! isLoading && ! error && ! shouldShowDataViews && (
+				<EmptyPopupsState onCreate={ () => setIsCreating( true ) } />
+			) }
+			{ ! isLoading && ! error && shouldShowDataViews && (
 				<DataViews
 					data={ processedPopups.data }
 					fields={ fields }
@@ -407,7 +416,6 @@ function App() {
 					actions={ actions }
 					paginationInfo={ processedPopups.paginationInfo }
 					search
-					empty={ <EmptyPopupsState onCreate={ () => setIsCreating( true ) } /> }
 				/>
 			) }
 

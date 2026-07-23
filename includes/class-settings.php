@@ -66,7 +66,6 @@ final class Settings {
 				'borderWidth'       => '1px',
 				'borderRadius'      => '8px',
 				'boxShadow'         => '0 20px 60px rgba(0,0,0,0.24)',
-				'closePosition'     => 'inside',
 				'closeColor'        => '#1e1e1e',
 				'closeBackground'   => 'transparent',
 				'closeSize'         => 28,

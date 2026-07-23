@@ -168,6 +168,14 @@ final class Frontend {
 			$asset['version']
 		);
 
+		wp_enqueue_script(
+			'blablablocks-popup-viewport',
+			BLABLABLOCKS_POPUP_URL . 'build/frontend.js',
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
 		wp_enqueue_script_module(
 			'@blablablocks/popup-frontend',
 			BLABLABLOCKS_POPUP_URL . 'build/frontend/module.js',
