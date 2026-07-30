@@ -402,19 +402,38 @@ final class Rest_Controller {
 		$labels   = array();
 
 		if ( ! empty( $triggers['pageLoad'] ) ) {
-			$labels[] = 0 < (int) $triggers['pageLoadDelay'] ? sprintf( __( 'Page load: %ss', 'blablablocks-popup' ), (int) $triggers['pageLoadDelay'] ) : __( 'Page load', 'blablablocks-popup' );
+			$labels[] = 0 < (int) $triggers['pageLoadDelay']
+				? sprintf(
+					/* translators: %d: Page load delay in seconds. */
+					__( 'Page load: %ds', 'blablablocks-popup' ),
+					(int) $triggers['pageLoadDelay']
+				)
+				: __( 'Page load', 'blablablocks-popup' );
 		}
 		if ( ! empty( $triggers['scroll'] ) ) {
-			$labels[] = sprintf( __( 'Scroll %s %s', 'blablablocks-popup' ), $triggers['scrollDirection'], $triggers['scrollAmount'] );
+			$labels[] = sprintf(
+				/* translators: 1: Scroll direction, 2: Scroll amount. */
+				__( 'Scroll %1$s %2$s', 'blablablocks-popup' ),
+				$triggers['scrollDirection'],
+				$triggers['scrollAmount']
+			);
 		}
 		if ( ! empty( $triggers['scrollElement'] ) ) {
 			$labels[] = __( 'Scroll to selector', 'blablablocks-popup' );
 		}
 		if ( ! empty( $triggers['click'] ) ) {
-			$labels[] = sprintf( __( '%d clicks', 'blablablocks-popup' ), (int) $triggers['clickCount'] );
+			$labels[] = sprintf(
+				/* translators: %d: Number of clicks. */
+				__( '%d clicks', 'blablablocks-popup' ),
+				(int) $triggers['clickCount']
+			);
 		}
 		if ( ! empty( $triggers['inactivity'] ) ) {
-			$labels[] = sprintf( __( 'Inactive %ss', 'blablablocks-popup' ), (int) $triggers['inactivitySeconds'] );
+			$labels[] = sprintf(
+				/* translators: %d: Inactivity duration in seconds. */
+				__( 'Inactive %ds', 'blablablocks-popup' ),
+				(int) $triggers['inactivitySeconds']
+			);
 		}
 		if ( ! empty( $triggers['exitIntent'] ) ) {
 			$labels[] = __( 'Exit intent', 'blablablocks-popup' );
@@ -442,14 +461,31 @@ final class Rest_Controller {
 		if ( ! empty( $conditions['includeSingular'] ) ) {
 			$type     = 'page' === ( $conditions['includeSingularType'] ?? 'post' ) ? __( 'Pages', 'blablablocks-popup' ) : __( 'Posts', 'blablablocks-popup' );
 			$selected = ! empty( $conditions['includeSingularIds'] ) ? count( $conditions['includeSingularIds'] ) : 0;
-			$labels[] = $selected ? sprintf( __( '%1$s: %2$d selected', 'blablablocks-popup' ), $type, $selected ) : $type;
+			$labels[] = $selected
+				? sprintf(
+					/* translators: 1: Content type label, 2: Number of selected items. */
+					__( '%1$s: %2$d selected', 'blablablocks-popup' ),
+					$type,
+					$selected
+				)
+				: $type;
 		}
 		if ( ! empty( $conditions['includeArchives'] ) ) {
 			$selected = ! empty( $conditions['includeArchiveIds'] ) ? count( $conditions['includeArchiveIds'] ) : 0;
-			$labels[] = $selected ? sprintf( __( 'Archives: %d selected', 'blablablocks-popup' ), $selected ) : __( 'Archives', 'blablablocks-popup' );
+			$labels[] = $selected
+				? sprintf(
+					/* translators: %d: Number of selected archives. */
+					__( 'Archives: %d selected', 'blablablocks-popup' ),
+					$selected
+				)
+				: __( 'Archives', 'blablablocks-popup' );
 		}
 		if ( ! empty( $conditions['includeIds'] ) ) {
-			$labels[] = sprintf( __( '%d selected IDs', 'blablablocks-popup' ), count( $conditions['includeIds'] ) );
+			$labels[] = sprintf(
+				/* translators: %d: Number of selected content IDs. */
+				__( '%d selected IDs', 'blablablocks-popup' ),
+				count( $conditions['includeIds'] )
+			);
 		}
 
 		return $labels ? implode( ', ', $labels ) : __( 'No automatic locations', 'blablablocks-popup' );

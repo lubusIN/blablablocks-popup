@@ -15,7 +15,9 @@
 		"includes",
 		"build",
 		"assets",
-		"README.md"
+		"README.md",
+		"readme.txt",
+		"LICENSE"
 	],
 	"dependencies": {
 		"@wordpress/data": "^10.51.0",

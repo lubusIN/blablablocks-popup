@@ -33979,7 +33979,8 @@ function SettingsModal({
     }
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Modal, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Settings: %s', 'blablablocks-popup'), popup.title),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %s: Popup title. */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Settings: %s', 'blablablocks-popup'), popup.title),
     onRequestClose: onClose,
     size: "large",
     className: "blablablocks-popup-settings-modal",
@@ -35091,7 +35092,8 @@ function App() {
     })));
     const trashedById = new Map(trashedPopups.map(popup => [popup.id, popup]));
     setPopups(current => current.map(item => trashedById.get(item.id) || item));
-    addSnackbar(popupsToTrash.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup moved to Trash.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups moved to Trash.', 'blablablocks-popup'), popupsToTrash.length));
+    addSnackbar(popupsToTrash.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup moved to Trash.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: Number of popups moved to Trash. */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups moved to Trash.', 'blablablocks-popup'), popupsToTrash.length));
   }, [addSnackbar]);
   const restorePopups = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useCallback)(async items => {
     const popupsToRestore = Array.isArray(items) ? items : [items];
@@ -35101,7 +35103,8 @@ function App() {
     })));
     const restoredById = new Map(restoredPopups.map(popup => [popup.id, popup]));
     setPopups(current => current.map(item => restoredById.get(item.id) || item));
-    addSnackbar(popupsToRestore.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup restored.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups restored.', 'blablablocks-popup'), popupsToRestore.length));
+    addSnackbar(popupsToRestore.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup restored.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: Number of restored popups. */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups restored.', 'blablablocks-popup'), popupsToRestore.length));
   }, [addSnackbar]);
   const permanentlyDeletePopups = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useCallback)(async items => {
     const popupsToDelete = Array.isArray(items) ? items : [items];
@@ -35111,7 +35114,8 @@ function App() {
     })));
     const deletedIds = popupsToDelete.map(popup => popup.id);
     setPopups(current => current.filter(item => !deletedIds.includes(item.id)));
-    addSnackbar(popupsToDelete.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup permanently deleted.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups permanently deleted.', 'blablablocks-popup'), popupsToDelete.length));
+    addSnackbar(popupsToDelete.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Popup permanently deleted.', 'blablablocks-popup') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: Number of permanently deleted popups. */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('%d popups permanently deleted.', 'blablablocks-popup'), popupsToDelete.length));
   }, [addSnackbar]);
   const closeConfirmDialog = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useCallback)(() => {
     if (!isConfirming) {
@@ -35283,12 +35287,17 @@ function App() {
       return '';
     }
     if (confirmAction.type === 'trash') {
-      return confirmAction.items.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to move "%s" to the trash?', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup')) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to move %d popups to the trash?', 'blablablocks-popup'), confirmAction.items.length);
+      return confirmAction.items.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %s: Popup title. */
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to move "%s" to the trash?', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup')) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: Number of popups to move to Trash. */
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to move %d popups to the trash?', 'blablablocks-popup'), confirmAction.items.length);
     }
     if (confirmAction.type === 'delete') {
-      return confirmAction.items.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup')) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup'), confirmAction.items.length);
+      return confirmAction.items.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %s: Popup title. */
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup')) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: Number of popups to permanently delete. */
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup'), confirmAction.items.length);
     }
-    return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to duplicate "%s"?', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup'));
+    return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %s: Popup title. */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Are you sure you want to duplicate "%s"?', 'blablablocks-popup'), confirmAction.items[0]?.title || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('(no title)', 'blablablocks-popup'));
   }, [confirmAction]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.__experimentalView, {
     className: "blablablocks-popup-admin",

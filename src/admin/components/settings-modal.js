@@ -59,7 +59,11 @@ export function SettingsModal({ popup, onClose, onSaved }) {
 
 	return (
 		<Modal
-			title={sprintf(__('Settings: %s', 'blablablocks-popup'), popup.title)}
+			title={sprintf(
+				/* translators: %s: Popup title. */
+				__('Settings: %s', 'blablablocks-popup'),
+				popup.title
+			)}
 			onRequestClose={onClose}
 			size="large"
 			className="blablablocks-popup-settings-modal"

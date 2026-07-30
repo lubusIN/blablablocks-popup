@@ -145,7 +145,11 @@ function App() {
 		addSnackbar(
 			popupsToTrash.length === 1 ?
 				__('Popup moved to Trash.', 'blablablocks-popup') :
-				sprintf(__('%d popups moved to Trash.', 'blablablocks-popup'), popupsToTrash.length)
+				sprintf(
+					/* translators: %d: Number of popups moved to Trash. */
+					__('%d popups moved to Trash.', 'blablablocks-popup'),
+					popupsToTrash.length
+				)
 		);
 	}, [addSnackbar]);
 
@@ -162,7 +166,11 @@ function App() {
 		addSnackbar(
 			popupsToRestore.length === 1 ?
 				__('Popup restored.', 'blablablocks-popup') :
-				sprintf(__('%d popups restored.', 'blablablocks-popup'), popupsToRestore.length)
+				sprintf(
+					/* translators: %d: Number of restored popups. */
+					__('%d popups restored.', 'blablablocks-popup'),
+					popupsToRestore.length
+				)
 		);
 	}, [addSnackbar]);
 
@@ -179,7 +187,11 @@ function App() {
 		addSnackbar(
 			popupsToDelete.length === 1 ?
 				__('Popup permanently deleted.', 'blablablocks-popup') :
-				sprintf(__('%d popups permanently deleted.', 'blablablocks-popup'), popupsToDelete.length)
+				sprintf(
+					/* translators: %d: Number of permanently deleted popups. */
+					__('%d popups permanently deleted.', 'blablablocks-popup'),
+					popupsToDelete.length
+				)
 		);
 	}, [addSnackbar]);
 
@@ -364,17 +376,34 @@ function App() {
 
 		if (confirmAction.type === 'trash') {
 			return confirmAction.items.length === 1 ?
-				sprintf(__('Are you sure you want to move "%s" to the trash?', 'blablablocks-popup'), confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')) :
-				sprintf(__('Are you sure you want to move %d popups to the trash?', 'blablablocks-popup'), confirmAction.items.length);
+				sprintf(
+					/* translators: %s: Popup title. */
+					__('Are you sure you want to move "%s" to the trash?', 'blablablocks-popup'),
+					confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')
+				) :
+				sprintf(
+					/* translators: %d: Number of popups to move to Trash. */
+					__('Are you sure you want to move %d popups to the trash?', 'blablablocks-popup'),
+					confirmAction.items.length
+				);
 		}
 
 		if (confirmAction.type === 'delete') {
 			return confirmAction.items.length === 1 ?
-				sprintf(__('Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup'), confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')) :
-				sprintf(__('Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup'), confirmAction.items.length);
+				sprintf(
+					/* translators: %s: Popup title. */
+					__('Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup'),
+					confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')
+				) :
+				sprintf(
+					/* translators: %d: Number of popups to permanently delete. */
+					__('Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup'),
+					confirmAction.items.length
+				);
 		}
 
 		return sprintf(
+			/* translators: %s: Popup title. */
 			__('Are you sure you want to duplicate "%s"?', 'blablablocks-popup'),
 			confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')
 		);
