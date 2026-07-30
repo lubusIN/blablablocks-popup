@@ -35,6 +35,13 @@
 
 ## Installation
 
+### Manual Installation
+
+1. Download the latest release or plugin source.
+2. Extract and place the plugin folder inside `wp-content/plugins/blablablocks-popup`.
+3. If build files are not included, run `npm install` and `npm run build`.
+4. Activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
+
 ## Development
 
 ### 1. Clone the Repository
@@ -79,13 +86,6 @@ Local Playground requires Node.js 20.18 or newer.
 
 > [!NOTE]
 > Refer to `package.json` for additional available npm commands.
-
-### Manual Installation
-
-1. Download the latest release or plugin source.
-2. Extract and place the plugin folder inside `wp-content/plugins/blablablocks-popup`.
-3. If build files are not included, run `npm install` and `npm run build`.
-4. Activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
 
 ## Usage Guide
 
