@@ -64,14 +64,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _config_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/constants */ "./src/frontend/config/constants.js");
 /* harmony import */ var _shared_animation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../shared/animation */ "./src/shared/animation.js");
+/* harmony import */ var _shared_border__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/border */ "./src/shared/border.js");
 /**
  * Internal dependencies
  */
 
 
 
+
 /**
  * Convert WordPress preset tokens into CSS custom property references.
+ *
+ * @param {*} value CSS value.
+ * @return {*} Resolved CSS value.
  */
 const resolveCssValue = value => {
   if (typeof value !== 'string') {
@@ -79,8 +84,6 @@ const resolveCssValue = value => {
   }
   return value.replace(/var:preset\|spacing\|([a-zA-Z0-9_-]+)/g, 'var(--wp--preset--spacing--$1)');
 };
-const hasBorderValue = border => border && typeof border === 'object' && [border.color, border.style, border.width].some(Boolean);
-const hasSplitBorderValue = border => border && typeof border === 'object' && ['top', 'right', 'bottom', 'left'].some(side => hasBorderValue(border[side]));
 const applyBorderSide = (dialog, side, border) => {
   const property = side.charAt(0).toUpperCase() + side.slice(1);
   dialog.style[`border${property}Style`] = border?.style || 'solid';
@@ -89,16 +92,16 @@ const applyBorderSide = (dialog, side, border) => {
 };
 const applyBorderStyles = (dialog, style) => {
   const border = style.border || {};
-  if (hasSplitBorderValue(border)) {
+  if ((0,_shared_border__WEBPACK_IMPORTED_MODULE_2__.hasSplitBorderValue)(border)) {
     dialog.style.borderStyle = 'none';
-    ['top', 'right', 'bottom', 'left'].forEach(side => {
-      if (hasBorderValue(border[side])) {
+    _shared_border__WEBPACK_IMPORTED_MODULE_2__.CSS_BOX_SIDES.forEach(side => {
+      if ((0,_shared_border__WEBPACK_IMPORTED_MODULE_2__.hasFlatBorderValue)(border[side])) {
         applyBorderSide(dialog, side, border[side]);
       }
     });
     return;
   }
-  if (hasBorderValue(border)) {
+  if ((0,_shared_border__WEBPACK_IMPORTED_MODULE_2__.hasFlatBorderValue)(border)) {
     dialog.style.borderStyle = border.style || 'solid';
     dialog.style.borderColor = border.color || '#dcdcde';
     dialog.style.borderWidth = resolveCssValue(border.width || '1px');
@@ -111,6 +114,9 @@ const applyBorderStyles = (dialog, style) => {
 
 /**
  * Apply saved layout and style settings to a rendered popup node.
+ *
+ * @param {Object} popup Parsed popup runtime record.
+ * @return {void}
  */
 const applyInlineStyles = popup => {
   const {
@@ -757,6 +763,59 @@ const normalizeAnimationDuration = (value, fallback = DEFAULT_ANIMATION_DURATION
   const seconds = duration > 20 ? duration / 1000 : duration;
   return Math.round(seconds * 1000) / 1000;
 };
+
+/***/ },
+
+/***/ "./src/shared/border.js"
+/*!******************************!*\
+  !*** ./src/shared/border.js ***!
+  \******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CSS_BOX_SIDES: () => (/* binding */ CSS_BOX_SIDES),
+/* harmony export */   hasBorderValue: () => (/* binding */ hasBorderValue),
+/* harmony export */   hasFlatBorderValue: () => (/* binding */ hasFlatBorderValue),
+/* harmony export */   hasSplitBorderValue: () => (/* binding */ hasSplitBorderValue),
+/* harmony export */   isBorderSide: () => (/* binding */ isBorderSide)
+/* harmony export */ });
+/**
+ * Physical sides used by border and spacing controls.
+ */
+const CSS_BOX_SIDES = ['top', 'right', 'bottom', 'left'];
+
+/**
+ * Determine whether a key identifies an individual border side.
+ *
+ * @param {string} key Border property key.
+ * @return {boolean} Whether the key is a border side.
+ */
+const isBorderSide = key => CSS_BOX_SIDES.includes(key);
+
+/**
+ * Determine whether a flat border object contains a visible value.
+ *
+ * @param {Object} border Border value.
+ * @return {boolean} Whether the border has a color, style, or width.
+ */
+const hasFlatBorderValue = border => !!border && typeof border === 'object' && [border.color, border.style, border.width].some(Boolean);
+
+/**
+ * Determine whether any side of a split border contains a visible value.
+ *
+ * @param {Object} border Border value.
+ * @return {boolean} Whether the border has a configured side.
+ */
+const hasSplitBorderValue = border => !!border && typeof border === 'object' && CSS_BOX_SIDES.some(side => hasFlatBorderValue(border[side]));
+
+/**
+ * Determine whether a flat or split border contains a visible value.
+ *
+ * @param {Object} border Border value.
+ * @return {boolean} Whether the border has a configured value.
+ */
+const hasBorderValue = border => hasFlatBorderValue(border) || hasSplitBorderValue(border);
 
 /***/ },
 

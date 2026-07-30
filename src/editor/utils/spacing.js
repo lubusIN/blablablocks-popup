@@ -1,14 +1,25 @@
-export const spacingSides = [ 'top', 'right', 'bottom', 'left' ];
+/**
+ * Internal dependencies
+ */
+import { CSS_BOX_SIDES } from '../../shared/border';
+
+export const spacingSides = CSS_BOX_SIDES;
 
 /**
  * Convert CSS spacing shorthand into SpacingSizesControl side values.
+ *
+ * @param {string|Object} value CSS shorthand or existing side values.
+ * @return {Object} Spacing values by side.
  */
 export const cssBoxToSpacingValues = ( value ) => {
 	if ( value && typeof value === 'object' ) {
 		return value;
 	}
 
-	const parts = String( value || '' ).trim().split( /\s+/ ).filter( Boolean );
+	const parts = String( value || '' )
+		.trim()
+		.split( /\s+/ )
+		.filter( Boolean );
 
 	if ( ! parts.length ) {
 		return {};
@@ -21,6 +32,9 @@ export const cssBoxToSpacingValues = ( value ) => {
 
 /**
  * Convert SpacingSizesControl side values back to CSS shorthand.
+ *
+ * @param {Object} values Spacing values by side.
+ * @return {string} CSS spacing shorthand.
  */
 export const spacingValuesToCssBox = ( values ) => {
 	if ( ! values || typeof values !== 'object' ) {

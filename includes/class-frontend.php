@@ -158,31 +158,7 @@ final class Frontend {
 	 * Enqueue frontend assets.
 	 */
 	private static function enqueue_assets() {
-		$asset        = self::get_asset();
-		$module_asset = self::get_module_asset();
-
-		wp_enqueue_style(
-			'blablablocks-popup-frontend',
-			BLABLABLOCKS_POPUP_URL . 'build/frontend.css',
-			array(),
-			$asset['version']
-		);
-
-		wp_enqueue_script(
-			'blablablocks-popup-viewport',
-			BLABLABLOCKS_POPUP_URL . 'build/frontend.js',
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-
-		wp_enqueue_script_module(
-			'@blablablocks/popup-frontend',
-			BLABLABLOCKS_POPUP_URL . 'build/frontend/module.js',
-			$module_asset['dependencies'],
-			$module_asset['version']
-		);
-
+		Assets::enqueue_frontend();
 		wp_interactivity_config( 'blablablocks/popup', self::script_data() );
 	}
 
@@ -199,39 +175,4 @@ final class Frontend {
 		);
 	}
 
-	/**
-	 * Read generated frontend asset metadata.
-	 *
-	 * @return array
-	 */
-	private static function get_asset() {
-		$asset_file = BLABLABLOCKS_POPUP_DIR . 'build/frontend.asset.php';
-
-		if ( file_exists( $asset_file ) ) {
-			return require $asset_file;
-		}
-
-		return array(
-			'dependencies' => array(),
-			'version'      => BLABLABLOCKS_POPUP_VERSION,
-		);
-	}
-
-	/**
-	 * Read generated frontend script module asset metadata.
-	 *
-	 * @return array
-	 */
-	private static function get_module_asset() {
-		$asset_file = BLABLABLOCKS_POPUP_DIR . 'build/frontend/module.asset.php';
-
-		if ( file_exists( $asset_file ) ) {
-			return require $asset_file;
-		}
-
-		return array(
-			'dependencies' => array( '@wordpress/interactivity' ),
-			'version'      => BLABLABLOCKS_POPUP_VERSION,
-		);
-	}
 }

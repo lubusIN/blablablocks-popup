@@ -186,10 +186,10 @@ final class Rest_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function update_popup( WP_REST_Request $request ) {
-		$post = get_post( absint( $request['id'] ) );
+		$post = self::get_popup_from_request( $request );
 
-		if ( ! $post || Plugin::POST_TYPE !== $post->post_type ) {
-			return new WP_Error( 'popup_block_not_found', __( 'Popup not found.', 'blablablocks-popup' ), array( 'status' => 404 ) );
+		if ( is_wp_error( $post ) ) {
+			return $post;
 		}
 
 		$updates = array( 'ID' => $post->ID );
@@ -245,10 +245,10 @@ final class Rest_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function duplicate_popup( WP_REST_Request $request ) {
-		$post = get_post( absint( $request['id'] ) );
+		$post = self::get_popup_from_request( $request );
 
-		if ( ! $post || Plugin::POST_TYPE !== $post->post_type ) {
-			return new WP_Error( 'popup_block_not_found', __( 'Popup not found.', 'blablablocks-popup' ), array( 'status' => 404 ) );
+		if ( is_wp_error( $post ) ) {
+			return $post;
 		}
 
 		$post_id = wp_insert_post(
@@ -282,10 +282,10 @@ final class Rest_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function trash_popup( WP_REST_Request $request ) {
-		$post = get_post( absint( $request['id'] ) );
+		$post = self::get_popup_from_request( $request );
 
-		if ( ! $post || Plugin::POST_TYPE !== $post->post_type ) {
-			return new WP_Error( 'popup_block_not_found', __( 'Popup not found.', 'blablablocks-popup' ), array( 'status' => 404 ) );
+		if ( is_wp_error( $post ) ) {
+			return $post;
 		}
 
 		if ( rest_sanitize_boolean( $request->get_param( 'force' ) ) ) {
@@ -314,10 +314,10 @@ final class Rest_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function restore_popup( WP_REST_Request $request ) {
-		$post = get_post( absint( $request['id'] ) );
+		$post = self::get_popup_from_request( $request );
 
-		if ( ! $post || Plugin::POST_TYPE !== $post->post_type ) {
-			return new WP_Error( 'popup_block_not_found', __( 'Popup not found.', 'blablablocks-popup' ), array( 'status' => 404 ) );
+		if ( is_wp_error( $post ) ) {
+			return $post;
 		}
 
 		$restored = wp_untrash_post( $post->ID );
@@ -327,6 +327,22 @@ final class Rest_Controller {
 		}
 
 		return rest_ensure_response( self::prepare_item( get_post( $post->ID ) ) );
+	}
+
+	/**
+	 * Resolve and validate the popup referenced by a REST request.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_Post|WP_Error
+	 */
+	private static function get_popup_from_request( WP_REST_Request $request ) {
+		$post = get_post( absint( $request['id'] ) );
+
+		if ( ! $post || Plugin::POST_TYPE !== $post->post_type ) {
+			return new WP_Error( 'popup_block_not_found', __( 'Popup not found.', 'blablablocks-popup' ), array( 'status' => 404 ) );
+		}
+
+		return $post;
 	}
 
 	/**

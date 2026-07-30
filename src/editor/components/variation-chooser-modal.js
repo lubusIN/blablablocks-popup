@@ -1,7 +1,9 @@
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
 import { createBlock, serialize } from '@wordpress/blocks';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	Button,
 	Modal,
@@ -9,9 +11,7 @@ import {
 	__experimentalText as Text,
 	__experimentalView as View,
 } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies

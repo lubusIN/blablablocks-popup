@@ -13,6 +13,7 @@ if (! defined('ABSPATH')) {
 }
 
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-settings.php';
+require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-assets.php';
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-post-type.php';
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-rest-controller.php';
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-admin.php';

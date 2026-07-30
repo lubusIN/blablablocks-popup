@@ -1,14 +1,14 @@
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
+import { Icon, navigationOverlay as popupIcon } from '@wordpress/icons';
+import { Stack } from '@wordpress/ui';
 import {
 	__experimentalHeading as Heading,
 	__experimentalText as Text,
 	__experimentalView as View,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { Icon, navigationOverlay as popupIcon } from '@wordpress/icons';
-import { Stack } from '@wordpress/ui';
 
 /**
  * Internal dependencies
@@ -27,21 +27,21 @@ export function SummaryCard() {
 			align="flex-start"
 			justify="flex-start"
 		>
-			{ BlockIcon ? (
-				<BlockIcon icon={ popupIcon } showColors />
+			{BlockIcon ? (
+				<BlockIcon icon={popupIcon} showColors />
 			) : (
 				<View as="span" className="block-editor-block-icon">
-					<Icon icon={ popupIcon } size={ 24 } />
+					<Icon icon={popupIcon} size={24} />
 				</View>
-			) }
+			)}
 			<Stack direction="column" gap="xs">
-				<Heading level={ 2 } className="block-editor-block-card__title">
+				<Heading level={2} className="block-editor-block-card__title">
 					<Text as="span" className="block-editor-block-card__name">
-						{ __( 'Popup', 'blablablocks-popup' ) }
+						{__('Popup', 'blablablocks-popup')}
 					</Text>
 				</Heading>
 				<Text className="block-editor-block-card__description">
-					{ __( 'Configure how this popup appears, opens, and closes.', 'blablablocks-popup' ) }
+					{__('Configure how this popup appears, opens, and closes.', 'blablablocks-popup')}
 				</Text>
 			</Stack>
 		</Stack>

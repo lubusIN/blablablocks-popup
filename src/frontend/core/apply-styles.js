@@ -8,9 +8,17 @@ import {
 	SELECTOR_OVERLAY,
 } from '../config/constants';
 import { normalizeAnimationDuration } from '../../shared/animation';
+import {
+	CSS_BOX_SIDES,
+	hasFlatBorderValue,
+	hasSplitBorderValue,
+} from '../../shared/border';
 
 /**
  * Convert WordPress preset tokens into CSS custom property references.
+ *
+ * @param {*} value CSS value.
+ * @return {*} Resolved CSS value.
  */
 const resolveCssValue = ( value ) => {
 	if ( typeof value !== 'string' ) {
@@ -23,24 +31,14 @@ const resolveCssValue = ( value ) => {
 	);
 };
 
-const hasBorderValue = ( border ) => (
-	border &&
-	typeof border === 'object' &&
-	[ border.color, border.style, border.width ].some( Boolean )
-);
-
-const hasSplitBorderValue = ( border ) => (
-	border &&
-	typeof border === 'object' &&
-	[ 'top', 'right', 'bottom', 'left' ].some( ( side ) => hasBorderValue( border[ side ] ) )
-);
-
 const applyBorderSide = ( dialog, side, border ) => {
 	const property = side.charAt( 0 ).toUpperCase() + side.slice( 1 );
 
 	dialog.style[ `border${ property }Style` ] = border?.style || 'solid';
 	dialog.style[ `border${ property }Color` ] = border?.color || '#dcdcde';
-	dialog.style[ `border${ property }Width` ] = resolveCssValue( border?.width || '1px' );
+	dialog.style[ `border${ property }Width` ] = resolveCssValue(
+		border?.width || '1px'
+	);
 };
 
 const applyBorderStyles = ( dialog, style ) => {
@@ -48,15 +46,15 @@ const applyBorderStyles = ( dialog, style ) => {
 
 	if ( hasSplitBorderValue( border ) ) {
 		dialog.style.borderStyle = 'none';
-		[ 'top', 'right', 'bottom', 'left' ].forEach( ( side ) => {
-			if ( hasBorderValue( border[ side ] ) ) {
+		CSS_BOX_SIDES.forEach( ( side ) => {
+			if ( hasFlatBorderValue( border[ side ] ) ) {
 				applyBorderSide( dialog, side, border[ side ] );
 			}
 		} );
 		return;
 	}
 
-	if ( hasBorderValue( border ) ) {
+	if ( hasFlatBorderValue( border ) ) {
 		dialog.style.borderStyle = border.style || 'solid';
 		dialog.style.borderColor = border.color || '#dcdcde';
 		dialog.style.borderWidth = resolveCssValue( border.width || '1px' );
@@ -65,11 +63,17 @@ const applyBorderStyles = ( dialog, style ) => {
 
 	dialog.style.borderStyle = style.borderType || 'none';
 	dialog.style.borderColor = style.borderColor || '#dcdcde';
-	dialog.style.borderWidth = style.borderType === 'none' ? '0' : resolveCssValue( style.borderWidth || '1px' );
+	dialog.style.borderWidth =
+		style.borderType === 'none'
+			? '0'
+			: resolveCssValue( style.borderWidth || '1px' );
 };
 
 /**
  * Apply saved layout and style settings to a rendered popup node.
+ *
+ * @param {Object} popup Parsed popup runtime record.
+ * @return {void}
  */
 export const applyInlineStyles = ( popup ) => {
 	const { node, settings } = popup;
@@ -85,7 +89,10 @@ export const applyInlineStyles = ( popup ) => {
 	node.dataset.entranceAnimation = layout.entranceAnimation || 'fade';
 	node.dataset.exitAnimation = layout.exitAnimation || 'fade';
 
-	node.style.setProperty( CSS_DURATION_VAR, `${ normalizeAnimationDuration( layout.animationDuration ) }s` );
+	node.style.setProperty(
+		CSS_DURATION_VAR,
+		`${ normalizeAnimationDuration( layout.animationDuration ) }s`
+	);
 
 	if ( dialog ) {
 		dialog.style.width = layout.width || '640px';
@@ -100,7 +107,8 @@ export const applyInlineStyles = ( popup ) => {
 
 	if ( overlay ) {
 		overlay.style.display = layout.overlay ? 'block' : 'none';
-		overlay.style.background = style.overlayBackground || 'rgba(0,0,0,0.55)';
+		overlay.style.background =
+			style.overlayBackground || 'rgba(0,0,0,0.55)';
 	}
 
 	if ( close ) {
@@ -113,9 +121,12 @@ export const applyInlineStyles = ( popup ) => {
 			close.hidden = true;
 		} else if ( Number( advanced.closeDelay || 0 ) > 0 ) {
 			close.hidden = true;
-			window.setTimeout( () => {
-				close.hidden = false;
-			}, Number( advanced.closeDelay ) * 1000 );
+			window.setTimeout(
+				() => {
+					close.hidden = false;
+				},
+				Number( advanced.closeDelay ) * 1000
+			);
 		}
 	}
 };

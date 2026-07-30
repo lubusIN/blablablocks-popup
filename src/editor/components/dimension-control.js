@@ -1,12 +1,12 @@
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
+import { Stack } from '@wordpress/ui';
 import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { Stack } from '@wordpress/ui';
 
 /**
  * Internal dependencies
@@ -28,20 +28,20 @@ const dimensionUnits = [
 ];
 
 const dimensionHelp = {
-	fit: __( 'Fit contents.', 'blablablocks-popup' ),
-	grow: __( 'Stretch to fill available space.', 'blablablocks-popup' ),
-	fixed: __( 'Specify a fixed size.', 'blablablocks-popup' ),
+	fit: __('Fit contents.', 'blablablocks-popup'),
+	grow: __('Stretch to fill available space.', 'blablablocks-popup'),
+	fixed: __('Specify a fixed size.', 'blablablocks-popup'),
 };
 
 /**
  * Width/height control that matches WordPress layout sizing semantics.
  */
-export function PopupDimensionControl( { label, type, value, onChange } ) {
-	const mode = getDimensionMode( value, type );
-	const fixedValue = getFixedDimensionValue( value, type );
+export function PopupDimensionControl({ label, type, value, onChange }) {
+	const mode = getDimensionMode(value, type);
+	const fixedValue = getFixedDimensionValue(value, type);
 
-	const updateMode = ( nextMode ) => {
-		onChange( getDimensionValue( nextMode, fixedValue, type ) );
+	const updateMode = (nextMode) => {
+		onChange(getDimensionValue(nextMode, fixedValue, type));
 	};
 
 	return (
@@ -49,28 +49,28 @@ export function PopupDimensionControl( { label, type, value, onChange } ) {
 			<ToggleGroupControl
 				__next40pxDefaultSize
 				isBlock
-				label={ label }
-				help={ dimensionHelp[ mode ] }
-				value={ mode }
-				onChange={ updateMode }
+				label={label}
+				help={dimensionHelp[mode]}
+				value={mode}
+				onChange={updateMode}
 			>
-				<ToggleGroupControlOption value="fit" label={ __( 'Fit', 'blablablocks-popup' ) } />
-				<ToggleGroupControlOption value="grow" label={ __( 'Grow', 'blablablocks-popup' ) } />
-				<ToggleGroupControlOption value="fixed" label={ __( 'Fixed', 'blablablocks-popup' ) } />
+				<ToggleGroupControlOption value="fit" label={__('Fit', 'blablablocks-popup')} />
+				<ToggleGroupControlOption value="grow" label={__('Grow', 'blablablocks-popup')} />
+				<ToggleGroupControlOption value="fixed" label={__('Fixed', 'blablablocks-popup')} />
 			</ToggleGroupControl>
-			{ 'fixed' === mode && UnitControl && (
+			{'fixed' === mode && UnitControl && (
 				<UnitControl
 					__next40pxDefaultSize
 					hideLabelFromVision
 					className="blablablocks-popup-editor-dimension-control__unit"
-					label={ label }
-					min={ 0 }
+					label={label}
+					min={0}
 					size="__unstable-large"
-					units={ dimensionUnits }
-					value={ fixedValue }
-					onChange={ onChange }
+					units={dimensionUnits}
+					value={fixedValue}
+					onChange={onChange}
 				/>
-			) }
+			)}
 		</Stack>
 	);
 }

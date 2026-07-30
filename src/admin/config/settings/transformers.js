@@ -2,10 +2,9 @@
  * Internal dependencies
  */
 import { normalizeAnimationDuration } from '../../../shared/animation';
+import { mergePopupSettings } from '../../../shared/settings';
 import { defaults } from './defaults';
 import { fromCsv, toCsv } from './tokens';
-
-const clone = ( value ) => JSON.parse( JSON.stringify( value || {} ) );
 
 /**
  * Flatten grouped popup settings into DataForm's single-record shape.
@@ -17,16 +16,7 @@ const clone = ( value ) => JSON.parse( JSON.stringify( value || {} ) );
  * @return {Object} Flat settings.
  */
 export const flattenSettings = ( settings = defaults ) => {
-	const merged = {
-		...clone( defaults ),
-		...clone( settings ),
-		layout: { ...( defaults.layout || {} ), ...( settings.layout || {} ) },
-		style: { ...( defaults.style || {} ), ...( settings.style || {} ) },
-		advanced: { ...( defaults.advanced || {} ), ...( settings.advanced || {} ) },
-		conditions: { ...( defaults.conditions || {} ), ...( settings.conditions || {} ) },
-		triggers: { ...( defaults.triggers || {} ), ...( settings.triggers || {} ) },
-		rules: { ...( defaults.rules || {} ), ...( settings.rules || {} ) },
-	};
+	const merged = mergePopupSettings( defaults, settings );
 
 	return {
 		width: merged.layout.width,
@@ -37,7 +27,9 @@ export const flattenSettings = ( settings = defaults ) => {
 		closeButton: merged.layout.closeButton,
 		entranceAnimation: merged.layout.entranceAnimation,
 		exitAnimation: merged.layout.exitAnimation,
-		animationDuration: normalizeAnimationDuration( merged.layout.animationDuration ),
+		animationDuration: normalizeAnimationDuration(
+			merged.layout.animationDuration
+		),
 		popupBackground: merged.style.popupBackground,
 		overlayBackground: merged.style.overlayBackground,
 		border: merged.style.border,

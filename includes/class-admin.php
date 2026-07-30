@@ -67,25 +67,7 @@ final class Admin
 			return;
 		}
 
-		$asset = self::get_asset('admin');
-
-		wp_enqueue_style('wp-components');
-		wp_enqueue_script(
-			'blablablocks-popup-admin',
-			BLABLABLOCKS_POPUP_URL . 'build/admin.js',
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-
-		wp_enqueue_style(
-			'blablablocks-popup-admin',
-			BLABLABLOCKS_POPUP_URL . 'build/admin.css',
-			array('wp-components'),
-			$asset['version']
-		);
-
-		wp_add_inline_script('blablablocks-popup-admin', 'window.BlaBlaBlocksPopupAdmin = ' . wp_json_encode(self::script_data()), 'before');
+		Assets::enqueue_admin(self::script_data());
 	}
 
 	/**
@@ -99,35 +81,12 @@ final class Admin
 			return;
 		}
 
-		$asset        = self::get_asset('editor');
-		$dependencies = array_values(
-			array_unique(
-				array_merge(
-					$asset['dependencies'],
-					array('wp-block-editor', 'wp-edit-post', 'wp-editor', 'wp-plugins')
-				)
-			)
+		$post_id = self::get_current_editor_post_id();
+
+		Assets::enqueue_editor(
+			self::editor_script_data($post_id),
+			self::get_editor_canvas_css($post_id)
 		);
-
-		wp_enqueue_script(
-			'blablablocks-popup-editor',
-			BLABLABLOCKS_POPUP_URL . 'build/editor.js',
-			$dependencies,
-			$asset['version'],
-			true
-		);
-
-		if (file_exists(BLABLABLOCKS_POPUP_DIR . 'build/editor.css')) {
-			wp_enqueue_style(
-				'blablablocks-popup-editor',
-				BLABLABLOCKS_POPUP_URL . 'build/editor.css',
-				array('wp-components'),
-				$asset['version']
-			);
-			wp_add_inline_style('blablablocks-popup-editor', self::get_editor_canvas_css(self::get_current_editor_post_id()));
-		}
-
-		wp_add_inline_script('blablablocks-popup-editor', 'window.BlaBlaBlocksPopupEditor = ' . wp_json_encode(self::editor_script_data()), 'before');
 	}
 
 	/**
@@ -178,36 +137,17 @@ final class Admin
 	/**
 	 * Block editor script data.
 	 *
+	 * @param int $post_id Popup post ID.
 	 * @return array
 	 */
-	private static function editor_script_data()
+	private static function editor_script_data($post_id)
 	{
 		return array(
-			'postId'   => self::get_current_editor_post_id(),
+			'postId'   => $post_id,
 			'postType' => Plugin::POST_TYPE,
 			'metaKey'  => Plugin::META_KEY,
 			'pluginUrl' => BLABLABLOCKS_POPUP_URL,
 			'defaults' => Settings::defaults(),
-		);
-	}
-
-	/**
-	 * Read a generated asset metadata file.
-	 *
-	 * @param string $entry Entry name.
-	 * @return array
-	 */
-	private static function get_asset($entry)
-	{
-		$asset_file = BLABLABLOCKS_POPUP_DIR . 'build/' . $entry . '.asset.php';
-
-		if (file_exists($asset_file)) {
-			return require $asset_file;
-		}
-
-		return array(
-			'dependencies' => array('wp-api-fetch', 'wp-components', 'wp-element', 'wp-i18n'),
-			'version'      => BLABLABLOCKS_POPUP_VERSION,
 		);
 	}
 

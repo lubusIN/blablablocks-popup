@@ -1,24 +1,49 @@
 /**
+ * Internal dependencies
+ */
+import {
+	CSS_BOX_SIDES,
+	hasBorderValue,
+	hasFlatBorderValue,
+	isBorderSide,
+} from '../../shared/border';
+
+/**
  * Convert CSS border-radius shorthand into BorderRadiusControl corner values.
+ *
+ * @param {string|Object} value CSS shorthand or existing corner values.
+ * @return {Object|undefined} Border radius corner values.
  */
 export const cssRadiusToBorderRadiusValues = ( value ) => {
 	if ( value && typeof value === 'object' ) {
 		return value;
 	}
 
-	const parts = String( value || '' ).split( '/' )[ 0 ].trim().split( /\s+/ ).filter( Boolean );
+	const parts = String( value || '' )
+		.split( '/' )[ 0 ]
+		.trim()
+		.split( /\s+/ )
+		.filter( Boolean );
 
 	if ( ! parts.length ) {
 		return undefined;
 	}
 
-	const [ topLeft, topRight = topLeft, bottomRight = topLeft, bottomLeft = topRight ] = parts;
+	const [
+		topLeft,
+		topRight = topLeft,
+		bottomRight = topLeft,
+		bottomLeft = topRight,
+	] = parts;
 
 	return { topLeft, topRight, bottomRight, bottomLeft };
 };
 
 /**
  * Convert BorderRadiusControl corner values back to CSS shorthand.
+ *
+ * @param {string|Object} values Border radius corner values.
+ * @return {string} CSS border-radius shorthand.
  */
 export const borderRadiusValuesToCss = ( values ) => {
 	if ( typeof values === 'string' ) {
@@ -38,7 +63,11 @@ export const borderRadiusValuesToCss = ( values ) => {
 		return '';
 	}
 
-	if ( topLeft === topRight && topLeft === bottomRight && topLeft === bottomLeft ) {
+	if (
+		topLeft === topRight &&
+		topLeft === bottomRight &&
+		topLeft === bottomLeft
+	) {
 		return topLeft;
 	}
 
@@ -53,20 +82,14 @@ export const borderRadiusValuesToCss = ( values ) => {
 	return `${ topLeft } ${ topRight } ${ bottomRight } ${ bottomLeft }`;
 };
 
-const isBorderSide = ( key ) => [ 'top', 'right', 'bottom', 'left' ].includes( key );
-
 const getFlatBorder = ( border ) => {
-	if ( ! border || typeof border !== 'object' ) {
-		return undefined;
-	}
-
 	const value = {
-		color: border.color,
-		style: border.style,
-		width: border.width,
+		color: border?.color,
+		style: border?.style,
+		width: border?.width,
 	};
 
-	return [ value.color, value.style, value.width ].some( Boolean ) ? value : undefined;
+	return hasFlatBorderValue( value ) ? value : undefined;
 };
 
 const getSplitBorder = ( border ) => {
@@ -74,8 +97,8 @@ const getSplitBorder = ( border ) => {
 		return undefined;
 	}
 
-	const value = [ 'top', 'right', 'bottom', 'left' ].reduce( ( sides, side ) => {
-		if ( hasBorderValue( border[ side ] ) ) {
+	const value = CSS_BOX_SIDES.reduce( ( sides, side ) => {
+		if ( hasFlatBorderValue( border[ side ] ) ) {
 			sides[ side ] = border[ side ];
 		}
 
@@ -85,25 +108,13 @@ const getSplitBorder = ( border ) => {
 	return Object.keys( value ).length ? value : undefined;
 };
 
-export const hasBorderValue = ( border ) => {
-	if ( ! border || typeof border !== 'object' ) {
-		return false;
-	}
-
-	if ( [ border.color, border.style, border.width ].some( Boolean ) ) {
-		return true;
-	}
-
-	return Object.entries( border ).some( ( [ key, value ] ) => (
-		isBorderSide( key ) &&
-		value &&
-		typeof value === 'object' &&
-		[ value.color, value.style, value.width ].some( Boolean )
-	) );
-};
+export { hasBorderValue };
 
 /**
  * Normalize legacy border settings into BorderBoxControl's value shape.
+ *
+ * @param {Object} style Popup style settings.
+ * @return {Object|undefined} BorderBoxControl border value.
  */
 export const getBorderControlValue = ( style ) => {
 	const splitBorder = getSplitBorder( style.border );
@@ -131,6 +142,10 @@ export const getBorderControlValue = ( style ) => {
 
 /**
  * Mirror BorderBoxControl values into legacy flat keys for runtime fallback.
+ *
+ * @param {Object} border BorderBoxControl border value.
+ * @param {Object} style  Current popup style settings.
+ * @return {Object} Legacy border settings.
  */
 export const borderToLegacyValues = ( border, style ) => {
 	if ( ! hasBorderValue( border ) ) {
@@ -142,7 +157,12 @@ export const borderToLegacyValues = ( border, style ) => {
 	}
 
 	const values = isBorderSide( Object.keys( border )[ 0 ] )
-		? Object.values( border ).find( ( value ) => value && typeof value === 'object' && hasBorderValue( value ) )
+		? Object.values( border ).find(
+				( value ) =>
+					value &&
+					typeof value === 'object' &&
+					hasBorderValue( value )
+		  )
 		: border;
 
 	return {

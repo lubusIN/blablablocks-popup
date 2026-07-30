@@ -16,43 +16,69 @@
 
 - **Block Editor Integration**: Design your popup content entirely within the native WordPress Block Editor.
 - **Dedicated Management**: Easily manage all your popups from a clean, dedicated admin screen.
-- **Starter Templates**: Jumpstart your design with pre-built variations: 
+- **Starter Templates**: Jumpstart your design with pre-built variations:
   - Modal Popup
   - Slide-in Popup
   - Floating Bar
   - Fullscreen Popup
   - Toast / Small Notification
 - **Extensive Styling**: Fine-tune layout, position, size, spacing, colors, borders, border radius, and entrance/exit animations.
-- **Smart Triggers**: Control exactly *when* popups appear (e.g., page load, scroll depth, inactivity, click count, exit intent).
-- **Targeted Display Conditions**: Control *where* popups appear (e.g., entire site, front page, specific posts/pages, archives).
+- **Smart Triggers**: Control exactly _when_ popups appear (e.g., page load, scroll depth, inactivity, click count, exit intent).
+- **Targeted Display Conditions**: Control _where_ popups appear (e.g., entire site, front page, specific posts/pages, archives).
 - **Advanced Rules**: Add conditional logic based on page views, sessions, max displays, referrers, login status, user roles, and device types.
 - **Popup Lifecycle**: Duplicate, trash, restore, and permanently delete popups with ease.
 
 ## Requirements
 
-### Minimum Requirements
-- **WordPress**: 6.9 or higher
-- **PHP**: 7.4 or higher
-
-### For Development
-- **Node.js**: 20.x or higher
-- **npm**: for dependency management
+- **WordPress**: 6.9+
+- **PHP**: 7.4+
 
 ## Installation
 
-### Via GitHub (Development / Bleeding Edge)
+## Development
 
-Clone the repository directly into your WordPress plugins directory:
+### 1. Clone the Repository
+
+Clone the repository to your local system:
 
 ```bash
-cd wp-content/plugins
 git clone git@github.com:lubusIN/blablablocks-popup.git
-cd blablablocks-popup
-npm install
-npm run build
 ```
 
-Then, activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
+### 2. Go to plugin folder
+
+```bash
+cd blablablocks-popup
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Build Plugin
+
+Build or start the development environment:
+
+```bash
+npm run build       # Compile the source files
+# OR
+npm run start       # Watch for changes and auto-compile
+```
+
+### 5. Launch Playground
+
+Start a local WordPress Playground instance:
+
+```bash
+npm run serve
+```
+
+Local Playground requires Node.js 20.18 or newer.
+
+> [!NOTE]
+> Refer to `package.json` for additional available npm commands.
 
 ### Manual Installation
 
@@ -71,30 +97,6 @@ Then, activate **BlaBlaBlocks Popup** from your WordPress plugins screen.
 6. Use the popup editor sidebar to configure layout, styles, and behavior.
 7. Return to the popup admin page to fine-tune settings, triggers, conditions, and display rules.
 8. **Publish** the popup when you're ready for it to go live!
-
-## Development
-
-We welcome contributions! Here are the commands you'll need to get started:
-
-Install dependencies:
-```bash
-npm install
-```
-
-Build the plugin assets for production:
-```bash
-npm run build
-```
-
-Watch files and re-compile during development:
-```bash
-npm run start
-```
-
-Start a local WordPress playground environment:
-```bash
-npm run playground
-```
 
 ## Meet Your Artisans
 

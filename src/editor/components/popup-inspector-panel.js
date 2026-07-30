@@ -1,9 +1,9 @@
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
 import { Icon, cog as settingsIcon, navigationOverlay as popupIcon, styles as stylesIcon } from '@wordpress/icons';
 import { Tabs } from '../../../node_modules/@wordpress/components/build-module/tabs/index.mjs';
 
@@ -29,61 +29,61 @@ import { mergeSettings } from '../utils/settings';
  * BlaBlaBlocks Popup block editor sidebar.
  */
 export function PopupInspectorPanel() {
-	const [ activeTab, setActiveTab ] = useState( TAB_SETTINGS );
+	const [activeTab, setActiveTab] = useState(TAB_SETTINGS);
 	const postType = useSelect(
-		( select ) => select( 'core/editor' ).getCurrentPostType(),
+		(select) => select('core/editor').getCurrentPostType(),
 		[]
 	);
 	const meta = useSelect(
-		( select ) => select( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {},
+		(select) => select('core/editor').getEditedPostAttribute('meta') || {},
 		[]
 	);
-	const { editPost } = useDispatch( 'core/editor' );
+	const { editPost } = useDispatch('core/editor');
 	const colorGradientSettings = useMultipleOriginColorsAndGradients();
 
-	if ( postType !== config.postType || ! PluginSidebar ) {
+	if (postType !== config.postType || !PluginSidebar) {
 		return null;
 	}
 
-	const settings = mergeSettings( meta[ metaKey ] );
+	const settings = mergeSettings(meta[metaKey]);
 	const layout = settings.layout;
 	const style = settings.style;
 
-	const updateGroup = ( group, key, value ) => {
-		editPost( {
+	const updateGroup = (group, key, value) => {
+		editPost({
 			meta: {
 				...meta,
-				[ metaKey ]: {
+				[metaKey]: {
 					...settings,
-					[ group ]: {
-						...settings[ group ],
-						[ key ]: value,
+					[group]: {
+						...settings[group],
+						[key]: value,
 					},
 				},
 			},
-		} );
+		});
 	};
 
-	const updatePosition = ( value ) => {
-		editPost( {
+	const updatePosition = (value) => {
+		editPost({
 			meta: {
 				...meta,
-				[ metaKey ]: {
+				[metaKey]: {
 					...settings,
 					layout: {
 						...layout,
-						...parsePositionValue( value ),
+						...parsePositionValue(value),
 					},
 				},
 			},
-		} );
+		});
 	};
 
-	const updateLayoutValues = ( values ) => {
-		editPost( {
+	const updateLayoutValues = (values) => {
+		editPost({
 			meta: {
 				...meta,
-				[ metaKey ]: {
+				[metaKey]: {
 					...settings,
 					layout: {
 						...layout,
@@ -91,14 +91,14 @@ export function PopupInspectorPanel() {
 					},
 				},
 			},
-		} );
+		});
 	};
 
-	const updateStyleValues = ( values ) => {
-		editPost( {
+	const updateStyleValues = (values) => {
+		editPost({
 			meta: {
 				...meta,
-				[ metaKey ]: {
+				[metaKey]: {
 					...settings,
 					style: {
 						...style,
@@ -106,82 +106,82 @@ export function PopupInspectorPanel() {
 					},
 				},
 			},
-		} );
+		});
 	};
 
-	const updateBorder = ( value ) => {
-		updateStyleValues( {
+	const updateBorder = (value) => {
+		updateStyleValues({
 			border: value || {},
-			...borderToLegacyValues( value, style ),
-		} );
+			...borderToLegacyValues(value, style),
+		});
 	};
 
 	const colorSettings = [
 		{
-			label: __( 'Popup background', 'blablablocks-popup' ),
+			label: __('Popup background', 'blablablocks-popup'),
 			value: style.popupBackground,
-			onChange: ( value ) => updateGroup( 'style', 'popupBackground', value ),
+			onChange: (value) => updateGroup('style', 'popupBackground', value),
 		},
 		layout.overlay && {
-			label: __( 'Overlay background', 'blablablocks-popup' ),
+			label: __('Overlay background', 'blablablocks-popup'),
 			value: style.overlayBackground,
-			onChange: ( value ) => updateGroup( 'style', 'overlayBackground', value ),
+			onChange: (value) => updateGroup('style', 'overlayBackground', value),
 		},
 		layout.closeButton && {
-			label: __( 'Close color', 'blablablocks-popup' ),
+			label: __('Close color', 'blablablocks-popup'),
 			value: style.closeColor,
-			onChange: ( value ) => updateGroup( 'style', 'closeColor', value ),
+			onChange: (value) => updateGroup('style', 'closeColor', value),
 		},
 		layout.closeButton && {
-			label: __( 'Close background', 'blablablocks-popup' ),
+			label: __('Close background', 'blablablocks-popup'),
 			value: style.closeBackground,
-			onChange: ( value ) => updateGroup( 'style', 'closeBackground', value ),
+			onChange: (value) => updateGroup('style', 'closeBackground', value),
 		},
-	].filter( Boolean );
+	].filter(Boolean);
 
 	return (
 		<PluginSidebar
-			name={ SIDEBAR_NAME }
-			title={ __( 'Popup', 'blablablocks-popup' ) }
-			icon={ popupIcon }
+			name={SIDEBAR_NAME}
+			title={__('Popup', 'blablablocks-popup')}
+			icon={popupIcon}
 			className="blablablocks-popup-editor-sidebar"
 			isActiveByDefault
 		>
 			<SummaryCard />
-			<Tabs selectedTabId={ activeTab } onSelect={ setActiveTab }>
-				<Tabs.TabList className="blablablocks-popup-editor-inspector-tabs" aria-label={ __( 'Popup inspector tabs', 'blablablocks-popup' ) }>
-					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={ TAB_SETTINGS } title={ __( 'Settings', 'blablablocks-popup' ) } aria-label={ __( 'Settings', 'blablablocks-popup' ) }>
-						<Icon icon={ settingsIcon } size={ 24 } />
+			<Tabs selectedTabId={activeTab} onSelect={setActiveTab}>
+				<Tabs.TabList className="blablablocks-popup-editor-inspector-tabs" aria-label={__('Popup inspector tabs', 'blablablocks-popup')}>
+					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={TAB_SETTINGS} title={__('Settings', 'blablablocks-popup')} aria-label={__('Settings', 'blablablocks-popup')}>
+						<Icon icon={settingsIcon} size={24} />
 					</Tabs.Tab>
-					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={ TAB_STYLES } title={ __( 'Styles', 'blablablocks-popup' ) } aria-label={ __( 'Styles', 'blablablocks-popup' ) }>
-						<Icon icon={ stylesIcon } size={ 24 } />
+					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={TAB_STYLES} title={__('Styles', 'blablablocks-popup')} aria-label={__('Styles', 'blablablocks-popup')}>
+						<Icon icon={stylesIcon} size={24} />
 					</Tabs.Tab>
 				</Tabs.TabList>
 
-				<Tabs.TabPanel tabId={ TAB_SETTINGS } focusable={ false }>
+				<Tabs.TabPanel tabId={TAB_SETTINGS} focusable={false}>
 					<LayoutPanel
-						layout={ layout }
-						position={ getPositionValue( layout ) }
-						style={ style }
-						onChangeLayout={ ( key, value ) => updateGroup( 'layout', key, value ) }
-						onChangePosition={ updatePosition }
-						onChangeStyle={ ( key, value ) => updateGroup( 'style', key, value ) }
+						layout={layout}
+						position={getPositionValue(layout)}
+						style={style}
+						onChangeLayout={(key, value) => updateGroup('layout', key, value)}
+						onChangePosition={updatePosition}
+						onChangeStyle={(key, value) => updateGroup('style', key, value)}
 					/>
 					<AnimationPanel
-						layout={ layout }
-						onChangeLayout={ ( key, value ) => updateGroup( 'layout', key, value ) }
-						onResetLayout={ updateLayoutValues }
+						layout={layout}
+						onChangeLayout={(key, value) => updateGroup('layout', key, value)}
+						onResetLayout={updateLayoutValues}
 					/>
 				</Tabs.TabPanel>
 
-				<Tabs.TabPanel tabId={ TAB_STYLES } focusable={ false }>
+				<Tabs.TabPanel tabId={TAB_STYLES} focusable={false}>
 					<StylePanel
-						colorGradientSettings={ colorGradientSettings }
-						colorSettings={ colorSettings }
-						style={ style }
-						onChangeStyle={ ( key, value ) => updateGroup( 'style', key, value ) }
-						onChangeStyleValues={ updateStyleValues }
-						onChangeBorder={ updateBorder }
+						colorGradientSettings={colorGradientSettings}
+						colorSettings={colorSettings}
+						style={style}
+						onChangeStyle={(key, value) => updateGroup('style', key, value)}
+						onChangeStyleValues={updateStyleValues}
+						onChangeBorder={updateBorder}
 					/>
 				</Tabs.TabPanel>
 			</Tabs>

@@ -1,6 +1,7 @@
 /**
  * WordPress dependencies
  */
+import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import {
 	__experimentalConfirmDialog as ConfirmDialog,
@@ -18,7 +19,6 @@ import {
 import { DataViews, filterSortAndPaginate } from '@wordpress/dataviews/wp';
 import { createRoot, useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 import { Icon, navigationOverlay, plus } from '@wordpress/icons';
-import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -37,43 +37,43 @@ import {
 } from './config/constants';
 import { config } from './config/wordpress';
 
-apiFetch.use( apiFetch.createNonceMiddleware( config.nonce ) );
+apiFetch.use(apiFetch.createNonceMiddleware(config.nonce));
 
-const getVariationEditUrl = ( editUrl ) => {
-	const url = new URL( editUrl, window.location.href );
-	url.searchParams.set( VARIATION_QUERY_PARAM, '1' );
+const getVariationEditUrl = (editUrl) => {
+	const url = new URL(editUrl, window.location.href);
+	url.searchParams.set(VARIATION_QUERY_PARAM, '1');
 
 	return url.toString();
 };
 
-const rememberVariationPost = ( postId ) => {
+const rememberVariationPost = (postId) => {
 	try {
-		window.sessionStorage.setItem( VARIATION_SESSION_KEY, String( postId ) );
-	} catch ( error ) {}
+		window.sessionStorage.setItem(VARIATION_SESSION_KEY, String(postId));
+	} catch (error) { }
 };
 
 /**
  * Empty state displayed when the popup collection is empty.
  */
-function EmptyPopupsState( { onCreate } ) {
+function EmptyPopupsState({ onCreate }) {
 	return (
 		<View className="blablablocks-popup-empty-state">
 			<View className="blablablocks-popup-empty-state__icon" aria-hidden="true">
-				<Icon icon={ navigationOverlay } size={ 24 } />
+				<Icon icon={navigationOverlay} size={24} />
 			</View>
-			<Heading className="blablablocks-popup-empty-state__title" level={ 2 }>
-				{ __( 'No Popups', 'blablablocks-popup' ) }
+			<Heading className="blablablocks-popup-empty-state__title" level={2}>
+				{__('No Popups', 'blablablocks-popup')}
 			</Heading>
 			<View as="p" className="blablablocks-popup-empty-state__description">
-				{ __( 'Create a popup to get started.', 'blablablocks-popup' ) }
+				{__('Create a popup to get started.', 'blablablocks-popup')}
 			</View>
 			<Button
 				className="blablablocks-popup-empty-state__button"
 				variant="primary"
-				icon={ plus }
-				onClick={ onCreate }
+				icon={plus}
+				onClick={onCreate}
 			>
-				{ __( 'Add Popup', 'blablablocks-popup' ) }
+				{__('Add Popup', 'blablablocks-popup')}
 			</Button>
 		</View>
 	);
@@ -83,156 +83,156 @@ function EmptyPopupsState( { onCreate } ) {
  * BlaBlaBlocks Popup admin application.
  */
 function App() {
-	const [ popups, setPopups ] = useState( [] );
-	const [ isLoading, setIsLoading ] = useState( true );
-	const [ error, setError ] = useState( '' );
-	const [ modalPopup, setModalPopup ] = useState( null );
-	const [ isCreating, setIsCreating ] = useState( false );
-	const [ confirmAction, setConfirmAction ] = useState( null );
-	const [ isConfirming, setIsConfirming ] = useState( false );
-	const [ snackbars, setSnackbars ] = useState( [] );
-	const [ view, setView ] = useState( DEFAULT_VIEW );
+	const [popups, setPopups] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState('');
+	const [modalPopup, setModalPopup] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
+	const [confirmAction, setConfirmAction] = useState(null);
+	const [isConfirming, setIsConfirming] = useState(false);
+	const [snackbars, setSnackbars] = useState([]);
+	const [view, setView] = useState(DEFAULT_VIEW);
 
-	const fetchPopups = useCallback( async () => {
-		setIsLoading( true );
-		setError( '' );
+	const fetchPopups = useCallback(async () => {
+		setIsLoading(true);
+		setError('');
 		try {
-			setPopups( await apiFetch( { path: REST_POPUPS_PATH } ) );
-		} catch ( apiError ) {
-			setError( apiError?.message || __( 'Could not load popups.', 'blablablocks-popup' ) );
+			setPopups(await apiFetch({ path: REST_POPUPS_PATH }));
+		} catch (apiError) {
+			setError(apiError?.message || __('Could not load popups.', 'blablablocks-popup'));
 		} finally {
-			setIsLoading( false );
+			setIsLoading(false);
 		}
-	}, [] );
+	}, []);
 
-	useEffect( () => {
+	useEffect(() => {
 		fetchPopups();
-	}, [ fetchPopups ] );
+	}, [fetchPopups]);
 
-	const addSnackbar = useCallback( ( content ) => {
-		setSnackbars( ( current ) => [
+	const addSnackbar = useCallback((content) => {
+		setSnackbars((current) => [
 			...current,
 			{
-				id: `${ SNACKBAR_ID_PREFIX }-${ Date.now() }-${ current.length }`,
+				id: `${SNACKBAR_ID_PREFIX}-${Date.now()}-${current.length}`,
 				content,
 			},
-		] );
-	}, [] );
+		]);
+	}, []);
 
-	const removeSnackbar = useCallback( ( id ) => {
-		setSnackbars( ( current ) => current.filter( ( snackbar ) => snackbar.id !== id ) );
-	}, [] );
+	const removeSnackbar = useCallback((id) => {
+		setSnackbars((current) => current.filter((snackbar) => snackbar.id !== id));
+	}, []);
 
-	const duplicatePopup = useCallback( async ( popup ) => {
-		const result = await apiFetch( {
-			path: `${ REST_POPUPS_PATH }/${ popup.id }/duplicate`,
+	const duplicatePopup = useCallback(async (popup) => {
+		const result = await apiFetch({
+			path: `${REST_POPUPS_PATH}/${popup.id}/duplicate`,
 			method: 'POST',
-		} );
-		setPopups( ( current ) => [ result, ...current ] );
-		addSnackbar( __( 'Popup duplicated.', 'blablablocks-popup' ) );
-	}, [ addSnackbar ] );
+		});
+		setPopups((current) => [result, ...current]);
+		addSnackbar(__('Popup duplicated.', 'blablablocks-popup'));
+	}, [addSnackbar]);
 
-	const trashPopups = useCallback( async ( items ) => {
-		const popupsToTrash = Array.isArray( items ) ? items : [ items ];
+	const trashPopups = useCallback(async (items) => {
+		const popupsToTrash = Array.isArray(items) ? items : [items];
 
-		const trashedPopups = await Promise.all( popupsToTrash.map( ( popup ) => apiFetch( {
-			path: `${ REST_POPUPS_PATH }/${ popup.id }`,
+		const trashedPopups = await Promise.all(popupsToTrash.map((popup) => apiFetch({
+			path: `${REST_POPUPS_PATH}/${popup.id}`,
 			method: 'DELETE',
-		} ) ) );
+		})));
 
-		const trashedById = new Map( trashedPopups.map( ( popup ) => [ popup.id, popup ] ) );
-		setPopups( ( current ) => current.map( ( item ) => trashedById.get( item.id ) || item ) );
+		const trashedById = new Map(trashedPopups.map((popup) => [popup.id, popup]));
+		setPopups((current) => current.map((item) => trashedById.get(item.id) || item));
 		addSnackbar(
 			popupsToTrash.length === 1 ?
-				__( 'Popup moved to Trash.', 'blablablocks-popup' ) :
-				sprintf( __( '%d popups moved to Trash.', 'blablablocks-popup' ), popupsToTrash.length )
+				__('Popup moved to Trash.', 'blablablocks-popup') :
+				sprintf(__('%d popups moved to Trash.', 'blablablocks-popup'), popupsToTrash.length)
 		);
-	}, [ addSnackbar ] );
+	}, [addSnackbar]);
 
-	const restorePopups = useCallback( async ( items ) => {
-		const popupsToRestore = Array.isArray( items ) ? items : [ items ];
+	const restorePopups = useCallback(async (items) => {
+		const popupsToRestore = Array.isArray(items) ? items : [items];
 
-		const restoredPopups = await Promise.all( popupsToRestore.map( ( popup ) => apiFetch( {
-			path: `${ REST_POPUPS_PATH }/${ popup.id }/restore`,
+		const restoredPopups = await Promise.all(popupsToRestore.map((popup) => apiFetch({
+			path: `${REST_POPUPS_PATH}/${popup.id}/restore`,
 			method: 'POST',
-		} ) ) );
+		})));
 
-		const restoredById = new Map( restoredPopups.map( ( popup ) => [ popup.id, popup ] ) );
-		setPopups( ( current ) => current.map( ( item ) => restoredById.get( item.id ) || item ) );
+		const restoredById = new Map(restoredPopups.map((popup) => [popup.id, popup]));
+		setPopups((current) => current.map((item) => restoredById.get(item.id) || item));
 		addSnackbar(
 			popupsToRestore.length === 1 ?
-				__( 'Popup restored.', 'blablablocks-popup' ) :
-				sprintf( __( '%d popups restored.', 'blablablocks-popup' ), popupsToRestore.length )
+				__('Popup restored.', 'blablablocks-popup') :
+				sprintf(__('%d popups restored.', 'blablablocks-popup'), popupsToRestore.length)
 		);
-	}, [ addSnackbar ] );
+	}, [addSnackbar]);
 
-	const permanentlyDeletePopups = useCallback( async ( items ) => {
-		const popupsToDelete = Array.isArray( items ) ? items : [ items ];
+	const permanentlyDeletePopups = useCallback(async (items) => {
+		const popupsToDelete = Array.isArray(items) ? items : [items];
 
-		await Promise.all( popupsToDelete.map( ( popup ) => apiFetch( {
-			path: `${ REST_POPUPS_PATH }/${ popup.id }?force=true`,
+		await Promise.all(popupsToDelete.map((popup) => apiFetch({
+			path: `${REST_POPUPS_PATH}/${popup.id}?force=true`,
 			method: 'DELETE',
-		} ) ) );
+		})));
 
-		const deletedIds = popupsToDelete.map( ( popup ) => popup.id );
-		setPopups( ( current ) => current.filter( ( item ) => ! deletedIds.includes( item.id ) ) );
+		const deletedIds = popupsToDelete.map((popup) => popup.id);
+		setPopups((current) => current.filter((item) => !deletedIds.includes(item.id)));
 		addSnackbar(
 			popupsToDelete.length === 1 ?
-				__( 'Popup permanently deleted.', 'blablablocks-popup' ) :
-				sprintf( __( '%d popups permanently deleted.', 'blablablocks-popup' ), popupsToDelete.length )
+				__('Popup permanently deleted.', 'blablablocks-popup') :
+				sprintf(__('%d popups permanently deleted.', 'blablablocks-popup'), popupsToDelete.length)
 		);
-	}, [ addSnackbar ] );
+	}, [addSnackbar]);
 
-	const closeConfirmDialog = useCallback( () => {
-		if ( ! isConfirming ) {
-			setConfirmAction( null );
+	const closeConfirmDialog = useCallback(() => {
+		if (!isConfirming) {
+			setConfirmAction(null);
 		}
-	}, [ isConfirming ] );
+	}, [isConfirming]);
 
-	const confirmPendingAction = useCallback( async () => {
-		if ( ! confirmAction ) {
+	const confirmPendingAction = useCallback(async () => {
+		if (!confirmAction) {
 			return;
 		}
 
-		setIsConfirming( true );
-		setError( '' );
+		setIsConfirming(true);
+		setError('');
 
 		try {
-			if ( confirmAction.type === 'duplicate' ) {
-				await duplicatePopup( confirmAction.items[ 0 ] );
+			if (confirmAction.type === 'duplicate') {
+				await duplicatePopup(confirmAction.items[0]);
 			}
 
-			if ( confirmAction.type === 'trash' ) {
-				await trashPopups( confirmAction.items );
+			if (confirmAction.type === 'trash') {
+				await trashPopups(confirmAction.items);
 			}
 
-			if ( confirmAction.type === 'delete' ) {
-				await permanentlyDeletePopups( confirmAction.items );
+			if (confirmAction.type === 'delete') {
+				await permanentlyDeletePopups(confirmAction.items);
 			}
 
-			setConfirmAction( null );
-		} catch ( apiError ) {
-			setError( apiError?.message || __( 'The action could not be completed.', 'blablablocks-popup' ) );
+			setConfirmAction(null);
+		} catch (apiError) {
+			setError(apiError?.message || __('The action could not be completed.', 'blablablocks-popup'));
 		} finally {
-			setIsConfirming( false );
+			setIsConfirming(false);
 		}
-	}, [ confirmAction, duplicatePopup, permanentlyDeletePopups, trashPopups ] );
+	}, [confirmAction, duplicatePopup, permanentlyDeletePopups, trashPopups]);
 
 	const hasStatusFilter = useMemo(
-		() => view.filters?.some( ( filter ) => filter.field === 'status' ),
-		[ view.filters ]
+		() => view.filters?.some((filter) => filter.field === 'status'),
+		[view.filters]
 	);
 	const visiblePopups = useMemo(
-		() => hasStatusFilter ? popups : popups.filter( ( popup ) => popup.status !== 'trash' ),
-		[ hasStatusFilter, popups ]
+		() => hasStatusFilter ? popups : popups.filter((popup) => popup.status !== 'trash'),
+		[hasStatusFilter, popups]
 	);
 
-	const fields = useMemo( () => {
+	const fields = useMemo(() => {
 		const authors = Array.from(
 			new Map(
 				visiblePopups
-					.filter( ( popup ) => popup.authorName )
-					.map( ( popup ) => [ popup.authorName, { value: popup.authorName, label: popup.authorName } ] )
+					.filter((popup) => popup.authorName)
+					.map((popup) => [popup.authorName, { value: popup.authorName, label: popup.authorName }])
 			).values()
 		);
 
@@ -240,16 +240,16 @@ function App() {
 			{
 				id: 'title',
 				type: 'text',
-				label: __( 'Title', 'blablablocks-popup' ),
+				label: __('Title', 'blablablocks-popup'),
 				enableGlobalSearch: true,
-				render: ( { item } ) => {
-					const title = item.title || __( '(no title)', 'blablablocks-popup' );
+				render: ({ item }) => {
+					const title = item.title || __('(no title)', 'blablablocks-popup');
 
 					return item.status === 'trash' ? (
-						<Text className="blablablocks-popup-title-link" as="span">{ title }</Text>
+						<Text className="blablablocks-popup-title-link" as="span">{title}</Text>
 					) : (
-						<Button className="blablablocks-popup-title-link" variant="link" href={ item.editUrl }>
-							{ title }
+						<Button className="blablablocks-popup-title-link" variant="link" href={item.editUrl}>
+							{title}
 						</Button>
 					);
 				},
@@ -257,221 +257,221 @@ function App() {
 			{
 				id: 'status',
 				type: 'text',
-				label: __( 'Status', 'blablablocks-popup' ),
+				label: __('Status', 'blablablocks-popup'),
 				enableGlobalSearch: true,
-				elements: Object.entries( config.statuses || {} ).map( ( [ value, label ] ) => ( { value, label } ) ),
-				filterBy: { operators: [ 'isAny', 'isNone' ] },
+				elements: Object.entries(config.statuses || {}).map(([value, label]) => ({ value, label })),
+				filterBy: { operators: ['isAny', 'isNone'] },
 				render: StatusBadge,
 			},
-			{ id: 'authorName', type: 'text', label: __( 'Author', 'blablablocks-popup' ), enableGlobalSearch: true, elements: authors, render: AuthorCell },
-			{ id: 'triggersSummary', type: 'text', label: __( 'Triggers', 'blablablocks-popup' ), enableGlobalSearch: true },
-			{ id: 'conditionsSummary', type: 'text', label: __( 'Conditions', 'blablablocks-popup' ), enableGlobalSearch: true },
-			{ id: 'devicesSummary', type: 'text', label: __( 'Devices', 'blablablocks-popup' ), enableGlobalSearch: true },
+			{ id: 'authorName', type: 'text', label: __('Author', 'blablablocks-popup'), enableGlobalSearch: true, elements: authors, render: AuthorCell },
+			{ id: 'triggersSummary', type: 'text', label: __('Triggers', 'blablablocks-popup'), enableGlobalSearch: true },
+			{ id: 'conditionsSummary', type: 'text', label: __('Conditions', 'blablablocks-popup'), enableGlobalSearch: true },
+			{ id: 'devicesSummary', type: 'text', label: __('Devices', 'blablablocks-popup'), enableGlobalSearch: true },
 			{
 				id: 'date',
 				type: 'datetime',
-				label: __( 'Date', 'blablablocks-popup' ),
-				getValue: ( { item } ) => item.status === 'publish' ? item.date : item.modified,
+				label: __('Date', 'blablablocks-popup'),
+				getValue: ({ item }) => item.status === 'publish' ? item.date : item.modified,
 				render: DateCell,
 			},
 		];
-	}, [ visiblePopups ] );
+	}, [visiblePopups]);
 
-	const actions = useMemo( () => [
+	const actions = useMemo(() => [
 		{
 			id: 'edit-content',
-			label: __( 'Edit', 'blablablocks-popup' ),
+			label: __('Edit', 'blablablocks-popup'),
 			isPrimary: true,
 			supportsBulk: false,
-			isEligible: ( item ) => item.status !== 'trash',
-			callback: ( items ) => {
-				const item = Array.isArray( items ) ? items[ 0 ] : items;
-				if ( item?.editUrl ) {
+			isEligible: (item) => item.status !== 'trash',
+			callback: (items) => {
+				const item = Array.isArray(items) ? items[0] : items;
+				if (item?.editUrl) {
 					window.location.href = item.editUrl;
 				}
 			},
 		},
 		{
 			id: 'edit-settings',
-			label: __( 'Settings', 'blablablocks-popup' ),
+			label: __('Settings', 'blablablocks-popup'),
 			supportsBulk: false,
-			isEligible: ( item ) => item.status !== 'trash',
-			callback: ( items ) => {
-				setModalPopup( Array.isArray( items ) ? items[ 0 ] : items );
+			isEligible: (item) => item.status !== 'trash',
+			callback: (items) => {
+				setModalPopup(Array.isArray(items) ? items[0] : items);
 			},
 		},
 		{
 			id: 'duplicate',
-			label: __( 'Duplicate', 'blablablocks-popup' ),
+			label: __('Duplicate', 'blablablocks-popup'),
 			supportsBulk: false,
-			isEligible: ( item ) => item.status !== 'trash',
-			callback: ( items ) => setConfirmAction( {
+			isEligible: (item) => item.status !== 'trash',
+			callback: (items) => setConfirmAction({
 				type: 'duplicate',
-				items: [ Array.isArray( items ) ? items[ 0 ] : items ],
-			} ),
+				items: [Array.isArray(items) ? items[0] : items],
+			}),
 		},
 		{
 			id: 'trash',
-			label: __( 'Trash', 'blablablocks-popup' ),
+			label: __('Trash', 'blablablocks-popup'),
 			supportsBulk: true,
-			isEligible: ( item ) => item.status !== 'trash',
-			callback: ( items ) => setConfirmAction( {
+			isEligible: (item) => item.status !== 'trash',
+			callback: (items) => setConfirmAction({
 				type: 'trash',
-				items: Array.isArray( items ) ? items : [ items ],
-			} ),
+				items: Array.isArray(items) ? items : [items],
+			}),
 		},
 		{
 			id: 'restore',
-			label: __( 'Restore', 'blablablocks-popup' ),
+			label: __('Restore', 'blablablocks-popup'),
 			supportsBulk: true,
-			isEligible: ( item ) => item.status === 'trash',
-			callback: async ( items ) => {
-				setError( '' );
+			isEligible: (item) => item.status === 'trash',
+			callback: async (items) => {
+				setError('');
 				try {
-					await restorePopups( items );
-				} catch ( apiError ) {
-					setError( apiError?.message || __( 'The action could not be completed.', 'blablablocks-popup' ) );
+					await restorePopups(items);
+				} catch (apiError) {
+					setError(apiError?.message || __('The action could not be completed.', 'blablablocks-popup'));
 				}
 			},
 		},
 		{
 			id: 'delete',
-			label: __( 'Permanently delete', 'blablablocks-popup' ),
+			label: __('Permanently delete', 'blablablocks-popup'),
 			supportsBulk: true,
-			isEligible: ( item ) => item.status === 'trash',
-			callback: ( items ) => setConfirmAction( {
+			isEligible: (item) => item.status === 'trash',
+			callback: (items) => setConfirmAction({
 				type: 'delete',
-				items: Array.isArray( items ) ? items : [ items ],
-			} ),
+				items: Array.isArray(items) ? items : [items],
+			}),
 		},
-	], [ restorePopups ] );
+	], [restorePopups]);
 
-	const processedPopups = useMemo( () => filterSortAndPaginate( visiblePopups, view, fields ), [ visiblePopups, view, fields ] );
+	const processedPopups = useMemo(() => filterSortAndPaginate(visiblePopups, view, fields), [visiblePopups, view, fields]);
 	const hasActivePopups = useMemo(
-		() => popups.some( ( popup ) => popup.status !== 'trash' ),
-		[ popups ]
+		() => popups.some((popup) => popup.status !== 'trash'),
+		[popups]
 	);
 	const shouldShowDataViews = hasActivePopups || hasStatusFilter;
 	const confirmButtonText = confirmAction?.type === 'trash' ?
-		__( 'Trash', 'blablablocks-popup' ) :
+		__('Trash', 'blablablocks-popup') :
 		confirmAction?.type === 'delete' ?
-			__( 'Delete permanently', 'blablablocks-popup' ) :
-			__( 'Duplicate', 'blablablocks-popup' );
-	const confirmMessage = useMemo( () => {
-		if ( ! confirmAction ) {
+			__('Delete permanently', 'blablablocks-popup') :
+			__('Duplicate', 'blablablocks-popup');
+	const confirmMessage = useMemo(() => {
+		if (!confirmAction) {
 			return '';
 		}
 
-		if ( confirmAction.type === 'trash' ) {
+		if (confirmAction.type === 'trash') {
 			return confirmAction.items.length === 1 ?
-				sprintf( __( 'Are you sure you want to move "%s" to the trash?', 'blablablocks-popup' ), confirmAction.items[ 0 ]?.title || __( '(no title)', 'blablablocks-popup' ) ) :
-				sprintf( __( 'Are you sure you want to move %d popups to the trash?', 'blablablocks-popup' ), confirmAction.items.length );
+				sprintf(__('Are you sure you want to move "%s" to the trash?', 'blablablocks-popup'), confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')) :
+				sprintf(__('Are you sure you want to move %d popups to the trash?', 'blablablocks-popup'), confirmAction.items.length);
 		}
 
-		if ( confirmAction.type === 'delete' ) {
+		if (confirmAction.type === 'delete') {
 			return confirmAction.items.length === 1 ?
-				sprintf( __( 'Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup' ), confirmAction.items[ 0 ]?.title || __( '(no title)', 'blablablocks-popup' ) ) :
-				sprintf( __( 'Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup' ), confirmAction.items.length );
+				sprintf(__('Are you sure you want to permanently delete "%s"? This cannot be undone.', 'blablablocks-popup'), confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')) :
+				sprintf(__('Are you sure you want to permanently delete %d popups? This cannot be undone.', 'blablablocks-popup'), confirmAction.items.length);
 		}
 
 		return sprintf(
-			__( 'Are you sure you want to duplicate "%s"?', 'blablablocks-popup' ),
-			confirmAction.items[ 0 ]?.title || __( '(no title)', 'blablablocks-popup' )
+			__('Are you sure you want to duplicate "%s"?', 'blablablocks-popup'),
+			confirmAction.items[0]?.title || __('(no title)', 'blablablocks-popup')
 		);
-	}, [ confirmAction ] );
+	}, [confirmAction]);
 
 	return (
 		<View className="blablablocks-popup-admin">
 			<Flex className="blablablocks-popup-admin__header" align="center">
 				<FlexBlock>
-					<Heading level={ 1 }>{ ADMIN_APP_TITLE }</Heading>
+					<Heading level={1}>{ADMIN_APP_TITLE}</Heading>
 				</FlexBlock>
-				{ hasActivePopups && (
+				{hasActivePopups && (
 					<FlexItem>
-						<Button variant="primary" onClick={ () => setIsCreating( true ) }>
-							{ __( 'Add Popup', 'blablablocks-popup' ) }
+						<Button variant="primary" onClick={() => setIsCreating(true)}>
+							{__('Add Popup', 'blablablocks-popup')}
 						</Button>
 					</FlexItem>
-				) }
+				)}
 			</Flex>
 
-			{ error && <Notice status="error" isDismissible={ false }>{ error }</Notice> }
-			{ isLoading && (
+			{error && <Notice status="error" isDismissible={false}>{error}</Notice>}
+			{isLoading && (
 				<View className="blablablocks-popup-admin__loading"><Spinner /></View>
-			) }
-			{ ! isLoading && ! error && ! shouldShowDataViews && (
-				<EmptyPopupsState onCreate={ () => setIsCreating( true ) } />
-			) }
-			{ ! isLoading && ! error && shouldShowDataViews && (
+			)}
+			{!isLoading && !error && !shouldShowDataViews && (
+				<EmptyPopupsState onCreate={() => setIsCreating(true)} />
+			)}
+			{!isLoading && !error && shouldShowDataViews && (
 				<DataViews
-					data={ processedPopups.data }
-					fields={ fields }
-					view={ view }
-					onChangeView={ setView }
-					defaultLayouts={ {
+					data={processedPopups.data}
+					fields={fields}
+					view={view}
+					onChangeView={setView}
+					defaultLayouts={{
 						table: {},
-						grid: { badgeFields: [ 'status', 'devicesSummary' ], density: 'balanced' },
+						grid: { badgeFields: ['status', 'devicesSummary'], density: 'balanced' },
 						list: { density: 'comfortable' },
-					} }
-					actions={ actions }
-					paginationInfo={ processedPopups.paginationInfo }
+					}}
+					actions={actions}
+					paginationInfo={processedPopups.paginationInfo}
 					search
 				/>
-			) }
+			)}
 
-			{ isCreating && (
+			{isCreating && (
 				<CreatePopupModal
-					onClose={ () => setIsCreating( false ) }
-					onSaved={ ( popup ) => {
-						if ( popup?.editUrl ) {
-							rememberVariationPost( popup.id );
-							window.location.href = getVariationEditUrl( popup.editUrl );
+					onClose={() => setIsCreating(false)}
+					onSaved={(popup) => {
+						if (popup?.editUrl) {
+							rememberVariationPost(popup.id);
+							window.location.href = getVariationEditUrl(popup.editUrl);
 							return;
 						}
 
-						setPopups( ( current ) => [ popup, ...current ] );
-						setIsCreating( false );
-						addSnackbar( __( 'Popup created.', 'blablablocks-popup' ) );
-					} }
+						setPopups((current) => [popup, ...current]);
+						setIsCreating(false);
+						addSnackbar(__('Popup created.', 'blablablocks-popup'));
+					}}
 				/>
-			) }
+			)}
 
-			{ modalPopup && (
+			{modalPopup && (
 				<SettingsModal
-					popup={ modalPopup }
-					onClose={ () => setModalPopup( null ) }
-					onSaved={ ( popup ) => {
-						setPopups( ( current ) => current.map( ( item ) => item.id === popup.id ? popup : item ) );
-						setModalPopup( popup );
-						addSnackbar( __( 'Popup settings saved.', 'blablablocks-popup' ) );
-					} }
+					popup={modalPopup}
+					onClose={() => setModalPopup(null)}
+					onSaved={(popup) => {
+						setPopups((current) => current.map((item) => item.id === popup.id ? popup : item));
+						setModalPopup(popup);
+						addSnackbar(__('Popup settings saved.', 'blablablocks-popup'));
+					}}
 				/>
-			) }
+			)}
 
-			{ confirmAction && (
+			{confirmAction && (
 				<ConfirmDialog
 					isOpen
-					onCancel={ closeConfirmDialog }
-					onConfirm={ confirmPendingAction }
-					isBusy={ isConfirming }
-					cancelButtonText={ __( 'Cancel', 'blablablocks-popup' ) }
-					confirmButtonText={ confirmButtonText }
+					onCancel={closeConfirmDialog}
+					onConfirm={confirmPendingAction}
+					isBusy={isConfirming}
+					cancelButtonText={__('Cancel', 'blablablocks-popup')}
+					confirmButtonText={confirmButtonText}
 				>
-					{ confirmMessage }
+					{confirmMessage}
 				</ConfirmDialog>
-			) }
+			)}
 
 			<SnackbarList
 				className="blablablocks-popup-snackbar-list"
-				notices={ snackbars }
-				onRemove={ removeSnackbar }
+				notices={snackbars}
+				onRemove={removeSnackbar}
 			/>
 		</View>
 	);
 }
 
-const root = document.getElementById( ADMIN_ROOT_ID );
+const root = document.getElementById(ADMIN_ROOT_ID);
 
-if ( root ) {
-	createRoot( root ).render( <App /> );
+if (root) {
+	createRoot(root).render(<App />);
 }
