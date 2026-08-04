@@ -10,7 +10,7 @@
 
 ## Overview
 
-**BlaBlaBlocks Popup** is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg). No third-party page builders needed!
+**BlaBlaBlocks Popup** is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg).
 
 ## Features
 

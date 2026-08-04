@@ -1,9 +1,9 @@
 {
 	"name": "blablablocks-popup",
 	"version": "0.1.0",
-	"description": "Block-editor powered popup manager for WordPress.",
+	"description": "BlaBlaBlocks Popup is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg). No third-party page builders needed!",
 	"license": "MIT",
-	"author": "Lubus",
+	"author": "lubus",
 	"authorUri": "https://lubus.in",
 	"engines": {
 		"node": "^20.19.0 || ^22.13.0 || >=24",

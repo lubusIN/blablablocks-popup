@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name: 		BlaBlaBlocks Popup
- * Description: 		Create block-editor powered popups with a modern DataViews admin experience.
+ * Description: 		BlaBlaBlocks Popup is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg).
  * Version: 			0.1.0
  * Requires at least:	6.9
  * Requires PHP: 		7.4
- * Author: 				Lubus
+ * Author: 				lubus
  * Author URI:			https://lubus.in
  * License:				MIT
  * License URI:			https://opensource.org/license/mit
