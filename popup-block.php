@@ -9,7 +9,7 @@
  * Author: 				lubus
  * Author URI:			https://lubus.in
  * License:				MIT
- * License URI:			https://www.gnu.org/licenses/MIT
+ * License URI:			https://opensource.org/license/mit
  * Text Domain: 		blablablocks-popup
  *
  * @package BlaBlaBlocksPopup
