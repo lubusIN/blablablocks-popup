@@ -24,11 +24,13 @@ const getEditorCanvases = ( document ) => {
 		canvases.push( document.body );
 	}
 
-	document.querySelectorAll( '.editor-styles-wrapper' ).forEach( ( element ) => {
-		if ( ! canvases.includes( element ) ) {
-			canvases.push( element );
-		}
-	} );
+	document
+		.querySelectorAll( '.editor-styles-wrapper' )
+		.forEach( ( element ) => {
+			if ( ! canvases.includes( element ) ) {
+				canvases.push( element );
+			}
+		} );
 
 	return canvases;
 };
@@ -48,7 +50,8 @@ const getEditorDocuments = () => {
 
 const applyPreviewVariables = ( canvas, variables, settings ) => {
 	canvas.classList.add( canvasClassName );
-	canvas.dataset.popupEntranceAnimation = settings.layout?.entranceAnimation || 'fade';
+	canvas.dataset.popupEntranceAnimation =
+		settings.layout?.entranceAnimation || 'fade';
 
 	Object.entries( variables ).forEach( ( [ property, value ] ) => {
 		canvas.style.setProperty( property, value );
@@ -72,9 +75,12 @@ const replayPreviewAnimation = ( canvas, settings ) => {
 	void canvas.offsetHeight; // Force a style flush so changing controls can replay the preview.
 	canvas.classList.add( animatingCanvasClassName );
 
-	window.setTimeout( () => {
-		canvas.classList.remove( animatingCanvasClassName );
-	}, Math.max( 120, duration + 100 ) );
+	window.setTimeout(
+		() => {
+			canvas.classList.remove( animatingCanvasClassName );
+		},
+		Math.max( 120, duration + 100 )
+	);
 };
 
 /**
@@ -87,7 +93,8 @@ export function CanvasPreview() {
 		[]
 	);
 	const meta = useSelect(
-		( select ) => select( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {},
+		( select ) =>
+			select( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {},
 		[]
 	);
 
@@ -102,7 +109,8 @@ export function CanvasPreview() {
 			settings.layout?.entranceAnimation || 'fade',
 			settings.layout?.animationDuration || 0.3,
 		].join( ':' );
-		const shouldReplayAnimation = animationSignature !== lastAnimationSignature.current;
+		const shouldReplayAnimation =
+			animationSignature !== lastAnimationSignature.current;
 		let hasReplayedAnimation = false;
 
 		lastAnimationSignature.current = animationSignature;
@@ -121,13 +129,17 @@ export function CanvasPreview() {
 					}
 				} );
 
-			hasReplayedAnimation = hasReplayedAnimation || shouldReplayAnimation;
+			hasReplayedAnimation =
+				hasReplayedAnimation || shouldReplayAnimation;
 		};
 
 		syncPreview();
 
 		const observer = new window.MutationObserver( syncPreview );
-		observer.observe( window.document.body, { childList: true, subtree: true } );
+		observer.observe( window.document.body, {
+			childList: true,
+			subtree: true,
+		} );
 
 		const interval = window.setInterval( syncPreview, 500 );
 

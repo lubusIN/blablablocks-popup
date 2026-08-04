@@ -1,11 +1,18 @@
+/* eslint-disable @wordpress/no-unsafe-wp-apis -- WordPress 6.9 has no stable color-gradient settings hook. */
+
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
-import { Icon, cog as settingsIcon, navigationOverlay as popupIcon, styles as stylesIcon } from '@wordpress/icons';
-import { Tabs } from '../../../node_modules/@wordpress/components/build-module/tabs/index.mjs';
+import {
+	cog as settingsIcon,
+	overlayText as popupIcon,
+	styles as stylesIcon,
+} from '@wordpress/icons';
+import { TabPanel } from '@wordpress/components';
+import { PluginSidebar } from '@wordpress/editor';
+import { __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
@@ -14,76 +21,86 @@ import { AnimationPanel } from './animation-panel';
 import { LayoutPanel } from './layout-panel';
 import { StylePanel } from './style-panel';
 import { SummaryCard } from './summary-card';
-import {
-	PluginSidebar,
-	config,
-	metaKey,
-	useMultipleOriginColorsAndGradients,
-} from '../config/wordpress';
+import { config, metaKey } from '../config/wordpress';
 import { SIDEBAR_NAME, TAB_SETTINGS, TAB_STYLES } from '../config/constants';
 import { borderToLegacyValues } from '../utils/border';
 import { getPositionValue, parsePositionValue } from '../utils/layout';
 import { mergeSettings } from '../utils/settings';
 
+const inspectorTabs = [
+	{
+		name: TAB_SETTINGS,
+		title: __( 'Settings', 'blablablocks-popup' ),
+		icon: settingsIcon,
+		className: 'blablablocks-popup-editor-inspector-tab',
+	},
+	{
+		name: TAB_STYLES,
+		title: __( 'Styles', 'blablablocks-popup' ),
+		icon: stylesIcon,
+		className: 'blablablocks-popup-editor-inspector-tab',
+	},
+];
+
 /**
  * BlaBlaBlocks Popup block editor sidebar.
  */
 export function PopupInspectorPanel() {
-	const [activeTab, setActiveTab] = useState(TAB_SETTINGS);
 	const postType = useSelect(
-		(select) => select('core/editor').getCurrentPostType(),
+		( select ) => select( 'core/editor' ).getCurrentPostType(),
 		[]
 	);
 	const meta = useSelect(
-		(select) => select('core/editor').getEditedPostAttribute('meta') || {},
+		( select ) =>
+			select( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {},
 		[]
 	);
-	const { editPost } = useDispatch('core/editor');
+	const { editPost } = useDispatch( 'core/editor' );
 	const colorGradientSettings = useMultipleOriginColorsAndGradients();
 
-	if (postType !== config.postType || !PluginSidebar) {
+	if ( postType !== config.postType ) {
 		return null;
 	}
 
-	const settings = mergeSettings(meta[metaKey]);
+	const settings = mergeSettings( meta[ metaKey ] );
 	const layout = settings.layout;
 	const style = settings.style;
 
-	const updateGroup = (group, key, value) => {
-		editPost({
+	const updateGroup = ( group, key, value ) => {
+		editPost( {
 			meta: {
 				...meta,
-				[metaKey]: {
+				[ metaKey ]: {
 					...settings,
-					[group]: {
-						...settings[group],
-						[key]: value,
+					[ group ]: {
+						...settings[ group ],
+						[ key ]: value,
 					},
 				},
 			},
-		});
+		} );
 	};
 
-	const updatePosition = (value) => {
-		editPost({
+	const updatePosition = ( value ) => {
+		editPost( {
 			meta: {
 				...meta,
-				[metaKey]: {
+				[ metaKey ]: {
 					...settings,
 					layout: {
 						...layout,
-						...parsePositionValue(value),
+						...parsePositionValue( value ),
 					},
 				},
 			},
-		});
+		} );
 	};
 
-	const updateLayoutValues = (values) => {
-		editPost({
+	const updateLayoutValues = ( values ) => {
+		editPost( {
 			meta: {
 				...meta,
-				[metaKey]: {
+				[ metaKey ]: {
 					...settings,
 					layout: {
 						...layout,
@@ -91,14 +108,14 @@ export function PopupInspectorPanel() {
 					},
 				},
 			},
-		});
+		} );
 	};
 
-	const updateStyleValues = (values) => {
-		editPost({
+	const updateStyleValues = ( values ) => {
+		editPost( {
 			meta: {
 				...meta,
-				[metaKey]: {
+				[ metaKey ]: {
 					...settings,
 					style: {
 						...style,
@@ -106,85 +123,101 @@ export function PopupInspectorPanel() {
 					},
 				},
 			},
-		});
+		} );
 	};
 
-	const updateBorder = (value) => {
-		updateStyleValues({
+	const updateBorder = ( value ) => {
+		updateStyleValues( {
 			border: value || {},
-			...borderToLegacyValues(value, style),
-		});
+			...borderToLegacyValues( value, style ),
+		} );
 	};
 
-	const colorSettings = [
+	const backgroundColorSettings = [
 		{
-			label: __('Popup background', 'blablablocks-popup'),
+			label: __( 'Color', 'blablablocks-popup' ),
 			value: style.popupBackground,
-			onChange: (value) => updateGroup('style', 'popupBackground', value),
+			onChange: ( value ) =>
+				updateGroup( 'style', 'popupBackground', value ),
 		},
 		layout.overlay && {
-			label: __('Overlay background', 'blablablocks-popup'),
+			label: __( 'Overlay', 'blablablocks-popup' ),
 			value: style.overlayBackground,
-			onChange: (value) => updateGroup('style', 'overlayBackground', value),
+			onChange: ( value ) =>
+				updateGroup( 'style', 'overlayBackground', value ),
+		},
+	].filter( Boolean );
+
+	const closeButtonColorSettings = [
+		layout.closeButton && {
+			label: __( 'Color', 'blablablocks-popup' ),
+			colorValue: style.closeColor,
+			onColorChange: ( value ) =>
+				updateGroup( 'style', 'closeColor', value ),
 		},
 		layout.closeButton && {
-			label: __('Close color', 'blablablocks-popup'),
-			value: style.closeColor,
-			onChange: (value) => updateGroup('style', 'closeColor', value),
+			label: __( 'Background', 'blablablocks-popup' ),
+			colorValue: style.closeBackground,
+			onColorChange: ( value ) =>
+				updateGroup( 'style', 'closeBackground', value ),
 		},
-		layout.closeButton && {
-			label: __('Close background', 'blablablocks-popup'),
-			value: style.closeBackground,
-			onChange: (value) => updateGroup('style', 'closeBackground', value),
-		},
-	].filter(Boolean);
+	].filter( Boolean );
 
 	return (
 		<PluginSidebar
-			name={SIDEBAR_NAME}
-			title={__('Popup', 'blablablocks-popup')}
-			icon={popupIcon}
+			name={ SIDEBAR_NAME }
+			title={ __( 'Popup', 'blablablocks-popup' ) }
+			icon={ popupIcon }
 			className="blablablocks-popup-editor-sidebar"
 			isActiveByDefault
 		>
 			<SummaryCard />
-			<Tabs selectedTabId={activeTab} onSelect={setActiveTab}>
-				<Tabs.TabList className="blablablocks-popup-editor-inspector-tabs" aria-label={__('Popup inspector tabs', 'blablablocks-popup')}>
-					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={TAB_SETTINGS} title={__('Settings', 'blablablocks-popup')} aria-label={__('Settings', 'blablablocks-popup')}>
-						<Icon icon={settingsIcon} size={24} />
-					</Tabs.Tab>
-					<Tabs.Tab className="blablablocks-popup-editor-inspector-tab" tabId={TAB_STYLES} title={__('Styles', 'blablablocks-popup')} aria-label={__('Styles', 'blablablocks-popup')}>
-						<Icon icon={stylesIcon} size={24} />
-					</Tabs.Tab>
-				</Tabs.TabList>
-
-				<Tabs.TabPanel tabId={TAB_SETTINGS} focusable={false}>
-					<LayoutPanel
-						layout={layout}
-						position={getPositionValue(layout)}
-						style={style}
-						onChangeLayout={(key, value) => updateGroup('layout', key, value)}
-						onChangePosition={updatePosition}
-						onChangeStyle={(key, value) => updateGroup('style', key, value)}
-					/>
-					<AnimationPanel
-						layout={layout}
-						onChangeLayout={(key, value) => updateGroup('layout', key, value)}
-						onResetLayout={updateLayoutValues}
-					/>
-				</Tabs.TabPanel>
-
-				<Tabs.TabPanel tabId={TAB_STYLES} focusable={false}>
-					<StylePanel
-						colorGradientSettings={colorGradientSettings}
-						colorSettings={colorSettings}
-						style={style}
-						onChangeStyle={(key, value) => updateGroup('style', key, value)}
-						onChangeStyleValues={updateStyleValues}
-						onChangeBorder={updateBorder}
-					/>
-				</Tabs.TabPanel>
-			</Tabs>
+			<TabPanel
+				className="blablablocks-popup-editor-inspector"
+				initialTabName={ TAB_SETTINGS }
+				tabs={ inspectorTabs }
+			>
+				{ ( tab ) => (
+					<>
+						{ TAB_SETTINGS === tab.name && (
+							<>
+								<LayoutPanel
+									layout={ layout }
+									position={ getPositionValue( layout ) }
+									onChangeLayout={ ( key, value ) =>
+										updateGroup( 'layout', key, value )
+									}
+									onChangePosition={ updatePosition }
+								/>
+								<AnimationPanel
+									layout={ layout }
+									onChangeLayout={ ( key, value ) =>
+										updateGroup( 'layout', key, value )
+									}
+									onResetLayout={ updateLayoutValues }
+								/>
+							</>
+						) }
+						{ TAB_STYLES === tab.name && (
+							<StylePanel
+								backgroundColorSettings={
+									backgroundColorSettings
+								}
+								closeButtonColorSettings={
+									closeButtonColorSettings
+								}
+								colorGradientSettings={ colorGradientSettings }
+								style={ style }
+								onChangeStyle={ ( key, value ) =>
+									updateGroup( 'style', key, value )
+								}
+								onChangeStyleValues={ updateStyleValues }
+								onChangeBorder={ updateBorder }
+							/>
+						) }
+					</>
+				) }
+			</TabPanel>
 		</PluginSidebar>
 	);
 }

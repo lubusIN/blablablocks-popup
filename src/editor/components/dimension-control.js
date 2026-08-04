@@ -1,9 +1,12 @@
+/* eslint-disable @wordpress/no-unsafe-wp-apis -- WordPress 6.9 has no stable exports for these editor controls. */
+
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Stack } from '@wordpress/ui';
 import {
+	Flex,
+	__experimentalUnitControl as UnitControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
@@ -11,7 +14,6 @@ import {
 /**
  * Internal dependencies
  */
-import { UnitControl } from '../config/wordpress';
 import {
 	getDimensionMode,
 	getDimensionValue,
@@ -28,49 +30,71 @@ const dimensionUnits = [
 ];
 
 const dimensionHelp = {
-	fit: __('Fit contents.', 'blablablocks-popup'),
-	grow: __('Stretch to fill available space.', 'blablablocks-popup'),
-	fixed: __('Specify a fixed size.', 'blablablocks-popup'),
+	fit: __( 'Fit contents.', 'blablablocks-popup' ),
+	grow: __( 'Stretch to fill available space.', 'blablablocks-popup' ),
+	fixed: __( 'Specify a fixed size.', 'blablablocks-popup' ),
 };
 
 /**
  * Width/height control that matches WordPress layout sizing semantics.
+ *
+ * @param {Object}   props          Component properties.
+ * @param {string}   props.label    Control label.
+ * @param {string}   props.type     Dimension type.
+ * @param {string}   props.value    Current CSS dimension.
+ * @param {Function} props.onChange Dimension change handler.
+ * @return {Element} Dimension control.
  */
-export function PopupDimensionControl({ label, type, value, onChange }) {
-	const mode = getDimensionMode(value, type);
-	const fixedValue = getFixedDimensionValue(value, type);
+export function PopupDimensionControl( props ) {
+	const { label, type, value, onChange } = props;
+	const mode = getDimensionMode( value, type );
+	const fixedValue = getFixedDimensionValue( value, type );
 
-	const updateMode = (nextMode) => {
-		onChange(getDimensionValue(nextMode, fixedValue, type));
+	const updateMode = ( nextMode ) => {
+		onChange( getDimensionValue( nextMode, fixedValue, type ) );
 	};
 
 	return (
-		<Stack className="blablablocks-popup-editor-dimension-control" direction="column" gap="sm">
+		<Flex
+			className="blablablocks-popup-editor-dimension-control"
+			direction="column"
+			gap={ 2 }
+			expanded={ false }
+		>
 			<ToggleGroupControl
 				__next40pxDefaultSize
 				isBlock
-				label={label}
-				help={dimensionHelp[mode]}
-				value={mode}
-				onChange={updateMode}
+				label={ label }
+				help={ dimensionHelp[ mode ] }
+				value={ mode }
+				onChange={ updateMode }
 			>
-				<ToggleGroupControlOption value="fit" label={__('Fit', 'blablablocks-popup')} />
-				<ToggleGroupControlOption value="grow" label={__('Grow', 'blablablocks-popup')} />
-				<ToggleGroupControlOption value="fixed" label={__('Fixed', 'blablablocks-popup')} />
+				<ToggleGroupControlOption
+					value="fit"
+					label={ __( 'Fit', 'blablablocks-popup' ) }
+				/>
+				<ToggleGroupControlOption
+					value="grow"
+					label={ __( 'Grow', 'blablablocks-popup' ) }
+				/>
+				<ToggleGroupControlOption
+					value="fixed"
+					label={ __( 'Fixed', 'blablablocks-popup' ) }
+				/>
 			</ToggleGroupControl>
-			{'fixed' === mode && UnitControl && (
+			{ 'fixed' === mode && (
 				<UnitControl
 					__next40pxDefaultSize
 					hideLabelFromVision
 					className="blablablocks-popup-editor-dimension-control__unit"
-					label={label}
-					min={0}
+					label={ label }
+					min={ 0 }
 					size="__unstable-large"
-					units={dimensionUnits}
-					value={fixedValue}
-					onChange={onChange}
+					units={ dimensionUnits }
+					value={ fixedValue }
+					onChange={ onChange }
 				/>
-			)}
-		</Stack>
+			) }
+		</Flex>
 	);
 }

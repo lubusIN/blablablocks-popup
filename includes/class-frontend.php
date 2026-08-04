@@ -59,12 +59,17 @@ final class Frontend {
 			$classes[] = sanitize_html_class( $settings['style']['customClass'] );
 		}
 
-		$content = apply_filters( 'the_content', $post->post_content );
+		$content      = apply_filters( 'the_content', $post->post_content );
+		$dialog_label = trim( get_the_title( $post ) );
+
+		if ( '' === $dialog_label ) {
+			$dialog_label = __( 'Popup', 'blablablocks-popup' );
+		}
 
 		$html = sprintf(
-			'<div id="blablablocks-popup-%1$d" class="%2$s" data-blablablocks-popup data-popup-id="%1$d" data-settings="%3$s" data-state="hidden" data-wp-interactive="blablablocks/popup" %7$s data-wp-bind--data-state="context.animationState" data-wp-init="callbacks.initPopup" data-wp-on-window--keydown="actions.closeOnEscape" role="dialog" aria-modal="true" aria-hidden="true" aria-label="%4$s">' .
+			'<div id="blablablocks-popup-%1$d" class="%2$s" data-blablablocks-popup data-popup-id="%1$d" data-settings="%3$s" data-state="hidden" data-wp-interactive="blablablocks/popup" %7$s data-wp-bind--data-state="context.animationState" data-wp-init="callbacks.initPopup" data-wp-on-window--keydown="actions.handlePopupKeydown" aria-hidden="true">' .
 				'<div class="blablablocks-popup__overlay" data-popup-close data-wp-on--click="actions.closeCurrentPopup"></div>' .
-				'<div class="blablablocks-popup__dialog">' .
+				'<div class="blablablocks-popup__dialog" role="dialog" aria-modal="true" aria-label="%4$s" tabindex="-1">' .
 					'<button type="button" class="blablablocks-popup__close" data-popup-close data-wp-on--click="actions.closeCurrentPopup" aria-label="%5$s">&times;</button>' .
 					'<div class="blablablocks-popup__content">%6$s</div>' .
 				'</div>' .
@@ -72,7 +77,7 @@ final class Frontend {
 			absint( $post->ID ),
 			esc_attr( implode( ' ', $classes ) ),
 			esc_attr( wp_json_encode( $settings ) ),
-			esc_attr( get_the_title( $post ) ),
+			esc_attr( $dialog_label ),
 			esc_attr__( 'Close popup', 'blablablocks-popup' ),
 			$content, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$context // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -148,10 +153,48 @@ final class Frontend {
 		if ( ! empty( $conditions['includeArchives'] ) && is_archive() ) {
 			$archive_ids = ! empty( $conditions['includeArchiveIds'] ) ? (array) $conditions['includeArchiveIds'] : (array) $conditions['includeIds'];
 
-			return empty( $archive_ids ) || in_array( $current_id, array_map( 'absint', $archive_ids ), true );
+			return self::matches_archive_conditions( $archive_ids, $current_id );
 		}
 
 		return $current_id && in_array( $current_id, array_map( 'absint', (array) $conditions['includeIds'] ), true );
+	}
+
+	/**
+	 * Match taxonomy-qualified archive values while supporting legacy numeric IDs.
+	 *
+	 * @param array $archive_values Saved archive condition values.
+	 * @param int   $current_id     Current queried-object ID.
+	 * @return bool
+	 */
+	private static function matches_archive_conditions( array $archive_values, $current_id ) {
+		if ( empty( $archive_values ) ) {
+			return true;
+		}
+
+		$taxonomy   = is_category() ? 'category' : ( is_tag() ? 'post_tag' : '' );
+		$legacy_ids = array();
+		$typed_ids  = array();
+
+		foreach ( $archive_values as $value ) {
+			if ( is_numeric( $value ) ) {
+				$legacy_ids[] = absint( $value );
+				continue;
+			}
+
+			if ( preg_match( '/^(category|post_tag):(\d+)$/', (string) $value, $matches ) ) {
+				$typed_ids[ $matches[1] ][] = absint( $matches[2] );
+			}
+		}
+
+		if ( in_array( (int) $current_id, $legacy_ids, true ) ) {
+			return true;
+		}
+
+		return $taxonomy && in_array(
+			(int) $current_id,
+			$typed_ids[ $taxonomy ] ?? array(),
+			true
+		);
 	}
 
 	/**

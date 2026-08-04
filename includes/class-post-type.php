@@ -71,8 +71,8 @@ final class Post_Type {
 				'single'            => true,
 				'default'           => Settings::defaults(),
 				'sanitize_callback' => array( Settings::class, 'sanitize' ),
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_posts' );
+				'auth_callback'     => function ( $allowed, $meta_key, $post_id ) {
+					return current_user_can( 'edit_post', (int) $post_id );
 				},
 				'show_in_rest'      => array(
 					'schema' => Settings::schema(),

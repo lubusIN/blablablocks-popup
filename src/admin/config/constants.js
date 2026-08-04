@@ -14,5 +14,12 @@ export const DEFAULT_VIEW = {
 	perPage: 10,
 	search: '',
 	sort: { field: 'date', direction: 'desc' },
-	fields: [ 'title', 'status', 'authorName', 'triggersSummary', 'conditionsSummary', 'date' ],
+	fields: [
+		'title',
+		'status',
+		'authorName',
+		'triggersSummary',
+		'conditionsSummary',
+		'date',
+	],
 };

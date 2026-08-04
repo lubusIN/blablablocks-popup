@@ -270,7 +270,13 @@ final class Settings {
 							return absint( $item );
 						}
 
-						return sanitize_key( (string) $item );
+						$item = sanitize_text_field( (string) $item );
+
+						if ( preg_match( '/^([a-z0-9_-]+):(\d+)$/i', $item, $matches ) ) {
+							return sanitize_key( $matches[1] ) . ':' . absint( $matches[2] );
+						}
+
+						return sanitize_key( $item );
 					},
 					$value
 				),

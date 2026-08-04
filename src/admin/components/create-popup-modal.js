@@ -2,7 +2,13 @@
  * WordPress dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Flex, Modal, Notice, TextControl } from '@wordpress/components';
+import {
+	Button,
+	Flex,
+	Modal,
+	Notice,
+	TextControl,
+} from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -17,6 +23,9 @@ import { defaults, titleField } from '../config/settings';
  *
  * Creation asks only for a title, then redirects the user to the block editor
  * where popup layout and design are configured.
+ * @param {Object}   root0         Component properties.
+ * @param {Function} root0.onClose Close callback.
+ * @param {Function} root0.onSaved Save callback.
  */
 export function CreatePopupModal( { onClose, onSaved } ) {
 	const [ title, setTitle ] = useState( '' );
@@ -38,7 +47,10 @@ export function CreatePopupModal( { onClose, onSaved } ) {
 			} );
 			onSaved( result );
 		} catch ( apiError ) {
-			setError( apiError?.message || __( 'The popup could not be saved.', 'blablablocks-popup' ) );
+			setError(
+				apiError?.message ||
+					__( 'The popup could not be saved.', 'blablablocks-popup' )
+			);
 		} finally {
 			setIsSaving( false );
 		}
@@ -50,7 +62,11 @@ export function CreatePopupModal( { onClose, onSaved } ) {
 			onRequestClose={ onClose }
 			className="blablablocks-popup-create-modal"
 		>
-			{ error && <Notice status="error" isDismissible={ false }>{ error }</Notice> }
+			{ error && (
+				<Notice status="error" isDismissible={ false }>
+					{ error }
+				</Notice>
+			) }
 			<TextControl
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
@@ -58,11 +74,23 @@ export function CreatePopupModal( { onClose, onSaved } ) {
 				value={ title }
 				onChange={ setTitle }
 			/>
-			<Flex className="blablablocks-popup-modal-actions" justify="flex-end">
-				<Button variant="tertiary" onClick={ onClose } disabled={ isSaving }>
+			<Flex
+				className="blablablocks-popup-modal-actions"
+				justify="flex-end"
+			>
+				<Button
+					variant="tertiary"
+					onClick={ onClose }
+					disabled={ isSaving }
+				>
 					{ __( 'Cancel', 'blablablocks-popup' ) }
 				</Button>
-				<Button variant="primary" onClick={ save } isBusy={ isSaving } disabled={ isSaving || ! title.trim() }>
+				<Button
+					variant="primary"
+					onClick={ save }
+					isBusy={ isSaving }
+					disabled={ isSaving || ! title.trim() }
+				>
 					{ __( 'Create Popup', 'blablablocks-popup' ) }
 				</Button>
 			</Flex>

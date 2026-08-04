@@ -1,7 +1,14 @@
 /**
  * WordPress dependencies
  */
-import { drafts, notAllowed, pending, published, scheduled, trash } from '@wordpress/icons';
+import {
+	drafts,
+	notAllowed,
+	pending,
+	published,
+	scheduled,
+	trash,
+} from '@wordpress/icons';
 
 /**
  * WordPress-provided globals for the admin app.

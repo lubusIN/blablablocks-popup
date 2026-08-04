@@ -79,7 +79,6 @@ export const applyInlineStyles = ( popup ) => {
 	const { node, settings } = popup;
 	const layout = settings.layout || {};
 	const style = settings.style || {};
-	const advanced = settings.advanced || {};
 	const dialog = node.querySelector( SELECTOR_DIALOG );
 	const overlay = node.querySelector( SELECTOR_OVERLAY );
 	const close = node.querySelector( SELECTOR_CLOSE_BUTTON );
@@ -117,16 +116,6 @@ export const applyInlineStyles = ( popup ) => {
 		close.style.width = `${ Number( style.closeSize || 28 ) }px`;
 		close.style.height = `${ Number( style.closeSize || 28 ) }px`;
 
-		if ( ! layout.closeButton ) {
-			close.hidden = true;
-		} else if ( Number( advanced.closeDelay || 0 ) > 0 ) {
-			close.hidden = true;
-			window.setTimeout(
-				() => {
-					close.hidden = false;
-				},
-				Number( advanced.closeDelay ) * 1000
-			);
-		}
+		close.hidden = ! layout.closeButton;
 	}
 };

@@ -8,7 +8,8 @@ import { __ } from '@wordpress/i18n';
  */
 import { pluginUrl } from './wordpress';
 
-const variationImage = ( filename ) => `${ pluginUrl }assets/variations/${ filename }`;
+const variationImage = ( filename ) =>
+	`${ pluginUrl }assets/variations/${ filename }`;
 
 const heading = ( content ) => ( {
 	name: 'core/heading',
@@ -49,7 +50,10 @@ export const POPUP_VARIATIONS = [
 	{
 		id: 'modal',
 		label: __( 'Modal Popup', 'blablablocks-popup' ),
-		description: __( 'Centered announcement, offer, or form prompt.', 'blablablocks-popup' ),
+		description: __(
+			'Centered announcement, offer, or form prompt.',
+			'blablablocks-popup'
+		),
 		image: variationImage( 'modal.png' ),
 		settings: {
 			layout: {
@@ -71,7 +75,12 @@ export const POPUP_VARIATIONS = [
 		template: [
 			group( [
 				heading( __( 'Popup headline', 'blablablocks-popup' ) ),
-				paragraph( __( 'Add your popup message, form, offer, or call to action.', 'blablablocks-popup' ) ),
+				paragraph(
+					__(
+						'Add your popup message, form, offer, or call to action.',
+						'blablablocks-popup'
+					)
+				),
 				button( __( 'Get started', 'blablablocks-popup' ) ),
 			] ),
 		],
@@ -79,7 +88,10 @@ export const POPUP_VARIATIONS = [
 	{
 		id: 'slide-in',
 		label: __( 'Slide-in Popup', 'blablablocks-popup' ),
-		description: __( 'A side panel for offers, signups, or contextual prompts.', 'blablablocks-popup' ),
+		description: __(
+			'A side panel for offers, signups, or contextual prompts.',
+			'blablablocks-popup'
+		),
 		image: variationImage( 'slide-in.png' ),
 		settings: {
 			layout: {
@@ -101,7 +113,12 @@ export const POPUP_VARIATIONS = [
 		template: [
 			group( [
 				heading( __( 'Limited-time offer', 'blablablocks-popup' ) ),
-				paragraph( __( 'Use this space for a focused message that slides in without taking over the page.', 'blablablocks-popup' ) ),
+				paragraph(
+					__(
+						'Use this space for a focused message that slides in without taking over the page.',
+						'blablablocks-popup'
+					)
+				),
 				button( __( 'View offer', 'blablablocks-popup' ) ),
 			] ),
 		],
@@ -109,7 +126,10 @@ export const POPUP_VARIATIONS = [
 	{
 		id: 'floating-bar',
 		label: __( 'Floating Bar', 'blablablocks-popup' ),
-		description: __( 'A compact top or bottom bar for site-wide notices.', 'blablablocks-popup' ),
+		description: __(
+			'A compact top or bottom bar for site-wide notices.',
+			'blablablocks-popup'
+		),
 		image: variationImage( 'floating-bar.png' ),
 		settings: {
 			layout: {
@@ -131,7 +151,12 @@ export const POPUP_VARIATIONS = [
 		template: [
 			group(
 				[
-					paragraph( __( 'Announce shipping updates, discounts, or important news in a floating bar.', 'blablablocks-popup' ) ),
+					paragraph(
+						__(
+							'Announce shipping updates, discounts, or important news in a floating bar.',
+							'blablablocks-popup'
+						)
+					),
 				],
 				{ layout: { type: 'flex', justifyContent: 'center' } }
 			),
@@ -140,7 +165,10 @@ export const POPUP_VARIATIONS = [
 	{
 		id: 'fullscreen',
 		label: __( 'Fullscreen Popup', 'blablablocks-popup' ),
-		description: __( 'A full-canvas takeover for launches, gates, or campaigns.', 'blablablocks-popup' ),
+		description: __(
+			'A full-canvas takeover for launches, gates, or campaigns.',
+			'blablablocks-popup'
+		),
 		image: variationImage( 'fullscreen.png' ),
 		settings: {
 			layout: {
@@ -161,8 +189,15 @@ export const POPUP_VARIATIONS = [
 		},
 		template: [
 			group( [
-				heading( __( 'Make a bigger announcement', 'blablablocks-popup' ) ),
-				paragraph( __( 'Use a fullscreen popup for high-priority campaigns, gated content, or product launches.', 'blablablocks-popup' ) ),
+				heading(
+					__( 'Make a bigger announcement', 'blablablocks-popup' )
+				),
+				paragraph(
+					__(
+						'Use a fullscreen popup for high-priority campaigns, gated content, or product launches.',
+						'blablablocks-popup'
+					)
+				),
 				button( __( 'Continue', 'blablablocks-popup' ) ),
 			] ),
 		],
@@ -170,7 +205,10 @@ export const POPUP_VARIATIONS = [
 	{
 		id: 'toast',
 		label: __( 'Toast / Small Notification', 'blablablocks-popup' ),
-		description: __( 'A small notification for short messages and reminders.', 'blablablocks-popup' ),
+		description: __(
+			'A small notification for short messages and reminders.',
+			'blablablocks-popup'
+		),
 		image: variationImage( 'toast.png' ),
 		settings: {
 			layout: {
@@ -192,7 +230,12 @@ export const POPUP_VARIATIONS = [
 		template: [
 			group( [
 				heading( __( 'Quick update', 'blablablocks-popup' ) ),
-				paragraph( __( 'Share a brief notification without interrupting the page.', 'blablablocks-popup' ) ),
+				paragraph(
+					__(
+						'Share a brief notification without interrupting the page.',
+						'blablablocks-popup'
+					)
+				),
 			] ),
 		],
 	},

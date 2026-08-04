@@ -82,7 +82,7 @@ final class Rest_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'restore_popup' ),
-				'permission_callback' => array( __CLASS__, 'can_edit_popup_request' ),
+				'permission_callback' => array( __CLASS__, 'can_delete_popup_request' ),
 			)
 		);
 
@@ -103,7 +103,20 @@ final class Rest_Controller {
 	 * @return bool
 	 */
 	public static function can_edit_popups() {
-		return current_user_can( 'edit_posts' );
+		$post_type = get_post_type_object( Plugin::POST_TYPE );
+
+		return $post_type && current_user_can( $post_type->cap->edit_posts );
+	}
+
+	/**
+	 * Whether the current user can publish popups.
+	 *
+	 * @return bool
+	 */
+	private static function can_publish_popups() {
+		$post_type = get_post_type_object( Plugin::POST_TYPE );
+
+		return $post_type && current_user_can( $post_type->cap->publish_posts );
 	}
 
 	/**
@@ -143,7 +156,16 @@ final class Rest_Controller {
 			)
 		);
 
-		return rest_ensure_response( array_map( array( __CLASS__, 'prepare_item' ), $query->posts ) );
+		$editable_popups = array_filter(
+			$query->posts,
+			function ( $post ) {
+				return current_user_can( 'edit_post', $post->ID );
+			}
+		);
+
+		return rest_ensure_response(
+			array_values( array_map( array( __CLASS__, 'prepare_item' ), $editable_popups ) )
+		);
 	}
 
 	/**
@@ -200,9 +222,29 @@ final class Rest_Controller {
 
 		if ( null !== $request->get_param( 'status' ) ) {
 			$status = sanitize_key( (string) $request->get_param( 'status' ) );
-			if ( in_array( $status, array( 'publish', 'draft', 'pending', 'private', 'future' ), true ) ) {
-				$updates['post_status'] = $status;
+			$allowed_statuses = array( 'publish', 'draft', 'pending', 'private', 'future' );
+
+			if ( ! in_array( $status, $allowed_statuses, true ) ) {
+				return new WP_Error(
+					'popup_block_invalid_status',
+					__( 'The popup status is invalid.', 'blablablocks-popup' ),
+					array( 'status' => 400 )
+				);
 			}
+
+			if (
+				$post->post_status !== $status &&
+				in_array( $status, array( 'publish', 'private', 'future' ), true ) &&
+				! self::can_publish_popups()
+			) {
+				return new WP_Error(
+					'popup_block_cannot_publish',
+					__( 'Sorry, you are not allowed to publish popups.', 'blablablocks-popup' ),
+					array( 'status' => rest_authorization_required_code() )
+				);
+			}
+
+			$updates['post_status'] = $status;
 		}
 
 		if ( null !== $request->get_param( 'slug' ) ) {

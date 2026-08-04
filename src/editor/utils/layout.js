@@ -1,5 +1,6 @@
 /**
  * Convert layout settings into AlignmentMatrixControl's expected value.
+ * @param {Object} layout Layout settings.
  */
 export const getPositionValue = ( layout ) => {
 	const vertical = layout.vertical || 'center';
@@ -10,9 +11,12 @@ export const getPositionValue = ( layout ) => {
 
 /**
  * Convert AlignmentMatrixControl's value back into layout settings.
+ * @param {string} value Alignment matrix value.
  */
 export const parsePositionValue = ( value ) => {
-	const [ vertical = 'center', horizontal = 'center' ] = String( value || 'center center' ).split( ' ' );
+	const [ vertical = 'center', horizontal = 'center' ] = String(
+		value || 'center center'
+	).split( ' ' );
 
 	return { horizontal, vertical };
 };
@@ -22,7 +26,10 @@ export const getDimensionMode = ( value, type ) => {
 		return 'fit';
 	}
 
-	if ( 'width' === type && ( ! value || 'fit-content' === value || 'auto' === value ) ) {
+	if (
+		'width' === type &&
+		( ! value || 'fit-content' === value || 'auto' === value )
+	) {
 		return 'fit';
 	}
 

@@ -1,49 +1,42 @@
+/* eslint-disable @wordpress/no-unsafe-wp-apis -- WordPress 6.9 has no stable Heading or Text exports. */
+
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Icon, navigationOverlay as popupIcon } from '@wordpress/icons';
-import { Stack } from '@wordpress/ui';
+import { overlayText as popupIcon } from '@wordpress/icons';
+import { BlockIcon } from '@wordpress/block-editor';
 import {
+	Flex,
 	__experimentalHeading as Heading,
 	__experimentalText as Text,
-	__experimentalView as View,
 } from '@wordpress/components';
-
-/**
- * Internal dependencies
- */
-import { BlockIcon } from '../config/wordpress';
 
 /**
  * Block-card style summary shown at the top of the popup sidebar.
  */
 export function SummaryCard() {
 	return (
-		<Stack
+		<Flex
 			className="block-editor-block-card blablablocks-popup-editor-summary"
-			direction="row"
-			gap="md"
+			direction="column"
+			gap={ 2 }
 			align="flex-start"
 			justify="flex-start"
+			expanded={ false }
 		>
-			{BlockIcon ? (
-				<BlockIcon icon={popupIcon} showColors />
-			) : (
-				<View as="span" className="block-editor-block-icon">
-					<Icon icon={popupIcon} size={24} />
-				</View>
-			)}
-			<Stack direction="column" gap="xs">
-				<Heading level={2} className="block-editor-block-card__title">
-					<Text as="span" className="block-editor-block-card__name">
-						{__('Popup', 'blablablocks-popup')}
-					</Text>
+			<Flex direction="row" align="center" gap={ 2 } expanded={ false }>
+				<BlockIcon icon={ popupIcon } showColors />
+				<Heading level={ 2 } className="block-editor-block-card__title">
+					{ __( 'Popup', 'blablablocks-popup' ) }
 				</Heading>
-				<Text className="block-editor-block-card__description">
-					{__('Configure how this popup appears, opens, and closes.', 'blablablocks-popup')}
-				</Text>
-			</Stack>
-		</Stack>
+			</Flex>
+			<Text className="block-editor-block-card__description">
+				{ __(
+					'Configure how this popup appears, opens, and closes.',
+					'blablablocks-popup'
+				) }
+			</Text>
+		</Flex>
 	);
 }

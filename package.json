@@ -5,10 +5,25 @@
 	"license": "MIT",
 	"author": "Lubus",
 	"authorUri": "https://lubus.in",
+	"engines": {
+		"node": "^20.19.0 || ^22.13.0 || >=24",
+		"npm": ">=10.2.3"
+	},
 	"scripts": {
-		"build": "wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
-		"start": "wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
-		"serve": "npx @wp-playground/cli@latest start"
+		"build": "cross-env NODE_ENV=production wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
+		"start": "cross-env NODE_ENV=development wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
+		"lint:css": "wp-scripts lint-style 'src/**/*.scss'",
+		"lint:js": "wp-scripts lint-js src playwright.config.js tests/e2e",
+		"test:unit": "wp-scripts test-unit-js",
+		"pretest:e2e": "npm run build",
+		"test:e2e": "playwright test",
+		"pretest:e2e:7.0": "npm run build",
+		"test:e2e:7.0": "cross-env WP_VERSION=7.0 playwright test",
+		"test:e2e:matrix": "npm run test:e2e && cross-env WP_VERSION=7.0 playwright test",
+		"test:e2e:debug": "playwright test --debug",
+		"test:e2e:install": "playwright install chromium",
+		"serve": "wp-playground-cli start",
+		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet"
 	},
 	"files": [
 		"popup-block.php",
@@ -20,13 +35,25 @@
 		"LICENSE"
 	],
 	"dependencies": {
-		"@wordpress/data": "^10.51.0",
-		"@wordpress/dataviews": "^17.1.0",
-		"@wordpress/ui": "^0.17.0",
-		"@wordpress/viewport": "^6.51.0",
+		"@wordpress/api-fetch": "7.33.1",
+		"@wordpress/block-editor": "15.6.9",
+		"@wordpress/blocks": "15.6.3",
+		"@wordpress/components": "30.6.5",
+		"@wordpress/data": "10.33.1",
+		"@wordpress/dataviews": "10.1.7",
+		"@wordpress/editor": "14.33.11",
+		"@wordpress/element": "6.33.1",
+		"@wordpress/i18n": "6.6.1",
+		"@wordpress/icons": "11.0.1",
+		"@wordpress/interactivity": "6.33.3",
+		"@wordpress/plugins": "7.33.5",
+		"@wordpress/viewport": "6.33.1",
 		"ajv": "^8.20.0"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^32.6.0"
+		"@playwright/test": "^1.62.1",
+		"@wordpress/scripts": "30.26.2",
+		"@wp-playground/cli": "^3.1.48",
+		"cross-env": "^10.0.0"
 	}
 }

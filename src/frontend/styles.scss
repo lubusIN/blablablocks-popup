@@ -60,19 +60,19 @@
 }
 
 .blablablocks-popup[data-state="opening"] .blablablocks-popup__overlay {
-	animation: blablablocks-popup-overlay-in var(--blablablocks-popup-duration, .3s) ease both;
+	animation: blablablocks-popup-overlay-in var(--blablablocks-popup-duration, 0.3s) ease both;
 }
 
 .blablablocks-popup[data-state="closing"] .blablablocks-popup__overlay {
-	animation: blablablocks-popup-overlay-out var(--blablablocks-popup-duration, .3s) ease both;
+	animation: blablablocks-popup-overlay-out var(--blablablocks-popup-duration, 0.3s) ease both;
 }
 
 .blablablocks-popup[data-state="opening"] .blablablocks-popup__dialog {
-	animation: blablablocks-popup-fade-in var(--blablablocks-popup-duration, .3s) ease both;
+	animation: blablablocks-popup-fade-in var(--blablablocks-popup-duration, 0.3s) ease both;
 }
 
 .blablablocks-popup[data-state="closing"] .blablablocks-popup__dialog {
-	animation: blablablocks-popup-fade-out var(--blablablocks-popup-duration, .3s) ease both;
+	animation: blablablocks-popup-fade-out var(--blablablocks-popup-duration, 0.3s) ease both;
 }
 
 .blablablocks-popup[data-state="opening"][data-entrance-animation="zoom"] .blablablocks-popup__dialog {
@@ -189,6 +189,7 @@
 }
 
 @keyframes blablablocks-popup-overlay-in {
+
 	from {
 		opacity: 0;
 	}
@@ -199,6 +200,7 @@
 }
 
 @keyframes blablablocks-popup-overlay-out {
+
 	from {
 		opacity: 1;
 	}
@@ -209,6 +211,7 @@
 }
 
 @keyframes blablablocks-popup-fade-in {
+
 	from {
 		opacity: 0;
 	}
@@ -219,6 +222,7 @@
 }
 
 @keyframes blablablocks-popup-fade-out {
+
 	from {
 		opacity: 1;
 	}
@@ -229,6 +233,7 @@
 }
 
 @keyframes blablablocks-popup-zoom-in {
+
 	from {
 		opacity: 0;
 		transform: scale(0.94);
@@ -241,6 +246,7 @@
 }
 
 @keyframes blablablocks-popup-zoom-out {
+
 	from {
 		opacity: 1;
 		transform: scale(1);
@@ -253,6 +259,7 @@
 }
 
 @keyframes blablablocks-popup-zoom-out-in {
+
 	from {
 		opacity: 0;
 		transform: scale(1.06);
@@ -265,6 +272,7 @@
 }
 
 @keyframes blablablocks-popup-zoom-out-out {
+
 	from {
 		opacity: 1;
 		transform: scale(1);
@@ -277,6 +285,7 @@
 }
 
 @keyframes blablablocks-popup-slide-up-in {
+
 	from {
 		opacity: 0;
 		transform: translate3d(0, 32px, 0);
@@ -289,6 +298,7 @@
 }
 
 @keyframes blablablocks-popup-slide-up-out {
+
 	from {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
@@ -301,6 +311,7 @@
 }
 
 @keyframes blablablocks-popup-slide-down-in {
+
 	from {
 		opacity: 0;
 		transform: translate3d(0, -32px, 0);
@@ -313,6 +324,7 @@
 }
 
 @keyframes blablablocks-popup-slide-down-out {
+
 	from {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
@@ -325,6 +337,7 @@
 }
 
 @keyframes blablablocks-popup-slide-left-in {
+
 	from {
 		opacity: 0;
 		transform: translate3d(32px, 0, 0);
@@ -337,6 +350,7 @@
 }
 
 @keyframes blablablocks-popup-slide-left-out {
+
 	from {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
@@ -349,6 +363,7 @@
 }
 
 @keyframes blablablocks-popup-slide-right-in {
+
 	from {
 		opacity: 0;
 		transform: translate3d(-32px, 0, 0);
@@ -361,6 +376,7 @@
 }
 
 @keyframes blablablocks-popup-slide-right-out {
+
 	from {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
@@ -373,6 +389,7 @@
 }
 
 @keyframes blablablocks-popup-flip-up-in {
+
 	from {
 		opacity: 0;
 		transform: perspective(900px) rotateX(-12deg) translate3d(0, 16px, 0);
@@ -385,6 +402,7 @@
 }
 
 @keyframes blablablocks-popup-flip-up-out {
+
 	from {
 		opacity: 1;
 		transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
@@ -397,6 +415,7 @@
 }
 
 @keyframes blablablocks-popup-flip-down-in {
+
 	from {
 		opacity: 0;
 		transform: perspective(900px) rotateX(12deg) translate3d(0, -16px, 0);
@@ -409,6 +428,7 @@
 }
 
 @keyframes blablablocks-popup-flip-down-out {
+
 	from {
 		opacity: 1;
 		transform: perspective(900px) rotateX(0) translate3d(0, 0, 0);
@@ -421,6 +441,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
 	.blablablocks-popup,
 	.blablablocks-popup__overlay,
 	.blablablocks-popup__dialog {

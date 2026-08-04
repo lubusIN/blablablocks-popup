@@ -3,7 +3,7 @@
 	border-left: 0;
 }
 
-.blablablocks-popup-editor-inspector-tabs {
+.blablablocks-popup-editor-inspector > .components-tab-panel__tabs {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	width: 100% !important;
@@ -43,6 +43,10 @@
 	border-left: 0;
 }
 
+.blablablocks-popup-editor-dimension-control .components-base-control {
+	margin-bottom: 0 !important;
+}
+
 .blablablocks-popup-editor-sidebar .components-panel__body .components-base-control,
 .blablablocks-popup-editor-sidebar .components-panel__body .components-toggle-control {
 	margin-bottom: 16px;
@@ -57,10 +61,6 @@
 	margin-bottom: 16px;
 }
 
-.blablablocks-popup-editor-dimension-control .components-base-control {
-	margin-bottom: 0 !important;
-}
-
 .blablablocks-popup-editor-dimension-control .components-toggle-group-control {
 	width: 100%;
 }
@@ -69,17 +69,8 @@
 	margin-top: 0;
 }
 
-.blablablocks-popup-editor-position-control__label {
-	margin-bottom: 8px;
-	font-size: 11px;
-	font-weight: 500;
-	line-height: 1.4;
-	text-transform: uppercase;
-	color: #1e1e1e;
-}
-
-.blablablocks-popup-editor-tools-panel {
-	margin-top: 8px;
+.blablablocks-popup-editor-color-settings-panel .components-tools-panel-header {
+	margin-bottom: 16px;
 }
 
 .blablablocks-popup-editor-settings-button {
@@ -159,6 +150,7 @@
 }
 
 @media (max-width: 782px) {
+
 	.blablablocks-popup-variation-grid {
 		grid-template-columns: 1fr;
 	}

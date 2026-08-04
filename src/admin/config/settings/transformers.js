@@ -141,7 +141,7 @@ export const unflattenSettings = ( data ) => ( {
 		includeSingularType: data.includeSingularType || 'post',
 		includeSingularIds: fromCsv( data.includeSingularIds, true ),
 		includeArchives: !! data.includeArchives,
-		includeArchiveIds: fromCsv( data.includeArchiveIds, true ),
+		includeArchiveIds: fromCsv( data.includeArchiveIds ),
 		includeIds: fromCsv( data.includeIds, true ),
 		excludeFrontPage: false,
 		excludeIds: fromCsv( data.excludeIds, true ),

@@ -1,10 +1,19 @@
 /**
  * Internal dependencies
  */
-import { getStorageNumber, pageKey, popupCountKey, sessionsKey } from '../utils/storage';
+import {
+	getStorageNumber,
+	localStore,
+	pageKey,
+	popupCountKey,
+	sessionsKey,
+} from '../utils/storage';
 import { getDevice, runtime, splitList } from '../utils/browser';
 
-const isSearchReferrer = ( referrer ) => /(^|\.)google\.|(^|\.)bing\.|(^|\.)yahoo\.|duckduckgo\.|ecosia\./i.test( referrer );
+const isSearchReferrer = ( referrer ) =>
+	/(^|\.)google\.|(^|\.)bing\.|(^|\.)yahoo\.|duckduckgo\.|ecosia\./i.test(
+		referrer
+	);
 
 const isInternalReferrer = ( referrer ) => {
 	if ( ! referrer ) {
@@ -12,8 +21,11 @@ const isInternalReferrer = ( referrer ) => {
 	}
 
 	try {
-		return new URL( referrer ).host === new URL( runtime.homeUrl || window.location.origin ).host;
-	} catch ( error ) {
+		return (
+			new URL( referrer ).host ===
+			new URL( runtime.homeUrl || window.location.origin ).host
+		);
+	} catch {
 		return false;
 	}
 };
@@ -26,7 +38,7 @@ const matchesReferrerPattern = ( pattern, referrer, useRegex ) => {
 	if ( useRegex ) {
 		try {
 			return new RegExp( pattern ).test( referrer );
-		} catch ( error ) {
+		} catch {
 			return false;
 		}
 	}
@@ -36,12 +48,10 @@ const matchesReferrerPattern = ( pattern, referrer, useRegex ) => {
 
 /**
  * Evaluate browser-only popup rules before automatic opening.
+ * @param {Object} popup Popup runtime record.
  */
 export const passesRules = ( popup ) => {
-	const { id, settings } = popup;
-	const rules = settings.rules || {};
-	const referrer = document.referrer || '';
-	const arrivingFrom = splitList( rules.arrivingFrom );
+	const rules = popup.settings.rules || {};
 	const device = getDevice();
 	const devices = splitList( rules.devices );
 
@@ -54,27 +64,49 @@ export const passesRules = ( popup ) => {
 	}
 
 	const hideRoles = splitList( rules.hideRoles );
-	if ( hideRoles.length && Array.isArray( runtime.userRoles ) && runtime.userRoles.some( ( role ) => hideRoles.includes( role ) ) ) {
+	if (
+		hideRoles.length &&
+		Array.isArray( runtime.userRoles ) &&
+		runtime.userRoles.some( ( role ) => hideRoles.includes( role ) )
+	) {
 		return false;
 	}
 
-	if ( rules.pageViews && getStorageNumber( localStorage, pageKey ) < Number( rules.pageViewsCount || 0 ) ) {
+	if (
+		rules.pageViews &&
+		getStorageNumber( localStore, pageKey ) <
+			Number( rules.pageViewsCount || 0 )
+	) {
 		return false;
 	}
 
-	if ( rules.sessions && getStorageNumber( localStorage, sessionsKey ) < Number( rules.sessionsCount || 0 ) ) {
+	if (
+		rules.sessions &&
+		getStorageNumber( localStore, sessionsKey ) <
+			Number( rules.sessionsCount || 0 )
+	) {
 		return false;
 	}
 
 	if ( rules.maxDisplays ) {
+		const { id } = popup;
 		const countMode = rules.countMode === 'close' ? 'close' : 'open';
-		if ( getStorageNumber( localStorage, popupCountKey( id, countMode ) ) >= Number( rules.maxDisplaysCount || 0 ) ) {
+		if (
+			getStorageNumber( localStore, popupCountKey( id, countMode ) ) >=
+			Number( rules.maxDisplaysCount || 0 )
+		) {
 			return false;
 		}
 	}
 
+	const referrer = document.referrer || '';
+
 	if ( rules.referrerUrl ) {
-		const matched = matchesReferrerPattern( rules.referrerPattern, referrer, rules.referrerRegex );
+		const matched = matchesReferrerPattern(
+			rules.referrerPattern,
+			referrer,
+			rules.referrerRegex
+		);
 		if ( rules.referrerMode === 'hide' && matched ) {
 			return false;
 		}
@@ -83,12 +115,18 @@ export const passesRules = ( popup ) => {
 		}
 	}
 
+	const arrivingFrom = splitList( rules.arrivingFrom );
+
 	if ( arrivingFrom.length ) {
-		const matchesSource = (
-			( arrivingFrom.includes( 'search' ) && isSearchReferrer( referrer ) ) ||
-			( arrivingFrom.includes( 'internal' ) && isInternalReferrer( referrer ) ) ||
-			( arrivingFrom.includes( 'external' ) && referrer && ! isInternalReferrer( referrer ) && ! isSearchReferrer( referrer ) )
-		);
+		const matchesSource =
+			( arrivingFrom.includes( 'search' ) &&
+				isSearchReferrer( referrer ) ) ||
+			( arrivingFrom.includes( 'internal' ) &&
+				isInternalReferrer( referrer ) ) ||
+			( arrivingFrom.includes( 'external' ) &&
+				referrer &&
+				! isInternalReferrer( referrer ) &&
+				! isSearchReferrer( referrer ) );
 
 		if ( ! matchesSource ) {
 			return false;

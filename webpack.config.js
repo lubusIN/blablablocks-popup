@@ -1,7 +1,9 @@
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const path = require( 'path' );
 
-const scriptConfig = Array.isArray( defaultConfig ) ? defaultConfig[ 0 ] : defaultConfig;
+const scriptConfig = Array.isArray( defaultConfig )
+	? defaultConfig[ 0 ]
+	: defaultConfig;
 
 const customScriptConfig = {
 	...scriptConfig,

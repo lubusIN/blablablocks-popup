@@ -1,9 +1,10 @@
+/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Stack } from '@wordpress/ui';
 import {
+	Flex,
 	__experimentalText as Text,
 	__experimentalView as View,
 } from '@wordpress/components';
@@ -16,64 +17,84 @@ import { config, statusIcons } from '../config/wordpress';
 
 /**
  * Status cell with a WordPress status icon.
+ * @param {Object} root0      Component properties.
+ * @param {Object} root0.item Popup record.
  */
-export function StatusBadge({ item }) {
+export function StatusBadge( { item } ) {
 	const status = item.status || 'draft';
-	const label = config.statuses?.[status] || status;
-	const icon = statusIcons[status] || drafts;
+	const label = config.statuses?.[ status ] || status;
+	const icon = statusIcons[ status ] || drafts;
 
 	return (
-		<Stack
-			className={`blablablocks-popup-status blablablocks-popup-status--${status}`}
+		<Flex
+			className={ `blablablocks-popup-status blablablocks-popup-status--${ status }` }
 			direction="row"
-			gap="xs"
+			gap={ 1 }
 			align="center"
 			justify="flex-start"
 		>
-			<Icon icon={icon} size={24} />
-			<Text as="span">{label}</Text>
-		</Stack>
+			<Icon icon={ icon } size={ 24 } />
+			<Text as="span">{ label }</Text>
+		</Flex>
 	);
 }
 
 /**
  * Author cell that falls back to a WordPress avatar icon.
+ * @param {Object} root0      Component properties.
+ * @param {Object} root0.item Popup record.
  */
-export function AuthorCell({ item }) {
-	const name = item.authorName || __('Unknown', 'blablablocks-popup');
+export function AuthorCell( { item } ) {
+	const name = item.authorName || __( 'Unknown', 'blablablocks-popup' );
 
 	return (
-		<Stack className="blablablocks-popup-author" direction="row" gap="xs" align="center" justify="flex-start">
-			{item.authorAvatarUrl ? (
+		<Flex
+			className="blablablocks-popup-author"
+			direction="row"
+			gap={ 1 }
+			align="center"
+			justify="flex-start"
+		>
+			{ item.authorAvatarUrl ? (
 				<View
 					as="img"
 					className="blablablocks-popup-author__avatar"
-					src={item.authorAvatarUrl}
+					src={ item.authorAvatarUrl }
 					alt=""
 				/>
 			) : (
 				<View as="span" className="blablablocks-popup-author__icon">
-					<Icon icon={commentAuthorAvatar} size={24} />
+					<Icon icon={ commentAuthorAvatar } size={ 24 } />
 				</View>
-			)}
-			<Text as="span">{name}</Text>
-		</Stack>
+			) }
+			<Text as="span">{ name }</Text>
+		</Flex>
 	);
 }
 
 /**
  * Date cell that labels published posts by publish date and other posts by
  * modified date.
+ * @param {Object} root0      Component properties.
+ * @param {Object} root0.item Popup record.
  */
-export function DateCell({ item }) {
+export function DateCell( { item } ) {
 	const isPublished = item.status === 'publish';
-	const label = isPublished ? __('Published:', 'blablablocks-popup') : __('Modified:', 'blablablocks-popup');
+	const label = isPublished
+		? __( 'Published:', 'blablablocks-popup' )
+		: __( 'Modified:', 'blablablocks-popup' );
 	const value = isPublished ? item.dateFormatted : item.modifiedFormatted;
 
 	return (
-		<Stack className="blablablocks-popup-date" direction="row" gap="xs" align="center" justify="flex-start">
-			<Text as="span">{label}</Text>
-			<Text as="span">{value}</Text>
-		</Stack>
+		<Flex
+			className="blablablocks-popup-date"
+			direction="row"
+			gap={ 1 }
+			align="center"
+			justify="flex-start"
+		>
+			<Text as="span">{ label }</Text>
+			<Text as="span">{ value }</Text>
+		</Flex>
 	);
 }

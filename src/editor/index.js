@@ -2,13 +2,13 @@
  * WordPress dependencies
  */
 import { Fragment } from '@wordpress/element';
-import { navigationOverlay as popupIcon } from '@wordpress/icons';
+import { overlayText as popupIcon } from '@wordpress/icons';
+import { registerPlugin } from '@wordpress/plugins';
 
 /**
  * Internal dependencies
  */
 import { SIDEBAR_PLUGIN_NAME } from './config/constants';
-import { registerPlugin } from './config/wordpress';
 import { CanvasPreview } from './components/canvas-preview';
 import { PopupInspectorPanel } from './components/popup-inspector-panel';
 import { PopupSidebarAutoOpen } from './components/popup-sidebar-auto-open';
@@ -30,9 +30,7 @@ function PopupEditorPlugin() {
 /**
  * Register the BlaBlaBlocks Popup editor plugin.
  */
-if ( registerPlugin ) {
-	registerPlugin( SIDEBAR_PLUGIN_NAME, {
-		icon: popupIcon,
-		render: PopupEditorPlugin,
-	} );
-}
+registerPlugin( SIDEBAR_PLUGIN_NAME, {
+	icon: popupIcon,
+	render: PopupEditorPlugin,
+} );

@@ -2,13 +2,12 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Stack } from '@wordpress/ui';
 import {
 	AlignmentMatrixControl,
+	BaseControl,
+	Flex,
 	PanelBody,
 	ToggleControl,
-	__experimentalNumberControl as NumberControl,
-	__experimentalText as Text,
 } from '@wordpress/components';
 
 /**
@@ -17,62 +16,64 @@ import {
 import { PopupDimensionControl } from './dimension-control';
 
 /**
- * Popup placement, sizing, overlay, and close-button controls.
+ * Popup placement, sizing, overlay, and close-button visibility controls.
+ *
+ * @param {Object}   props                  Component properties.
+ * @param {Object}   props.layout           Current popup layout settings.
+ * @param {string}   props.position         Current popup position.
+ * @param {Function} props.onChangeLayout   Layout change handler.
+ * @param {Function} props.onChangePosition Position change handler.
+ * @return {Element} Popup layout controls.
  */
-export function LayoutPanel({
+export function LayoutPanel( {
 	layout,
 	position,
-	style,
 	onChangeLayout,
 	onChangePosition,
-	onChangeStyle,
-}) {
+} ) {
 	return (
-		<PanelBody title={__('Layout', 'blablablocks-popup')} initialOpen>
+		<PanelBody title={ __( 'Layout', 'blablablocks-popup' ) } initialOpen>
 			<PopupDimensionControl
-				label={__('Width', 'blablablocks-popup')}
+				label={ __( 'Width', 'blablablocks-popup' ) }
 				type="width"
-				value={layout.width}
-				onChange={(value) => onChangeLayout('width', value)}
+				value={ layout.width }
+				onChange={ ( value ) => onChangeLayout( 'width', value ) }
 			/>
 			<PopupDimensionControl
-				label={__('Height', 'blablablocks-popup')}
+				label={ __( 'Height', 'blablablocks-popup' ) }
 				type="height"
-				value={layout.height}
-				onChange={(value) => onChangeLayout('height', value)}
+				value={ layout.height }
+				onChange={ ( value ) => onChangeLayout( 'height', value ) }
 			/>
-			<Stack className="blablablocks-popup-editor-position-control" direction="column" gap="sm">
-				<Text className="blablablocks-popup-editor-position-control__label">
-					{__('Position', 'blablablocks-popup')}
-				</Text>
+			<Flex
+				className="blablablocks-popup-editor-position-control"
+				direction="column"
+				gap={ 2 }
+				expanded={ false }
+			>
+				<BaseControl.VisualLabel>
+					{ __( 'Position', 'blablablocks-popup' ) }
+				</BaseControl.VisualLabel>
 				<AlignmentMatrixControl
-					label={__('Popup position', 'blablablocks-popup')}
-					value={position}
-					onChange={onChangePosition}
+					label={ __( 'Popup position', 'blablablocks-popup' ) }
+					value={ position }
+					onChange={ onChangePosition }
 				/>
-			</Stack>
+			</Flex>
 			<ToggleControl
 				__nextHasNoMarginBottom
-				label={__('Show overlay', 'blablablocks-popup')}
-				checked={!!layout.overlay}
-				onChange={(value) => onChangeLayout('overlay', !!value)}
+				label={ __( 'Show overlay', 'blablablocks-popup' ) }
+				checked={ !! layout.overlay }
+				onChange={ ( value ) => onChangeLayout( 'overlay', !! value ) }
 			/>
 			<ToggleControl
 				__nextHasNoMarginBottom
-				label={__('Show close button', 'blablablocks-popup')}
-				checked={!!layout.closeButton}
-				onChange={(value) => onChangeLayout('closeButton', !!value)}
+				label={ __( 'Show close button', 'blablablocks-popup' ) }
+				checked={ !! layout.closeButton }
+				onChange={ ( value ) =>
+					onChangeLayout( 'closeButton', !! value )
+				}
 			/>
-			{layout.closeButton && (
-				<NumberControl
-					__next40pxDefaultSize
-					label={__('Close size', 'blablablocks-popup')}
-					min={12}
-					step={1}
-					value={style.closeSize}
-					onChange={(value) => onChangeStyle('closeSize', Number(value) || 0)}
-				/>
-			)}
 		</PanelBody>
 	);
 }
