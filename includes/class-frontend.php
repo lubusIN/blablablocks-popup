@@ -59,6 +59,7 @@ final class Frontend {
 			$classes[] = sanitize_html_class( $settings['style']['customClass'] );
 		}
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- This intentionally invokes WordPress core's content filter.
 		$content      = apply_filters( 'the_content', $post->post_content );
 		$dialog_label = trim( get_the_title( $post ) );
 

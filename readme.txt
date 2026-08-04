@@ -1,4 +1,4 @@
-=== BlaBlaBlocks Popup - Block Editor Popup Builder ===
+=== BlaBlaBlocks Popup ===
 Contributors:      lubus, punitv342, ajitbohra
 Tags:              popup, modal, block editor, notifications, marketing
 Requires at least: 6.9

@@ -5,6 +5,12 @@ _playground
 node_modules
 package-lock.json
 package.json
+playwright.config.js
+README.md
 src
+tests
+test-results
 webpack.config.js
+build/*.map
+build/**/*.map
 .*
