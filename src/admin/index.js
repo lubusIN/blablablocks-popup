@@ -25,7 +25,7 @@ import {
 	useMemo,
 	useState,
 } from '@wordpress/element';
-import { Icon, overlayText as popupIcon, plus } from '@wordpress/icons';
+import { Icon, plus } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -38,11 +38,13 @@ import {
 	ADMIN_ROOT_ID,
 	DEFAULT_VIEW,
 	REST_POPUPS_PATH,
+	REST_SAMPLE_POPUPS_PATH,
 	SNACKBAR_ID_PREFIX,
 	VARIATION_QUERY_PARAM,
 	VARIATION_SESSION_KEY,
 } from './config/constants';
 import { config } from './config/wordpress';
+import { popupIcon } from '../shared/icons';
 
 apiFetch.use( apiFetch.createNonceMiddleware( config.nonce ) );
 
@@ -99,10 +101,20 @@ const reportBulkFailures = ( failedCount ) => {
 
 /**
  * Empty state displayed when the popup collection is empty.
- * @param {Object}   root0          Component properties.
- * @param {Function} root0.onCreate Create callback.
+ * @param {Object}   root0                   Component properties.
+ * @param {Function} root0.onCreate          Create callback.
+ * @param {Function} root0.onCreateSamples   Sample creation callback.
+ * @param {Function} root0.onViewTrash       Trash view callback.
+ * @param {boolean}  root0.isCreatingSamples Whether samples are being created.
+ * @param {boolean}  root0.hasTrashedPopups  Whether trashed popups exist.
  */
-function EmptyPopupsState( { onCreate } ) {
+function EmptyPopupsState( {
+	onCreate,
+	onCreateSamples,
+	onViewTrash,
+	isCreatingSamples,
+	hasTrashedPopups,
+} ) {
 	return (
 		<View className="blablablocks-popup-empty-state">
 			<View
@@ -123,14 +135,41 @@ function EmptyPopupsState( { onCreate } ) {
 			>
 				{ __( 'Create a popup to get started.', 'blablablocks-popup' ) }
 			</View>
-			<Button
-				className="blablablocks-popup-empty-state__button"
-				variant="primary"
-				icon={ plus }
-				onClick={ onCreate }
+			<Flex
+				className="blablablocks-popup-empty-state__actions"
+				gap={ 2 }
+				justify="center"
+				expanded={ false }
 			>
-				{ __( 'Add Popup', 'blablablocks-popup' ) }
-			</Button>
+				<Button
+					className="blablablocks-popup-empty-state__button"
+					variant="primary"
+					icon={ plus }
+					onClick={ onCreate }
+					disabled={ isCreatingSamples }
+				>
+					{ __( 'Add Popup', 'blablablocks-popup' ) }
+				</Button>
+				<Button
+					className="blablablocks-popup-empty-state__button"
+					variant="secondary"
+					onClick={ onCreateSamples }
+					isBusy={ isCreatingSamples }
+					disabled={ isCreatingSamples }
+				>
+					{ __( 'Add Sample Popups', 'blablablocks-popup' ) }
+				</Button>
+				{ hasTrashedPopups && (
+					<Button
+						className="blablablocks-popup-empty-state__button"
+						variant="tertiary"
+						onClick={ onViewTrash }
+						disabled={ isCreatingSamples }
+					>
+						{ __( 'View Trash', 'blablablocks-popup' ) }
+					</Button>
+				) }
+			</Flex>
 		</View>
 	);
 }
@@ -144,6 +183,7 @@ function App() {
 	const [ error, setError ] = useState( '' );
 	const [ modalPopup, setModalPopup ] = useState( null );
 	const [ isCreating, setIsCreating ] = useState( false );
+	const [ isCreatingSamples, setIsCreatingSamples ] = useState( false );
 	const [ confirmAction, setConfirmAction ] = useState( null );
 	const [ isConfirming, setIsConfirming ] = useState( false );
 	const [ snackbars, setSnackbars ] = useState( [] );
@@ -185,6 +225,37 @@ function App() {
 			current.filter( ( snackbar ) => snackbar.id !== id )
 		);
 	}, [] );
+
+	const createSamplePopups = useCallback( async () => {
+		setIsCreatingSamples( true );
+		setError( '' );
+
+		try {
+			const samplePopups = await apiFetch( {
+				path: REST_SAMPLE_POPUPS_PATH,
+				method: 'POST',
+			} );
+
+			setPopups( ( current ) => [ ...samplePopups, ...current ] );
+			addSnackbar(
+				sprintf(
+					/* translators: %d: Number of sample popups created. */
+					__( '%d sample popups created.', 'blablablocks-popup' ),
+					samplePopups.length
+				)
+			);
+		} catch ( apiError ) {
+			setError(
+				apiError?.message ||
+					__(
+						'The sample popups could not be created.',
+						'blablablocks-popup'
+					)
+			);
+		} finally {
+			setIsCreatingSamples( false );
+		}
+	}, [ addSnackbar ] );
 
 	const duplicatePopup = useCallback(
 		async ( popup ) => {
@@ -555,7 +626,27 @@ function App() {
 		() => popups.some( ( popup ) => popup.status !== 'trash' ),
 		[ popups ]
 	);
-	const shouldShowDataViews = popups.length > 0 || hasStatusFilter;
+	const hasTrashedPopups = useMemo(
+		() => popups.some( ( popup ) => popup.status === 'trash' ),
+		[ popups ]
+	);
+	const showTrash = useCallback( () => {
+		setView( ( current ) => ( {
+			...current,
+			page: 1,
+			filters: [
+				...( current.filters || [] ).filter(
+					( filter ) => filter.field !== 'status'
+				),
+				{
+					field: 'status',
+					operator: 'isAny',
+					value: [ 'trash' ],
+				},
+			],
+		} ) );
+	}, [] );
+	const shouldShowDataViews = hasActivePopups || hasStatusFilter;
 	let confirmButtonText = __( 'Duplicate', 'blablablocks-popup' );
 
 	if ( confirmAction?.type === 'trash' ) {
@@ -650,7 +741,13 @@ function App() {
 				</View>
 			) }
 			{ ! isLoading && ! error && ! shouldShowDataViews && (
-				<EmptyPopupsState onCreate={ () => setIsCreating( true ) } />
+				<EmptyPopupsState
+					onCreate={ () => setIsCreating( true ) }
+					onCreateSamples={ createSamplePopups }
+					onViewTrash={ showTrash }
+					isCreatingSamples={ isCreatingSamples }
+					hasTrashedPopups={ hasTrashedPopups }
+				/>
 			) }
 			{ ! isLoading && ! error && shouldShowDataViews && (
 				<DataViews

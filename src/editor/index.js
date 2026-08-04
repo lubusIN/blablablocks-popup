@@ -2,7 +2,6 @@
  * WordPress dependencies
  */
 import { Fragment } from '@wordpress/element';
-import { overlayText as popupIcon } from '@wordpress/icons';
 import { registerPlugin } from '@wordpress/plugins';
 
 /**
@@ -14,6 +13,7 @@ import { PopupInspectorPanel } from './components/popup-inspector-panel';
 import { PopupSidebarAutoOpen } from './components/popup-sidebar-auto-open';
 import { PopupSettingsStatusAction } from './components/popup-settings-status-action';
 import { VariationChooserModal } from './components/variation-chooser-modal';
+import { popupIcon } from '../shared/icons';
 
 function PopupEditorPlugin() {
 	return (

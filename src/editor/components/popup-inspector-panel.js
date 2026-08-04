@@ -5,11 +5,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
-import {
-	cog as settingsIcon,
-	overlayText as popupIcon,
-	styles as stylesIcon,
-} from '@wordpress/icons';
+import { cog as settingsIcon, styles as stylesIcon } from '@wordpress/icons';
 import { TabPanel } from '@wordpress/components';
 import { PluginSidebar } from '@wordpress/editor';
 import { __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients } from '@wordpress/block-editor';
@@ -26,6 +22,7 @@ import { SIDEBAR_NAME, TAB_SETTINGS, TAB_STYLES } from '../config/constants';
 import { borderToLegacyValues } from '../utils/border';
 import { getPositionValue, parsePositionValue } from '../utils/layout';
 import { mergeSettings } from '../utils/settings';
+import { popupIcon } from '../../shared/icons';
 
 const inspectorTabs = [
 	{

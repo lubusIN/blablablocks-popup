@@ -75,6 +75,63 @@ test.beforeEach( async ( { page } ) => {
 	await clearPopups( page, nonce );
 } );
 
+test( 'creates five sample popups from the empty state', async ( { page } ) => {
+	await page.goto( adminPath );
+	await expect(
+		page.getByRole( 'heading', { name: 'No Popups' } )
+	).toBeVisible();
+	await expect(
+		page.locator( '.blablablocks-popup-empty-state__icon svg' )
+	).toBeVisible();
+
+	await page.getByRole( 'button', { name: 'Add Sample Popups' } ).click();
+
+	for ( const title of [
+		'Welcome Discount',
+		'Newsletter Slide-in',
+		'Free Shipping Bar',
+		'Exit Intent Offer',
+		'Order Update Toast',
+	] ) {
+		const sampleRow = page.getByRole( 'row' ).filter( { hasText: title } );
+		await expect( sampleRow ).toBeVisible();
+		await expect( sampleRow ).toContainText( 'Draft' );
+	}
+
+	await expect(
+		getSnackbar( page, '5 sample popups created.' )
+	).toBeVisible();
+
+	const nonce = await page.evaluate(
+		() => window.BlaBlaBlocksPopupAdmin.nonce
+	);
+	const samplePopups = await restRequest( page, nonce, popupRestPath );
+	const samplesByTitle = Object.fromEntries(
+		samplePopups.map( ( popup ) => [ popup.title, popup ] )
+	);
+
+	expect( samplePopups ).toHaveLength( 5 );
+	expect(
+		samplesByTitle[ 'Newsletter Slide-in' ].settings.triggers.scroll
+	).toBe( true );
+	expect(
+		samplesByTitle[ 'Exit Intent Offer' ].settings.triggers.exitIntent
+	).toBe( true );
+	expect(
+		samplesByTitle[ 'Order Update Toast' ].settings.advanced.autoClose
+	).toBe( 6 );
+
+	const welcomePopup = samplesByTitle[ 'Welcome Discount' ];
+	const welcomePost = await restRequest(
+		page,
+		nonce,
+		`/wp-json/wp/v2/blablablocks-popups/${ welcomePopup.id }?context=edit`
+	);
+	expect( welcomePost.content.raw ).toContain(
+		'Save 20% on your first order'
+	);
+} );
+
 test( 'creates a popup and applies a starter variation', async ( { page } ) => {
 	await page.goto( adminPath );
 	await expect(
@@ -154,9 +211,10 @@ test( 'moves a popup to Trash and restores it', async ( { page } ) => {
 		page.getByRole( 'cell', { name: 'Restore test' } )
 	).toHaveCount( 0 );
 
-	await page.getByRole( 'button', { name: /Add filter/ } ).click();
-	await page.getByRole( 'menuitem', { name: 'Status' } ).click();
-	await page.getByRole( 'option', { name: 'Trash', exact: true } ).click();
+	await expect(
+		page.getByRole( 'heading', { name: 'No Popups' } )
+	).toBeVisible();
+	await page.getByRole( 'button', { name: 'View Trash' } ).click();
 	await openRowAction( page, 'Restore test', 'Restore' );
 	await expect( getSnackbar( page, 'Popup restored.' ) ).toBeVisible();
 } );

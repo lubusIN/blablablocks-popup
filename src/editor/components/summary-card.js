@@ -4,13 +4,17 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { overlayText as popupIcon } from '@wordpress/icons';
 import { BlockIcon } from '@wordpress/block-editor';
 import {
 	Flex,
 	__experimentalHeading as Heading,
 	__experimentalText as Text,
 } from '@wordpress/components';
+
+/**
+ * Internal dependencies
+ */
+import { popupIcon } from '../../shared/icons';
 
 /**
  * Block-card style summary shown at the top of the popup sidebar.

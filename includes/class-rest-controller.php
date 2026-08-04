@@ -78,6 +78,16 @@ final class Rest_Controller {
 
 		register_rest_route(
 			Plugin::REST_NS,
+			'/popups/samples',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'create_sample_popups' ),
+				'permission_callback' => array( __CLASS__, 'can_edit_popups' ),
+			)
+		);
+
+		register_rest_route(
+			Plugin::REST_NS,
 			'/popups/(?P<id>\d+)/restore',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -199,6 +209,23 @@ final class Rest_Controller {
 		update_post_meta( $post_id, Plugin::META_KEY, Settings::sanitize( (array) $request->get_param( 'settings' ) ) );
 
 		return rest_ensure_response( self::prepare_item( get_post( $post_id ) ) );
+	}
+
+	/**
+	 * Create the complete sample popup set.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function create_sample_popups() {
+		$posts = Sample_Popups::create();
+
+		if ( is_wp_error( $posts ) ) {
+			return $posts;
+		}
+
+		return rest_ensure_response(
+			array_map( array( __CLASS__, 'prepare_item' ), $posts )
+		);
 	}
 
 	/**
