@@ -6,7 +6,7 @@ Tested up to:      7.0
 Requires PHP:      7.4
 Stable tag:        0.1.0
 License:           MIT
-License URI:       https://opensource.org/license/mit
+License URI:       https://www.gnu.org/licenses/MIT
 
 Create responsive popups with the native Block Editor, flexible triggers, display conditions, and the WordPress Interactivity API.
 
