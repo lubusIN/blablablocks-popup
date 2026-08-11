@@ -38,7 +38,7 @@ final class Rest_Controller {
 				array(
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => array( __CLASS__, 'create_popup' ),
-					'permission_callback' => array( __CLASS__, 'can_edit_popups' ),
+					'permission_callback' => array( __CLASS__, 'can_create_popups' ),
 					'args'                => array(
 						'title'    => array(
 							'type'     => 'string',
@@ -82,7 +82,7 @@ final class Rest_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'create_sample_popups' ),
-				'permission_callback' => array( __CLASS__, 'can_edit_popups' ),
+				'permission_callback' => array( __CLASS__, 'can_create_popups' ),
 			)
 		);
 
@@ -102,7 +102,7 @@ final class Rest_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'duplicate_popup' ),
-				'permission_callback' => array( __CLASS__, 'can_edit_popup_request' ),
+				'permission_callback' => array( __CLASS__, 'can_duplicate_popup_request' ),
 			)
 		);
 	}
@@ -116,6 +116,17 @@ final class Rest_Controller {
 		$post_type = get_post_type_object( Plugin::POST_TYPE );
 
 		return $post_type && current_user_can( $post_type->cap->edit_posts );
+	}
+
+	/**
+	 * Whether the current user can create popups.
+	 *
+	 * @return bool
+	 */
+	public static function can_create_popups() {
+		$post_type = get_post_type_object( Plugin::POST_TYPE );
+
+		return $post_type && current_user_can( $post_type->cap->create_posts );
 	}
 
 	/**
@@ -137,6 +148,16 @@ final class Rest_Controller {
 	 */
 	public static function can_edit_popup_request( WP_REST_Request $request ) {
 		return current_user_can( 'edit_post', absint( $request['id'] ) );
+	}
+
+	/**
+	 * Whether the current request can duplicate a popup.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return bool
+	 */
+	public static function can_duplicate_popup_request( WP_REST_Request $request ) {
+		return self::can_create_popups() && self::can_edit_popup_request( $request );
 	}
 
 	/**
