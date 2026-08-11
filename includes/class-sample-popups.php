@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sample popup creation.
  *
@@ -9,14 +10,15 @@ namespace BlaBlaBlocks_Popup;
 
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
 	exit;
 }
 
 /**
  * Creates a realistic set of draft popups for evaluation and testing.
  */
-final class Sample_Popups {
+final class Sample_Popups
+{
 	/**
 	 * Create every sample popup as a draft.
 	 *
@@ -25,11 +27,12 @@ final class Sample_Popups {
 	 *
 	 * @return array|WP_Error Created posts, or an insertion error.
 	 */
-	public static function create() {
+	public static function create()
+	{
 		$created_ids = array();
 		$posts       = array();
 
-		foreach ( self::definitions() as $definition ) {
+		foreach (self::definitions() as $definition) {
 			$post_id = wp_insert_post(
 				array(
 					'post_type'    => Plugin::POST_TYPE,
@@ -41,8 +44,8 @@ final class Sample_Popups {
 				true
 			);
 
-			if ( is_wp_error( $post_id ) ) {
-				self::rollback( $created_ids );
+			if (is_wp_error($post_id)) {
+				self::rollback($created_ids);
 				return $post_id;
 			}
 
@@ -50,9 +53,9 @@ final class Sample_Popups {
 			update_post_meta(
 				$post_id,
 				Plugin::META_KEY,
-				Settings::sanitize( $definition['settings'] )
+				Settings::sanitize($definition['settings'])
 			);
-			$posts[] = get_post( $post_id );
+			$posts[] = get_post($post_id);
 		}
 
 		return $posts;
@@ -63,17 +66,18 @@ final class Sample_Popups {
 	 *
 	 * @return array
 	 */
-	private static function definitions() {
+	private static function definitions()
+	{
 		return array(
 			array(
-				'title'    => __( 'Welcome Discount', 'blablablocks-popup' ),
+				'title'    => __('Welcome Discount', 'blablablocks-popup'),
 				'content'  => self::content(
-					__( 'Save 20% on your first order', 'blablablocks-popup' ),
+					__('Save 20% on your first order', 'blablablocks-popup'),
 					__(
 						'Join our list and receive a welcome code for your next purchase.',
 						'blablablocks-popup'
 					),
-					__( 'Get my discount', 'blablablocks-popup' )
+					__('Get my discount', 'blablablocks-popup')
 				),
 				'settings' => array(
 					'layout'  => array(
@@ -97,14 +101,14 @@ final class Sample_Popups {
 				),
 			),
 			array(
-				'title'    => __( 'Newsletter Slide-in', 'blablablocks-popup' ),
+				'title'    => __('Newsletter Slide-in', 'blablablocks-popup'),
 				'content'  => self::content(
-					__( 'Useful ideas, once a week', 'blablablocks-popup' ),
+					__('Useful ideas, once a week', 'blablablocks-popup'),
 					__(
 						'Get practical articles and product updates delivered to your inbox.',
 						'blablablocks-popup'
 					),
-					__( 'Subscribe', 'blablablocks-popup' )
+					__('Subscribe', 'blablablocks-popup')
 				),
 				'settings' => array(
 					'layout'  => array(
@@ -126,15 +130,15 @@ final class Sample_Popups {
 						'scrollAmount'    => 45,
 					),
 					'rules'    => array(
-						'devices' => array( 'desktop', 'tablet' ),
+						'devices' => array('desktop', 'tablet'),
 					),
 				),
 			),
 			array(
-				'title'    => __( 'Free Shipping Bar', 'blablablocks-popup' ),
+				'title'    => __('Free Shipping Bar', 'blablablocks-popup'),
 				'content'  => self::content(
-					__( 'Free shipping this weekend', 'blablablocks-popup' ),
-					__( 'Orders over $50 ship free through Sunday.', 'blablablocks-popup' )
+					__('Free shipping this weekend', 'blablablocks-popup'),
+					__('Orders over $50 ship free through Sunday.', 'blablablocks-popup')
 				),
 				'settings' => array(
 					'layout'     => array(
@@ -161,14 +165,14 @@ final class Sample_Popups {
 				),
 			),
 			array(
-				'title'    => __( 'Exit Intent Offer', 'blablablocks-popup' ),
+				'title'    => __('Exit Intent Offer', 'blablablocks-popup'),
 				'content'  => self::content(
-					__( 'Before you go', 'blablablocks-popup' ),
+					__('Before you go', 'blablablocks-popup'),
 					__(
 						'Take another look and save your favorites for later.',
 						'blablablocks-popup'
 					),
-					__( 'Continue browsing', 'blablablocks-popup' )
+					__('Continue browsing', 'blablablocks-popup')
 				),
 				'settings' => array(
 					'layout'  => array(
@@ -186,14 +190,14 @@ final class Sample_Popups {
 						'exitIntent' => true,
 					),
 					'rules'    => array(
-						'devices' => array( 'desktop' ),
+						'devices' => array('desktop'),
 					),
 				),
 			),
 			array(
-				'title'    => __( 'Order Update Toast', 'blablablocks-popup' ),
+				'title'    => __('Order Update Toast', 'blablablocks-popup'),
 				'content'  => self::content(
-					__( 'Order confirmed', 'blablablocks-popup' ),
+					__('Order confirmed', 'blablablocks-popup'),
 					__(
 						'Your order is being prepared. We will send tracking details soon.',
 						'blablablocks-popup'
@@ -234,13 +238,14 @@ final class Sample_Popups {
 	 * @param string $button  Optional button text.
 	 * @return string
 	 */
-	private static function content( $heading, $body, $button = '' ) {
+	private static function content($heading, $body, $button = '')
+	{
 		$content = '<!-- wp:group {"layout":{"type":"constrained"}} --><div class="wp-block-group">';
-		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html( $heading ) . '</h2><!-- /wp:heading -->';
-		$content .= '<!-- wp:paragraph --><p>' . esc_html( $body ) . '</p><!-- /wp:paragraph -->';
+		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html($heading) . '</h2><!-- /wp:heading -->';
+		$content .= '<!-- wp:paragraph --><p>' . esc_html($body) . '</p><!-- /wp:paragraph -->';
 
-		if ( '' !== $button ) {
-			$content .= '<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button">' . esc_html( $button ) . '</a></div><!-- /wp:button --></div><!-- /wp:buttons -->';
+		if ('' !== $button) {
+			$content .= '<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button">' . esc_html($button) . '</a></div><!-- /wp:button --></div><!-- /wp:buttons -->';
 		}
 
 		return $content . '</div><!-- /wp:group -->';
@@ -251,9 +256,10 @@ final class Sample_Popups {
 	 *
 	 * @param int[] $post_ids Created post IDs.
 	 */
-	private static function rollback( array $post_ids ) {
-		foreach ( $post_ids as $post_id ) {
-			wp_delete_post( $post_id, true );
+	private static function rollback(array $post_ids)
+	{
+		foreach ($post_ids as $post_id) {
+			wp_delete_post($post_id, true);
 		}
 	}
 }
