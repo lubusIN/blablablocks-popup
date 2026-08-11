@@ -26,7 +26,7 @@
 		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet"
 	},
 	"files": [
-		"popup-block.php",
+		"blablablocks-popup.php",
 		"includes",
 		"build",
 		"assets",
