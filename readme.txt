@@ -14,7 +14,7 @@ Create responsive popups with the native Block Editor, flexible triggers, displa
 
 ### Build Popups in the WordPress Block Editor
 
-**BlaBlaBlocks Popup** lets you design popup content with the blocks and editing tools you already use in WordPress. Create focused announcements, offers, forms, banners, and notifications without switching to a separate visual builder.
+**BlaBlaBlocks Popup** is a powerful yet lightweight WordPress plugin that empowers you to create and manage dynamic popups seamlessly using the native Block Editor (Gutenberg).
 
 Choose a starter layout, edit its content in the native Block Editor, and control where, when, and how the popup appears from dedicated settings.
 
@@ -25,7 +25,7 @@ BlaBlaBlocks Popup combines a familiar editing experience with modern WordPress 
 #### Key Highlights
 
 * **Native Block Editing:** Build popup content with core and third-party blocks.
-* **Five Starter Layouts:** Start with a modal, slide-in, floating bar, fullscreen popup, or toast notification.
+* **Starter Layouts:** Start with a modal, slide-in, floating bar, fullscreen popup, or toast notification.
 * **Flexible Display Conditions:** Target the entire site, front page, selected posts or pages, and archives.
 * **Multiple Triggers:** Open popups on page load, scroll, click count, inactivity, exit intent, or a manual selector.
 * **Advanced Display Rules:** Limit popups by page views, sessions, display count, referrer, login state, user role, and device.
@@ -78,7 +78,7 @@ Frontend opening, closing, trigger evaluation, and popup state use the WordPress
 
 #### Step 1: Add a Popup
 
-Open **Popups** in the WordPress admin menu and select **Add Popup**. Enter a title to create a draft.
+Open **Popups** in the WordPress admin menu and click **Add Popup**. Enter a title to create a draft.
 
 #### Step 2: Choose a Popup Type
 
@@ -132,12 +132,16 @@ Confirm that the configured selector matches an element on the page. CSS class s
 
 Theme or block styles can affect popup content. Inspect the conflicting style and adjust the popup controls or theme CSS as needed.
 
-### Open Source and Free
+### Open Source and Contributions
 
-**BlaBlaBlocks Popup** is open source under the **MIT License**.
+**BlaBlaBlocks Popup** is open source under the **MIT License**.  
+You can freely use, modify, and contribute to its development.
 
-* **Source Code:** [https://github.com/lubusIN/blablablocks-popup](https://github.com/lubusIN/blablablocks-popup)
-* **Report Issues:** [https://github.com/lubusIN/blablablocks-popup/issues](https://github.com/lubusIN/blablablocks-popup/issues)
+- **Source Code:**  
+  [https://github.com/lubusIN/blablablocks-popup](https://github.com/lubusIN/blablablocks-popup)
+
+- **Report Issues:**  
+  [https://github.com/lubusIN/blablablocks-popup/issues](https://github.com/lubusIN/blablablocks-popup/issues)
 
 == Frequently Asked Questions ==
 
@@ -176,6 +180,14 @@ Yes. Choose whether a popup can appear on desktop, tablet, and mobile devices.
 = Does the plugin use jQuery? =
 
 No. Frontend popup behavior uses the WordPress Interactivity API.
+
+== Screenshots ==
+
+1. **Management** – Manage popups from the DataViews screen.
+2. **Editor** – Design popup content and adjust its appearance.
+3. **Layouts** – Choose from five starter popup types.
+4. **Settings** – Configure conditions, triggers, and audience rules.
+5. **Preview** – View a published popup on the frontend.
 
 == Installation ==
 

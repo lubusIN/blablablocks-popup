@@ -1,0 +1,26 @@
+# @format
+
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What do you want to run?"
+        required: true
+        default: "assets"
+        type: choice
+        options:
+          - assets
+jobs:
+  deploy:
+    uses: lubusIN/.github/.github/workflows/deploy-wordpress-org.yml@main
+    with:
+      plugin-slug: blablablocks-popup
+      run-deploy: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+      run-assets: ${{ github.event_name == 'workflow_dispatch' && inputs.task == 'assets' }}
+    secrets:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
