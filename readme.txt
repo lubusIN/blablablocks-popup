@@ -2,7 +2,7 @@
 Contributors:      lubus, punitv342, ajitbohra
 Tags:              popup, modal, block editor, notifications, marketing
 Requires at least: 6.9
-Tested up to:      7.0
+Tested up to:      7.1
 Requires PHP:      7.4
 Stable tag:        0.1.0
 License:           MIT
