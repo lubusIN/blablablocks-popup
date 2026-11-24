@@ -1,0 +1,6 @@
+{
+  "apiVersion": 3,
+  "name": "blablablocks/popup-frontend",
+  "title": "BlaBlaBlocks Popup Frontend",
+  "viewScriptModule": "file:./module.js"
+}
