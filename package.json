@@ -35,7 +35,7 @@
 		"test:e2e:matrix": "npm run test:e2e && cross-env WP_VERSION=7.0 playwright test",
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:install": "playwright install chromium",
-		"serve": "wp-playground-cli start",
+		"serve": "wp-playground-cli start --blueprint=_playground/blueprint-local.json",
 		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet",
 		"prepare": "husky"
 	},
