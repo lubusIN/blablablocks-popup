@@ -29,6 +29,10 @@ coverage
 playwright-report/
 test-results/
 
+# PHPUnit cache
+.phpunit.cache
+.phpunit.result.cache
+
 # nyc test coverage
 .nyc_output
 

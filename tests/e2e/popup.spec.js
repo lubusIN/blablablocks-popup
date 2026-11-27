@@ -276,3 +276,53 @@ test( 'opens an accessible frontend dialog and restores focus', async ( {
 		/blablablocks-popup-scroll-locked/
 	);
 } );
+
+test( 'opens automatically on page load and closes when clicking overlay', async ( {
+	page,
+} ) => {
+	const nonce = await getRestNonce( page );
+	const popup = await createPopup( page, nonce, 'Auto page load popup' );
+
+	await restRequest( page, nonce, `${ popupRestPath }/${ popup.id }`, {
+		method: 'PUT',
+		data: {
+			status: 'publish',
+			settings: {
+				advanced: {
+					preventOverlayClose: false,
+					disableScroll: false,
+				},
+				conditions: { includeEntireSite: true },
+				triggers: {
+					pageLoad: true,
+					pageLoadDelay: 0,
+				},
+				style: {
+					customClass: 'auto-load-custom-class',
+				},
+			},
+		},
+	} );
+
+	const testPage = await restRequest( page, nonce, '/wp-json/wp/v2/pages', {
+		method: 'POST',
+		data: {
+			title: 'Auto load test page',
+			content: '<p>Content for auto load test</p>',
+			status: 'publish',
+		},
+	} );
+
+	await page.goto( testPage.link );
+	const dialog = page.getByRole( 'dialog', { name: 'Auto page load popup' } );
+	await expect( dialog ).toBeVisible();
+
+	const popupContainer = page.locator( `#blablablocks-popup-${ popup.id }` );
+	await expect( popupContainer ).toHaveClass( /auto-load-custom-class/ );
+
+	// Clicking overlay closes the popup
+	await popupContainer
+		.locator( '.blablablocks-popup__overlay' )
+		.click( { position: { x: 5, y: 5 } } );
+	await expect( dialog ).toBeHidden();
+} );
