@@ -218,5 +218,4 @@ final class Frontend {
 			'homeUrl'    => home_url(),
 		);
 	}
-
 }

@@ -269,7 +269,7 @@ final class Rest_Controller {
 		}
 
 		if ( null !== $request->get_param( 'status' ) ) {
-			$status = sanitize_key( (string) $request->get_param( 'status' ) );
+			$status           = sanitize_key( (string) $request->get_param( 'status' ) );
 			$allowed_statuses = array( 'publish', 'draft', 'pending', 'private', 'future' );
 
 			if ( ! in_array( $status, $allowed_statuses, true ) ) {

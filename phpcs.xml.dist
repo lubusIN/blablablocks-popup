@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="BlaBlaBlocks Popup Ruleset">
+	<description>PHP_CodeSniffer ruleset for BlaBlaBlocks Popup.</description>
+
+	<!-- Pass flags to PHPCS -->
+	<arg value="ps"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+
+	<!-- Paths to inspect -->
+	<file>blablablocks-popup.php</file>
+	<file>includes</file>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
+	<!-- Ruleset: WordPress Coding Standards -->
+	<rule ref="WordPress-Core"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="WordPress-Extra"/>
+
+	<!-- Set minimum supported WP version -->
+	<config name="minimum_wp_version" value="6.9"/>
+
+	<!-- Set text domain -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="blablablocks-popup"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Check for PHP cross-version compatibility -->
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

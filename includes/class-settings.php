@@ -73,7 +73,7 @@ final class Settings {
 				'padding'           => '32px',
 				'customClass'       => '',
 			),
-			'advanced'  => array(
+			'advanced'   => array(
 				'closeDelay'          => 0,
 				'autoClose'           => 0,
 				'preventOverlayClose' => false,
@@ -83,16 +83,16 @@ final class Settings {
 				'openSelectors'       => '',
 			),
 			'conditions' => array(
-				'includeEntireSite' => true,
-				'includeFrontPage'  => false,
-				'includeSingular'   => false,
+				'includeEntireSite'   => true,
+				'includeFrontPage'    => false,
+				'includeSingular'     => false,
 				'includeSingularType' => 'post',
-				'includeSingularIds' => array(),
-				'includeArchives'   => false,
-				'includeArchiveIds' => array(),
-				'includeIds'        => array(),
-				'excludeFrontPage'  => false,
-				'excludeIds'        => array(),
+				'includeSingularIds'  => array(),
+				'includeArchives'     => false,
+				'includeArchiveIds'   => array(),
+				'includeIds'          => array(),
+				'excludeFrontPage'    => false,
+				'excludeIds'          => array(),
 			),
 			'triggers'   => array(
 				'pageLoad'          => true,
@@ -240,15 +240,15 @@ final class Settings {
 	/**
 	 * Determine if an array is a list.
 	 *
-	 * @param array $array Array.
+	 * @param array $items Array.
 	 * @return bool
 	 */
-	private static function is_list_array( array $array ) {
-		if ( array() === $array ) {
+	private static function is_list_array( array $items ) {
+		if ( array() === $items ) {
 			return true;
 		}
 
-		return array_keys( $array ) === range( 0, count( $array ) - 1 );
+		return array_keys( $items ) === range( 0, count( $items ) - 1 );
 	}
 
 	/**

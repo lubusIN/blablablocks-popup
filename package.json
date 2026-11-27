@@ -12,8 +12,19 @@
 	"scripts": {
 		"build": "cross-env NODE_ENV=production wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
 		"start": "cross-env NODE_ENV=development wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
+		"format": "wp-scripts format",
+		"format:check": "wp-scripts format --check",
+		"format:php": "composer run format:php",
+		"lint": "npm run lint:js && npm run lint:css",
+		"lint:fix": "npm run lint:js:fix && npm run lint:css:fix",
 		"lint:css": "wp-scripts lint-style 'src/**/*.scss'",
+		"lint:css:fix": "wp-scripts lint-style --fix 'src/**/*.scss'",
 		"lint:js": "wp-scripts lint-js src playwright.config.js tests/e2e",
+		"lint:js:fix": "wp-scripts lint-js --fix src playwright.config.js tests/e2e",
+		"lint:php": "composer run lint:php",
+		"analyze": "composer run analyze",
+		"check:php": "composer run check:php",
+		"check:all": "npm run lint && npm run format:check && npm run check:php",
 		"test:unit": "wp-scripts test-unit-js",
 		"pretest:e2e": "npm run build",
 		"test:e2e": "playwright test",
@@ -23,7 +34,26 @@
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:install": "playwright install chromium",
 		"serve": "wp-playground-cli start",
-		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet"
+		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet",
+		"prepare": "husky"
+	},
+	"prettier": "@wordpress/prettier-config",
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"wp-scripts lint-js --fix",
+			"wp-scripts format"
+		],
+		"*.scss": [
+			"wp-scripts lint-style --fix",
+			"wp-scripts format"
+		],
+		"*.{json,yml,yaml,md}": [
+			"wp-scripts format"
+		],
+		"*.php": [
+			"vendor/bin/phpcbf",
+			"vendor/bin/phpcs"
+		]
 	},
 	"files": [
 		"blablablocks-popup.php",
@@ -54,6 +84,8 @@
 		"@playwright/test": "^1.62.1",
 		"@wordpress/scripts": "30.26.2",
 		"@wp-playground/cli": "^3.1.48",
-		"cross-env": "^10.0.0"
+		"cross-env": "^10.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.6.2"
 	}
 }
