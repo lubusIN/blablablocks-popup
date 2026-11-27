@@ -1,21 +1,53 @@
+# Repository and CI/CD
 .git
 .github
 .gitignore
+.gitattributes
+.distignore
+
+# Dotfiles and editor/tooling configurations
+.*
+.husky
+.nvmrc
+.prettierignore
+.editorconfig
+
+# WordPress.org asset directory
+.wordpress-org
+
+# Playground and local dev
 _playground
+
+# Node and build tooling
 node_modules
-package-lock.json
 package.json
-playwright.config.js
+package-lock.json
+webpack.config.js
+
+# Composer and PHP tooling
 vendor
 composer.json
 composer.lock
+phpcs.xml
 phpcs.xml.dist
+phpstan.neon
 phpstan.neon.dist
-README.md
-src
+phpunit.xml
+phpunit.xml.dist
+.phpunit.cache
+.phpunit.result.cache
+
+# Tests and testing artifacts
 tests
 test-results
-webpack.config.js
+playwright-report
+playwright.config.js
+
+# Source files and markdown
+src
+README.md
+
+# Source maps
+*.map
 build/*.map
 build/**/*.map
-.*
