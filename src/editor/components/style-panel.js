@@ -81,10 +81,7 @@ export function StylePanel( props ) {
 						} )
 					}
 				>
-					<div
-						className="close-button-color-wrapper"
-						style={ { gridColumn: '1 / -1' } }
-					>
+					<div className="close-button-color-wrapper">
 						<ColorGradientSettingsDropdown
 							__experimentalIsRenderedInSidebar
 							enableAlpha

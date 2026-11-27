@@ -39,6 +39,7 @@ describe( 'settings transformers', () => {
 			includeSingular: true,
 			includeSingularType: 'post',
 			includeSingularIds: '10, 20',
+			excludeFrontPage: true,
 			scroll: true,
 			scrollAmount: 60,
 			devices: 'desktop, tablet',
@@ -57,6 +58,7 @@ describe( 'settings transformers', () => {
 		expect( unflattened.conditions.includeSingularIds ).toEqual( [
 			10, 20,
 		] );
+		expect( unflattened.conditions.excludeFrontPage ).toBe( true );
 		expect( unflattened.triggers.scroll ).toBe( true );
 		expect( unflattened.triggers.scrollAmount ).toBe( 60 );
 		expect( unflattened.rules.devices ).toEqual( [ 'desktop', 'tablet' ] );

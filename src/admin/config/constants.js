@@ -6,8 +6,10 @@ export const ADMIN_APP_TITLE = 'BlaBlaBlocks Popup';
 export const REST_POPUPS_PATH = '/blablablocks-popup/v1/popups';
 export const REST_SAMPLE_POPUPS_PATH = `${ REST_POPUPS_PATH }/samples`;
 export const SNACKBAR_ID_PREFIX = 'blablablocks-popup-snackbar';
-export const VARIATION_QUERY_PARAM = 'blablablocks_popup_variations';
-export const VARIATION_SESSION_KEY = 'blablablocks-popup-created-post';
+export {
+	VARIATION_QUERY_PARAM,
+	VARIATION_SESSION_KEY,
+} from '../../shared/variation';
 
 export const DEFAULT_VIEW = {
 	type: 'table',

@@ -13,23 +13,7 @@ import {
 	hasFlatBorderValue,
 	hasSplitBorderValue,
 } from '../../shared/border';
-
-/**
- * Convert WordPress preset tokens into CSS custom property references.
- *
- * @param {*} value CSS value.
- * @return {*} Resolved CSS value.
- */
-const resolveCssValue = ( value ) => {
-	if ( typeof value !== 'string' ) {
-		return value;
-	}
-
-	return value.replace(
-		/var:preset\|spacing\|([a-zA-Z0-9_-]+)/g,
-		'var(--wp--preset--spacing--$1)'
-	);
-};
+import { resolveCssValue } from '../../shared/css';
 
 const applyBorderSide = ( dialog, side, border ) => {
 	const property = side.charAt( 0 ).toUpperCase() + side.slice( 1 );

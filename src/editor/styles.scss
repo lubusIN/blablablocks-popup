@@ -47,8 +47,12 @@
 	margin-bottom: 0 !important;
 }
 
-.blablablocks-popup-editor-sidebar .components-panel__body .components-base-control,
-.blablablocks-popup-editor-sidebar .components-panel__body .components-toggle-control {
+.blablablocks-popup-editor-sidebar
+	.components-panel__body
+	.components-base-control,
+.blablablocks-popup-editor-sidebar
+	.components-panel__body
+	.components-toggle-control {
 	margin-bottom: 16px;
 }
 
@@ -71,6 +75,10 @@
 
 .blablablocks-popup-editor-color-settings-panel .components-tools-panel-header {
 	margin-bottom: 16px;
+}
+
+.close-button-color-wrapper {
+	grid-column: 1 / -1;
 }
 
 .blablablocks-popup-editor-settings-button {
@@ -150,7 +158,6 @@
 }
 
 @media (max-width: 782px) {
-
 	.blablablocks-popup-variation-grid {
 		grid-template-columns: 1fr;
 	}

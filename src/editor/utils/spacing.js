@@ -2,6 +2,7 @@
  * Internal dependencies
  */
 import { CSS_BOX_SIDES } from '../../shared/border';
+import { collapseBoxValues, parseBoxShorthand } from '../../shared/css';
 
 export const spacingSides = CSS_BOX_SIDES;
 
@@ -16,16 +17,13 @@ export const cssBoxToSpacingValues = ( value ) => {
 		return value;
 	}
 
-	const parts = String( value || '' )
-		.trim()
-		.split( /\s+/ )
-		.filter( Boolean );
+	const parts = parseBoxShorthand( value );
 
-	if ( ! parts.length ) {
+	if ( ! parts ) {
 		return {};
 	}
 
-	const [ top, right = top, bottom = top, left = right ] = parts;
+	const [ top, right, bottom, left ] = parts;
 
 	return { top, right, bottom, left };
 };
@@ -46,21 +44,5 @@ export const spacingValuesToCssBox = ( values ) => {
 	const bottom = values.bottom || values.vertical || '';
 	const left = values.left || values.horizontal || '';
 
-	if ( ! top && ! right && ! bottom && ! left ) {
-		return '';
-	}
-
-	if ( top === right && top === bottom && top === left ) {
-		return top;
-	}
-
-	if ( top === bottom && right === left ) {
-		return `${ top } ${ right }`;
-	}
-
-	if ( right === left ) {
-		return `${ top } ${ right } ${ bottom }`;
-	}
-
-	return `${ top } ${ right } ${ bottom } ${ left }`;
+	return collapseBoxValues( top, right, bottom, left );
 };

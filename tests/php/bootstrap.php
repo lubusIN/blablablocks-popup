@@ -82,6 +82,15 @@ if ( ! function_exists( 'esc_html' ) ) {
 	}
 }
 
+if ( ! function_exists( 'array_is_list' ) ) {
+	function array_is_list( array $array ) {
+		if ( array() === $array ) {
+			return true;
+		}
+		return array_keys( $array ) === range( 0, count( $array ) - 1 );
+	}
+}
+
 // Load plugin files.
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-settings.php';
 require_once BLABLABLOCKS_POPUP_DIR . 'includes/class-plugin.php';

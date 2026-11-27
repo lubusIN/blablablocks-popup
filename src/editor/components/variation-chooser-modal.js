@@ -18,32 +18,13 @@ import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
  * Internal dependencies
  */
 import { config, metaKey } from '../config/wordpress';
-import {
-	VARIATION_QUERY_PARAM,
-	VARIATION_SESSION_KEY,
-} from '../config/constants';
 import { POPUP_VARIATIONS } from '../config/variations';
 import { mergeSettings } from '../utils/settings';
-
-const removeVariationQueryParam = () => {
-	const url = new URL( window.location.href );
-	url.searchParams.delete( VARIATION_QUERY_PARAM );
-	window.history.replaceState( {}, '', url.toString() );
-};
-
-const getStoredVariationPostId = () => {
-	try {
-		return window.sessionStorage.getItem( VARIATION_SESSION_KEY );
-	} catch {
-		return null;
-	}
-};
-
-const clearStoredVariationPostId = () => {
-	try {
-		window.sessionStorage.removeItem( VARIATION_SESSION_KEY );
-	} catch {}
-};
+import {
+	clearStoredVariationPostId,
+	removeVariationQueryParam,
+	shouldOpenVariationChooser,
+} from '../../shared/variation';
 
 const createBlocksFromTemplate = ( blocks ) =>
 	blocks.map( ( block ) =>
@@ -74,14 +55,7 @@ export function VariationChooserModal() {
 	const { resetBlocks } = useDispatch( 'core/block-editor' );
 
 	useEffect( () => {
-		const params = new URLSearchParams( window.location.search );
-		const storedPostId = getStoredVariationPostId();
-		const currentPostId = String( config.postId || '' );
-
-		if (
-			params.get( VARIATION_QUERY_PARAM ) === '1' ||
-			( currentPostId && storedPostId === currentPostId )
-		) {
+		if ( shouldOpenVariationChooser( config.postId ) ) {
 			setIsOpen( true );
 		}
 	}, [] );

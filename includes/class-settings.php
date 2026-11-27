@@ -203,7 +203,7 @@ final class Settings {
 			$value = $input[ $key ];
 
 			if ( is_array( $default ) ) {
-				$output[ $key ] = self::is_list_array( $default )
+				$output[ $key ] = array_is_list( $default )
 					? self::sanitize_list( $value )
 					: ( is_array( $value ) ? self::sanitize_by_defaults( $value, $default ) : $default );
 			} elseif ( is_bool( $default ) ) {
@@ -235,20 +235,6 @@ final class Settings {
 		}
 
 		return round( $value, 3 );
-	}
-
-	/**
-	 * Determine if an array is a list.
-	 *
-	 * @param array $items Array.
-	 * @return bool
-	 */
-	private static function is_list_array( array $items ) {
-		if ( array() === $items ) {
-			return true;
-		}
-
-		return array_keys( $items ) === range( 0, count( $items ) - 1 );
 	}
 
 	/**
