@@ -1,4 +1,3 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies
  */
@@ -6,16 +5,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { DataForm } from '@wordpress/dataviews';
 import { useState } from '@wordpress/element';
-import {
-	Button,
-	Flex,
-	Modal,
-	Notice,
-	TabPanel,
-	__experimentalHeading as Heading,
-	__experimentalText as Text,
-	__experimentalView as View,
-} from '@wordpress/components';
+import { Button, Flex, Modal, Notice, TabPanel } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -99,28 +89,19 @@ export function SettingsModal( { popup, onClose, onSaved } ) {
 						) || settingsTabs[ 0 ];
 
 					return (
-						<View
-							as="section"
-							className="blablablocks-popup-settings-panel"
-						>
+						<section className="blablablocks-popup-settings-panel">
 							<Flex
 								className="blablablocks-popup-settings-panel__header"
 								direction="column"
 								gap={ 2 }
 								expanded={ false }
 							>
-								<Heading
-									className="blablablocks-popup-settings-panel__title"
-									level={ 2 }
-								>
+								<h2 className="blablablocks-popup-settings-panel__title">
 									{ tab.label }
-								</Heading>
-								<Text
-									as="p"
-									className="blablablocks-popup-settings-panel__description"
-								>
+								</h2>
+								<p className="blablablocks-popup-settings-panel__description">
 									{ tab.description }
-								</Text>
+								</p>
 							</Flex>
 							<DataForm
 								data={ data }
@@ -139,7 +120,7 @@ export function SettingsModal( { popup, onClose, onSaved } ) {
 									} ) )
 								}
 							/>
-						</View>
+						</section>
 					);
 				} }
 			</TabPanel>

@@ -1,18 +1,14 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import {
-	__experimentalConfirmDialog as ConfirmDialog,
-	__experimentalHeading as Heading,
-	__experimentalText as Text,
-	__experimentalView as View,
 	Button,
 	Flex,
 	FlexBlock,
 	FlexItem,
+	Modal,
 	Notice,
 	SnackbarList,
 	Spinner,
@@ -49,6 +45,49 @@ import {
 } from '../shared/variation';
 
 apiFetch.use( apiFetch.createNonceMiddleware( config.nonce ) );
+
+function ConfirmModal( {
+	isOpen,
+	title,
+	onCancel,
+	onConfirm,
+	isBusy,
+	cancelButtonText,
+	confirmButtonText,
+	children,
+} ) {
+	if ( ! isOpen ) {
+		return null;
+	}
+
+	return (
+		<Modal
+			title={ title || confirmButtonText }
+			onRequestClose={ onCancel }
+			size="small"
+			className="blablablocks-popup-confirm-modal"
+		>
+			<div style={ { marginBottom: '1.5rem' } }>{ children }</div>
+			<Flex justify="flex-end" gap={ 2 }>
+				<Button
+					variant="tertiary"
+					onClick={ onCancel }
+					disabled={ isBusy }
+				>
+					{ cancelButtonText }
+				</Button>
+				<Button
+					variant="primary"
+					onClick={ onConfirm }
+					isBusy={ isBusy }
+					disabled={ isBusy }
+				>
+					{ confirmButtonText }
+				</Button>
+			</Flex>
+		</Modal>
+	);
+}
 
 const getPopupTitle = ( popup ) =>
 	popup?.title || __( '(no title)', 'blablablocks-popup' );
@@ -105,25 +144,19 @@ function EmptyPopupsState( {
 	hasTrashedPopups,
 } ) {
 	return (
-		<View className="blablablocks-popup-empty-state">
-			<View
+		<div className="blablablocks-popup-empty-state">
+			<div
 				className="blablablocks-popup-empty-state__icon"
 				aria-hidden="true"
 			>
 				<Icon icon={ popupIcon } size={ 24 } />
-			</View>
-			<Heading
-				className="blablablocks-popup-empty-state__title"
-				level={ 2 }
-			>
+			</div>
+			<h2 className="blablablocks-popup-empty-state__title">
 				{ __( 'No Popups', 'blablablocks-popup' ) }
-			</Heading>
-			<View
-				as="p"
-				className="blablablocks-popup-empty-state__description"
-			>
+			</h2>
+			<p className="blablablocks-popup-empty-state__description">
 				{ __( 'Create a popup to get started.', 'blablablocks-popup' ) }
-			</View>
+			</p>
 			<Flex
 				className="blablablocks-popup-empty-state__actions"
 				gap={ 2 }
@@ -159,7 +192,7 @@ function EmptyPopupsState( {
 					</Button>
 				) }
 			</Flex>
-		</View>
+		</div>
 	);
 }
 
@@ -461,12 +494,9 @@ function App() {
 					const title = getPopupTitle( item );
 
 					return item.status === 'trash' ? (
-						<Text
-							className="blablablocks-popup-title-link"
-							as="span"
-						>
+						<span className="blablablocks-popup-title-link">
 							{ title }
-						</Text>
+						</span>
 					) : (
 						<Button
 							className="blablablocks-popup-title-link"
@@ -701,10 +731,12 @@ function App() {
 	}, [ confirmAction ] );
 
 	return (
-		<View className="blablablocks-popup-admin">
+		<div className="blablablocks-popup-admin">
 			<Flex className="blablablocks-popup-admin__header" align="center">
 				<FlexBlock>
-					<Heading level={ 1 }>{ ADMIN_APP_TITLE }</Heading>
+					<h1 className="blablablocks-popup-admin__title">
+						{ ADMIN_APP_TITLE }
+					</h1>
 				</FlexBlock>
 				{ hasActivePopups && (
 					<FlexItem>
@@ -724,9 +756,9 @@ function App() {
 				</Notice>
 			) }
 			{ isLoading && (
-				<View className="blablablocks-popup-admin__loading">
+				<div className="blablablocks-popup-admin__loading">
 					<Spinner />
-				</View>
+				</div>
 			) }
 			{ ! isLoading && ! error && ! shouldShowDataViews && (
 				<EmptyPopupsState
@@ -797,7 +829,7 @@ function App() {
 			) }
 
 			{ confirmAction && (
-				<ConfirmDialog
+				<ConfirmModal
 					isOpen
 					onCancel={ closeConfirmDialog }
 					onConfirm={ confirmPendingAction }
@@ -806,7 +838,7 @@ function App() {
 					confirmButtonText={ confirmButtonText }
 				>
 					{ confirmMessage }
-				</ConfirmDialog>
+				</ConfirmModal>
 			) }
 
 			<SnackbarList
@@ -814,7 +846,7 @@ function App() {
 				notices={ snackbars }
 				onRemove={ removeSnackbar }
 			/>
-		</View>
+		</div>
 	);
 }
 

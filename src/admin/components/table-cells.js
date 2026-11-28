@@ -1,13 +1,8 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import {
-	Flex,
-	__experimentalText as Text,
-	__experimentalView as View,
-} from '@wordpress/components';
+import { Flex } from '@wordpress/components';
 import { Icon, commentAuthorAvatar, drafts } from '@wordpress/icons';
 
 /**
@@ -34,7 +29,7 @@ export function StatusBadge( { item } ) {
 			justify="flex-start"
 		>
 			<Icon icon={ icon } size={ 24 } />
-			<Text as="span">{ label }</Text>
+			<span>{ label }</span>
 		</Flex>
 	);
 }
@@ -56,18 +51,17 @@ export function AuthorCell( { item } ) {
 			justify="flex-start"
 		>
 			{ item.authorAvatarUrl ? (
-				<View
-					as="img"
+				<img
 					className="blablablocks-popup-author__avatar"
 					src={ item.authorAvatarUrl }
 					alt=""
 				/>
 			) : (
-				<View as="span" className="blablablocks-popup-author__icon">
+				<span className="blablablocks-popup-author__icon">
 					<Icon icon={ commentAuthorAvatar } size={ 24 } />
-				</View>
+				</span>
 			) }
-			<Text as="span">{ name }</Text>
+			<span>{ name }</span>
 		</Flex>
 	);
 }
@@ -93,8 +87,8 @@ export function DateCell( { item } ) {
 			align="center"
 			justify="flex-start"
 		>
-			<Text as="span">{ label }</Text>
-			<Text as="span">{ value }</Text>
+			<span>{ label }</span>
+			<span>{ value }</span>
 		</Flex>
 	);
 }

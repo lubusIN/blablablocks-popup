@@ -2,17 +2,31 @@ const { test, expect } = require( '@playwright/test' );
 
 const adminPath = '/wp-admin/admin.php?page=blablablocks-popup';
 const popupRestPath = '/wp-json/blablablocks-popup/v1/popups';
-const expectedWordPressVersion = process.env.WP_VERSION || '6.9';
 
 async function getRestNonce( page ) {
+	await page.goto( '/wp-login.php?redirect_to=%2Fwp-admin%2F' );
+	if (
+		page.url().includes( 'wp-login.php' ) ||
+		( await page
+			.locator( '#user_login' )
+			.isVisible()
+			.catch( () => false ) )
+	) {
+		await page.locator( '#user_login' ).fill( 'admin' );
+		await page.locator( '#user_pass' ).fill( 'password' );
+		await Promise.all( [
+			page.waitForURL(
+				( url ) => ! url.pathname.includes( 'wp-login.php' )
+			),
+			page.locator( '#wp-submit' ).click(),
+		] );
+	}
 	await page.goto( adminPath );
 	await expect(
 		page.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
 	).toBeVisible();
 	await expect(
-		page
-			.locator( `script[src*="ver=${ expectedWordPressVersion }"]` )
-			.first()
+		page.locator( 'script[src*="ver="]' ).first()
 	).toBeAttached();
 
 	return page.evaluate( () => window.BlaBlaBlocksPopupAdmin.nonce );

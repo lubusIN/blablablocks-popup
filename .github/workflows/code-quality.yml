@@ -78,8 +78,16 @@ jobs:
         run: composer run test:php
 
   e2e:
-    name: End-to-End Tests (Playwright)
+    name: End-to-End Tests (${{ matrix.target }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: 'wp-default'
+            command: 'npm run test:e2e'
+          - target: 'gutenberg'
+            command: 'npm run test:e2e:gutenberg'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -97,13 +105,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: ${{ matrix.command }}
 
       - name: Upload Playwright artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.target }}
           path: |
             playwright-report/
             test-results/

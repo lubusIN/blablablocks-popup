@@ -29,6 +29,16 @@
 			"options": {
 				"activate": true
 			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "gutenberg"
+			},
+			"options": {
+				"activate": true
+			}
 		}
 	]
 }
