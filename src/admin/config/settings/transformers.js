@@ -143,7 +143,7 @@ export const unflattenSettings = ( data ) => ( {
 		includeArchives: !! data.includeArchives,
 		includeArchiveIds: fromCsv( data.includeArchiveIds ),
 		includeIds: fromCsv( data.includeIds, true ),
-		excludeFrontPage: false,
+		excludeFrontPage: !! data.excludeFrontPage,
 		excludeIds: fromCsv( data.excludeIds, true ),
 	},
 	triggers: {

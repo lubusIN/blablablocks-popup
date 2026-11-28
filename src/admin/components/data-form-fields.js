@@ -10,10 +10,9 @@ import {
 	Flex,
 	FormTokenField,
 	SelectControl,
+	TextControl,
 	ToggleControl,
 	__experimentalNumberControl as NumberControl,
-	__experimentalText as Text,
-	__experimentalView as View,
 } from '@wordpress/components';
 
 /**
@@ -154,9 +153,9 @@ function TokenField( { data, field, onChange } ) {
 				}
 			/>
 			{ field.description && (
-				<Text as="p" className="blablablocks-popup-token-field__help">
+				<p className="blablablocks-popup-token-field__help">
 					{ field.description }
-				</Text>
+				</p>
 			) }
 		</Flex>
 	);
@@ -231,10 +230,10 @@ function SingularValuesField( { data, field, onChange } ) {
 			align="flex-start"
 			expanded={ false }
 		>
-			<View className="blablablocks-popup-condition-singular-row__type">
+			<div className="blablablocks-popup-condition-singular-row__type">
 				<SingularTypeSelect data={ data } onChange={ onChange } />
-			</View>
-			<View className="blablablocks-popup-condition-singular-row__values">
+			</div>
+			<div className="blablablocks-popup-condition-singular-row__values">
 				<FormTokenField
 					__next40pxDefaultSize
 					label={ field.label }
@@ -254,7 +253,7 @@ function SingularValuesField( { data, field, onChange } ) {
 						setTokenFieldValue( data, field, value, onChange )
 					}
 				/>
-			</View>
+			</div>
 		</Flex>
 	);
 }
@@ -344,6 +343,112 @@ function ArchiveValuesField( { data, field, onChange } ) {
 }
 
 /**
+ * Number/Integer renderer for DataForm fields.
+ * @param {Object}   root0          Component properties.
+ * @param {Object}   root0.data     DataForm record.
+ * @param {Object}   root0.field    DataForm field.
+ * @param {Function} root0.onChange Change callback.
+ */
+function IntegerField( { data, field, onChange } ) {
+	const rawValue = field.getValue( { item: data } );
+	const value =
+		rawValue !== undefined && rawValue !== null && rawValue !== ''
+			? Number( rawValue )
+			: undefined;
+
+	return (
+		<NumberControl
+			__next40pxDefaultSize
+			label={ field.label }
+			help={ field.description }
+			min={ typeof field.min === 'number' ? field.min : undefined }
+			max={ typeof field.max === 'number' ? field.max : undefined }
+			step={ typeof field.step === 'number' ? field.step : 1 }
+			value={ value }
+			disabled={ isFieldDisabled( field, data ) }
+			onChange={ ( nextValue ) => {
+				const numeric =
+					nextValue === '' || nextValue === undefined
+						? undefined
+						: Number( nextValue );
+				onChange(
+					field.setValue( {
+						item: data,
+						value: Number.isNaN( numeric ) ? undefined : numeric,
+					} )
+				);
+			} }
+		/>
+	);
+}
+
+/**
+ * Select renderer for DataForm fields with elements.
+ * @param {Object}   root0          Component properties.
+ * @param {Object}   root0.data     DataForm record.
+ * @param {Object}   root0.field    DataForm field.
+ * @param {Function} root0.onChange Change callback.
+ */
+function SelectField( { data, field, onChange } ) {
+	const value = field.getValue( { item: data } ) ?? '';
+	const options = ( field.elements || [] ).map( ( opt ) => ( {
+		value: opt.value,
+		label: opt.label,
+	} ) );
+
+	return (
+		<SelectControl
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
+			label={ field.label }
+			help={ field.description }
+			options={ options }
+			value={ value }
+			disabled={ isFieldDisabled( field, data ) }
+			onChange={ ( nextValue ) =>
+				onChange(
+					field.setValue( {
+						item: data,
+						value: nextValue,
+					} )
+				)
+			}
+		/>
+	);
+}
+
+/**
+ * Text renderer for DataForm fields.
+ * @param {Object}   root0          Component properties.
+ * @param {Object}   root0.data     DataForm record.
+ * @param {Object}   root0.field    DataForm field.
+ * @param {Function} root0.onChange Change callback.
+ */
+function TextField( { data, field, onChange } ) {
+	const value = field.getValue( { item: data } ) ?? '';
+
+	return (
+		<TextControl
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
+			label={ field.label }
+			help={ field.description }
+			placeholder={ field.placeholder }
+			value={ value }
+			disabled={ isFieldDisabled( field, data ) }
+			onChange={ ( nextValue ) =>
+				onChange(
+					field.setValue( {
+						item: data,
+						value: nextValue,
+					} )
+				)
+			}
+		/>
+	);
+}
+
+/**
  * Decimal seconds renderer for animation duration.
  * @param {Object}   root0          Component properties.
  * @param {Object}   root0.data     DataForm record.
@@ -400,6 +505,18 @@ export const popupSettingsFields = settingsFields
 
 		if ( field.id === 'animationDuration' ) {
 			return { ...field, Edit: AnimationDurationField };
+		}
+
+		if ( field.type === 'integer' || field.type === 'number' ) {
+			return { ...field, Edit: IntegerField };
+		}
+
+		if ( field.elements && ! field.Edit ) {
+			return { ...field, Edit: SelectField };
+		}
+
+		if ( field.type === 'text' && ! field.Edit ) {
+			return { ...field, Edit: TextField };
 		}
 
 		return field;

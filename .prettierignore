@@ -1,0 +1,11 @@
+build/
+vendor/
+node_modules/
+package-lock.json
+composer.lock
+_playground/
+.wordpress-org/
+.github/
+*.min.js
+*.min.css
+

@@ -1,18 +1,14 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
 /**
  * WordPress dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import {
-	__experimentalConfirmDialog as ConfirmDialog,
-	__experimentalHeading as Heading,
-	__experimentalText as Text,
-	__experimentalView as View,
 	Button,
 	Flex,
 	FlexBlock,
 	FlexItem,
+	Modal,
 	Notice,
 	SnackbarList,
 	Spinner,
@@ -40,29 +36,61 @@ import {
 	REST_POPUPS_PATH,
 	REST_SAMPLE_POPUPS_PATH,
 	SNACKBAR_ID_PREFIX,
-	VARIATION_QUERY_PARAM,
-	VARIATION_SESSION_KEY,
 } from './config/constants';
 import { config } from './config/wordpress';
 import { popupIcon } from '../shared/icons';
+import {
+	getVariationEditUrl,
+	rememberVariationPost,
+} from '../shared/variation';
 
 apiFetch.use( apiFetch.createNonceMiddleware( config.nonce ) );
 
-const getVariationEditUrl = ( editUrl ) => {
-	const url = new URL( editUrl, window.location.href );
-	url.searchParams.set( VARIATION_QUERY_PARAM, '1' );
+function ConfirmModal( {
+	isOpen,
+	title,
+	onCancel,
+	onConfirm,
+	isBusy,
+	cancelButtonText,
+	confirmButtonText,
+	children,
+} ) {
+	if ( ! isOpen ) {
+		return null;
+	}
 
-	return url.toString();
-};
+	return (
+		<Modal
+			title={ title || confirmButtonText }
+			onRequestClose={ onCancel }
+			size="small"
+			className="blablablocks-popup-confirm-modal"
+		>
+			<div style={ { marginBottom: '1.5rem' } }>{ children }</div>
+			<Flex justify="flex-end" gap={ 2 }>
+				<Button
+					variant="tertiary"
+					onClick={ onCancel }
+					disabled={ isBusy }
+				>
+					{ cancelButtonText }
+				</Button>
+				<Button
+					variant="primary"
+					onClick={ onConfirm }
+					isBusy={ isBusy }
+					disabled={ isBusy }
+				>
+					{ confirmButtonText }
+				</Button>
+			</Flex>
+		</Modal>
+	);
+}
 
-const rememberVariationPost = ( postId ) => {
-	try {
-		window.sessionStorage.setItem(
-			VARIATION_SESSION_KEY,
-			String( postId )
-		);
-	} catch {}
-};
+const getPopupTitle = ( popup ) =>
+	popup?.title || __( '(no title)', 'blablablocks-popup' );
 
 const runPopupRequests = async ( popups, request ) => {
 	const results = await Promise.allSettled(
@@ -116,25 +144,19 @@ function EmptyPopupsState( {
 	hasTrashedPopups,
 } ) {
 	return (
-		<View className="blablablocks-popup-empty-state">
-			<View
+		<div className="blablablocks-popup-empty-state">
+			<div
 				className="blablablocks-popup-empty-state__icon"
 				aria-hidden="true"
 			>
 				<Icon icon={ popupIcon } size={ 24 } />
-			</View>
-			<Heading
-				className="blablablocks-popup-empty-state__title"
-				level={ 2 }
-			>
+			</div>
+			<h2 className="blablablocks-popup-empty-state__title">
 				{ __( 'No Popups', 'blablablocks-popup' ) }
-			</Heading>
-			<View
-				as="p"
-				className="blablablocks-popup-empty-state__description"
-			>
+			</h2>
+			<p className="blablablocks-popup-empty-state__description">
 				{ __( 'Create a popup to get started.', 'blablablocks-popup' ) }
-			</View>
+			</p>
 			<Flex
 				className="blablablocks-popup-empty-state__actions"
 				gap={ 2 }
@@ -170,7 +192,7 @@ function EmptyPopupsState( {
 					</Button>
 				) }
 			</Flex>
-		</View>
+		</div>
 	);
 }
 
@@ -269,28 +291,46 @@ function App() {
 		[ addSnackbar ]
 	);
 
-	const trashPopups = useCallback(
-		async ( items ) => {
-			const popupsToTrash = Array.isArray( items ) ? items : [ items ];
+	const runBulkPopupAction = useCallback(
+		async ( items, request, applyUpdates, successMessage ) => {
+			const popupsList = Array.isArray( items ) ? items : [ items ];
 			const { successful, failedCount } = await runPopupRequests(
-				popupsToTrash,
+				popupsList,
+				request
+			);
+
+			if ( successful.length ) {
+				setPopups( ( current ) => applyUpdates( current, successful ) );
+				addSnackbar( successMessage( successful.length ) );
+			}
+
+			reportBulkFailures( failedCount );
+		},
+		[ addSnackbar ]
+	);
+
+	const trashPopups = useCallback(
+		( items ) =>
+			runBulkPopupAction(
+				items,
 				( popup ) =>
 					apiFetch( {
 						path: `${ REST_POPUPS_PATH }/${ popup.id }`,
 						method: 'DELETE',
-					} )
-			);
-			const trashedById = new Map(
-				successful.map( ( { result } ) => [ result.id, result ] )
-			);
-
-			setPopups( ( current ) =>
-				current.map( ( item ) => trashedById.get( item.id ) || item )
-			);
-
-			if ( successful.length ) {
-				addSnackbar(
-					successful.length === 1
+					} ),
+				( current, successful ) => {
+					const trashedById = new Map(
+						successful.map( ( { result } ) => [
+							result.id,
+							result,
+						] )
+					);
+					return current.map(
+						( item ) => trashedById.get( item.id ) || item
+					);
+				},
+				( count ) =>
+					count === 1
 						? __( 'Popup moved to Trash.', 'blablablocks-popup' )
 						: sprintf(
 								/* translators: %d: Number of popups moved to Trash. */
@@ -298,39 +338,34 @@ function App() {
 									'%d popups moved to Trash.',
 									'blablablocks-popup'
 								),
-								successful.length
+								count
 						  )
-				);
-			}
-
-			reportBulkFailures( failedCount );
-		},
-		[ addSnackbar ]
+			),
+		[ runBulkPopupAction ]
 	);
 
 	const restorePopups = useCallback(
-		async ( items ) => {
-			const popupsToRestore = Array.isArray( items ) ? items : [ items ];
-
-			const { successful, failedCount } = await runPopupRequests(
-				popupsToRestore,
+		( items ) =>
+			runBulkPopupAction(
+				items,
 				( popup ) =>
 					apiFetch( {
 						path: `${ REST_POPUPS_PATH }/${ popup.id }/restore`,
 						method: 'POST',
-					} )
-			);
-			const restoredById = new Map(
-				successful.map( ( { result } ) => [ result.id, result ] )
-			);
-
-			setPopups( ( current ) =>
-				current.map( ( item ) => restoredById.get( item.id ) || item )
-			);
-
-			if ( successful.length ) {
-				addSnackbar(
-					successful.length === 1
+					} ),
+				( current, successful ) => {
+					const restoredById = new Map(
+						successful.map( ( { result } ) => [
+							result.id,
+							result,
+						] )
+					);
+					return current.map(
+						( item ) => restoredById.get( item.id ) || item
+					);
+				},
+				( count ) =>
+					count === 1
 						? __( 'Popup restored.', 'blablablocks-popup' )
 						: sprintf(
 								/* translators: %d: Number of restored popups. */
@@ -338,37 +373,31 @@ function App() {
 									'%d popups restored.',
 									'blablablocks-popup'
 								),
-								successful.length
+								count
 						  )
-				);
-			}
-
-			reportBulkFailures( failedCount );
-		},
-		[ addSnackbar ]
+			),
+		[ runBulkPopupAction ]
 	);
 
 	const permanentlyDeletePopups = useCallback(
-		async ( items ) => {
-			const popupsToDelete = Array.isArray( items ) ? items : [ items ];
-
-			const { successful, failedCount } = await runPopupRequests(
-				popupsToDelete,
+		( items ) =>
+			runBulkPopupAction(
+				items,
 				( popup ) =>
 					apiFetch( {
 						path: `${ REST_POPUPS_PATH }/${ popup.id }?force=true`,
 						method: 'DELETE',
-					} )
-			);
-			const deletedIds = successful.map( ( { popup } ) => popup.id );
-
-			setPopups( ( current ) =>
-				current.filter( ( item ) => ! deletedIds.includes( item.id ) )
-			);
-
-			if ( successful.length ) {
-				addSnackbar(
-					successful.length === 1
+					} ),
+				( current, successful ) => {
+					const deletedIds = successful.map(
+						( { popup } ) => popup.id
+					);
+					return current.filter(
+						( item ) => ! deletedIds.includes( item.id )
+					);
+				},
+				( count ) =>
+					count === 1
 						? __(
 								'Popup permanently deleted.',
 								'blablablocks-popup'
@@ -379,14 +408,10 @@ function App() {
 									'%d popups permanently deleted.',
 									'blablablocks-popup'
 								),
-								successful.length
+								count
 						  )
-				);
-			}
-
-			reportBulkFailures( failedCount );
-		},
-		[ addSnackbar ]
+			),
+		[ runBulkPopupAction ]
 	);
 
 	const closeConfirmDialog = useCallback( () => {
@@ -466,16 +491,12 @@ function App() {
 				label: __( 'Title', 'blablablocks-popup' ),
 				enableGlobalSearch: true,
 				render: ( { item } ) => {
-					const title =
-						item.title || __( '(no title)', 'blablablocks-popup' );
+					const title = getPopupTitle( item );
 
 					return item.status === 'trash' ? (
-						<Text
-							className="blablablocks-popup-title-link"
-							as="span"
-						>
+						<span className="blablablocks-popup-title-link">
 							{ title }
-						</Text>
+						</span>
 					) : (
 						<Button
 							className="blablablocks-popup-title-link"
@@ -667,8 +688,7 @@ function App() {
 							'Are you sure you want to move "%s" to the trash?',
 							'blablablocks-popup'
 						),
-						confirmAction.items[ 0 ]?.title ||
-							__( '(no title)', 'blablablocks-popup' )
+						getPopupTitle( confirmAction.items[ 0 ] )
 				  )
 				: sprintf(
 						/* translators: %d: Number of popups to move to Trash. */
@@ -688,8 +708,7 @@ function App() {
 							'Are you sure you want to permanently delete "%s"? This cannot be undone.',
 							'blablablocks-popup'
 						),
-						confirmAction.items[ 0 ]?.title ||
-							__( '(no title)', 'blablablocks-popup' )
+						getPopupTitle( confirmAction.items[ 0 ] )
 				  )
 				: sprintf(
 						/* translators: %d: Number of popups to permanently delete. */
@@ -707,16 +726,17 @@ function App() {
 				'Are you sure you want to duplicate "%s"?',
 				'blablablocks-popup'
 			),
-			confirmAction.items[ 0 ]?.title ||
-				__( '(no title)', 'blablablocks-popup' )
+			getPopupTitle( confirmAction.items[ 0 ] )
 		);
 	}, [ confirmAction ] );
 
 	return (
-		<View className="blablablocks-popup-admin">
+		<div className="blablablocks-popup-admin">
 			<Flex className="blablablocks-popup-admin__header" align="center">
 				<FlexBlock>
-					<Heading level={ 1 }>{ ADMIN_APP_TITLE }</Heading>
+					<h1 className="blablablocks-popup-admin__title">
+						{ ADMIN_APP_TITLE }
+					</h1>
 				</FlexBlock>
 				{ hasActivePopups && (
 					<FlexItem>
@@ -736,9 +756,9 @@ function App() {
 				</Notice>
 			) }
 			{ isLoading && (
-				<View className="blablablocks-popup-admin__loading">
+				<div className="blablablocks-popup-admin__loading">
 					<Spinner />
-				</View>
+				</div>
 			) }
 			{ ! isLoading && ! error && ! shouldShowDataViews && (
 				<EmptyPopupsState
@@ -809,7 +829,7 @@ function App() {
 			) }
 
 			{ confirmAction && (
-				<ConfirmDialog
+				<ConfirmModal
 					isOpen
 					onCancel={ closeConfirmDialog }
 					onConfirm={ confirmPendingAction }
@@ -818,7 +838,7 @@ function App() {
 					confirmButtonText={ confirmButtonText }
 				>
 					{ confirmMessage }
-				</ConfirmDialog>
+				</ConfirmModal>
 			) }
 
 			<SnackbarList
@@ -826,7 +846,7 @@ function App() {
 				notices={ snackbars }
 				onRemove={ removeSnackbar }
 			/>
-		</View>
+		</div>
 	);
 }
 

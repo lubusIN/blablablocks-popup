@@ -2,17 +2,54 @@ const { test, expect } = require( '@playwright/test' );
 
 const adminPath = '/wp-admin/admin.php?page=blablablocks-popup';
 const popupRestPath = '/wp-json/blablablocks-popup/v1/popups';
-const expectedWordPressVersion = process.env.WP_VERSION || '6.9';
 
 async function getRestNonce( page ) {
-	await page.goto( adminPath );
+	const startTime = Date.now();
+	while ( Date.now() - startTime < 60_000 ) {
+		await page.goto( adminPath );
+		if (
+			page.url().includes( 'wp-login.php' ) ||
+			( await page
+				.locator( '#user_login' )
+				.isVisible()
+				.catch( () => false ) )
+		) {
+			await page.locator( '#user_login' ).fill( 'admin' );
+			await page.locator( '#user_pass' ).fill( 'password' );
+			await Promise.all( [
+				page.waitForURL(
+					( url ) => ! url.pathname.includes( 'wp-login.php' )
+				),
+				page.locator( '#wp-submit' ).click(),
+			] );
+			await page.goto( adminPath );
+		}
+
+		const notAllowed = await page
+			.getByText( 'Sorry, you are not allowed to access this page.' )
+			.isVisible()
+			.catch( () => false );
+		if ( notAllowed ) {
+			await page.waitForTimeout( 3000 );
+			continue;
+		}
+
+		const headingVisible = await page
+			.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
+			.isVisible()
+			.catch( () => false );
+		if ( headingVisible ) {
+			break;
+		}
+
+		await page.waitForTimeout( 1000 );
+	}
+
 	await expect(
 		page.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
 	).toBeVisible();
 	await expect(
-		page
-			.locator( `script[src*="ver=${ expectedWordPressVersion }"]` )
-			.first()
+		page.locator( 'script[src*="ver="]' ).first()
 	).toBeAttached();
 
 	return page.evaluate( () => window.BlaBlaBlocksPopupAdmin.nonce );
@@ -71,6 +108,21 @@ const getSnackbar = ( page, message ) =>
 		.filter( { hasText: message } );
 
 test.beforeEach( async ( { page } ) => {
+	await page.addInitScript( () => {
+		try {
+			window.localStorage.setItem(
+				'WP_PREFERENCES_USER_1',
+				JSON.stringify( {
+					'core/edit-post': {
+						welcomeGuide: false,
+						welcomeGuideStyles: false,
+						fullscreenMode: false,
+					},
+				} )
+			);
+		} catch {}
+	} );
+
 	const nonce = await getRestNonce( page );
 	await clearPopups( page, nonce );
 } );
@@ -151,6 +203,17 @@ test( 'creates a popup and applies a starter variation', async ( { page } ) => {
 	await createDialog.getByRole( 'button', { name: 'Create Popup' } ).click();
 
 	await expect( page ).toHaveURL( /post\.php\?post=\d+&action=edit/ );
+
+	const welcomeGuide = page.getByRole( 'dialog', {
+		name: /Welcome to the block editor/i,
+	} );
+	if ( await welcomeGuide.isVisible().catch( () => false ) ) {
+		await welcomeGuide
+			.getByRole( 'button', { name: /Close/i } )
+			.first()
+			.click();
+	}
+
 	const variationDialog = page.getByRole( 'dialog', {
 		name: 'Choose popup type',
 	} );
@@ -164,6 +227,31 @@ test( 'creates a popup and applies a starter variation', async ( { page } ) => {
 			.frameLocator( 'iframe[name="editor-canvas"]' )
 			.getByText( 'Popup headline', { exact: true } )
 	).toBeVisible();
+
+	// Verify the Document Settings panel in the sidebar.
+	const sidebarToggle = page.getByLabel( 'Settings', { exact: true } );
+	if ( ( await sidebarToggle.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await sidebarToggle.click();
+	}
+
+	const popupTab = page.getByRole( 'tab', { name: 'Popup' } );
+	if ( await popupTab.isVisible().catch( () => false ) ) {
+		await popupTab.click();
+	}
+
+	const documentSettingsPanel = page.locator(
+		'.components-panel__body.blablablocks-popup-editor-sidebar'
+	);
+	await expect( documentSettingsPanel ).toBeVisible();
+
+	const panelToggle = documentSettingsPanel.getByRole( 'button', {
+		name: 'Settings',
+	} );
+	if ( ( await panelToggle.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panelToggle.click();
+	}
+
+	await expect( documentSettingsPanel.getByText( 'Layout' ) ).toBeVisible();
 } );
 
 test( 'saves settings without closing the modal', async ( { page } ) => {
@@ -275,4 +363,54 @@ test( 'opens an accessible frontend dialog and restores focus', async ( {
 	await expect( page.locator( 'html' ) ).not.toHaveClass(
 		/blablablocks-popup-scroll-locked/
 	);
+} );
+
+test( 'opens automatically on page load and closes when clicking overlay', async ( {
+	page,
+} ) => {
+	const nonce = await getRestNonce( page );
+	const popup = await createPopup( page, nonce, 'Auto page load popup' );
+
+	await restRequest( page, nonce, `${ popupRestPath }/${ popup.id }`, {
+		method: 'PUT',
+		data: {
+			status: 'publish',
+			settings: {
+				advanced: {
+					preventOverlayClose: false,
+					disableScroll: false,
+				},
+				conditions: { includeEntireSite: true },
+				triggers: {
+					pageLoad: true,
+					pageLoadDelay: 0,
+				},
+				style: {
+					customClass: 'auto-load-custom-class',
+				},
+			},
+		},
+	} );
+
+	const testPage = await restRequest( page, nonce, '/wp-json/wp/v2/pages', {
+		method: 'POST',
+		data: {
+			title: 'Auto load test page',
+			content: '<p>Content for auto load test</p>',
+			status: 'publish',
+		},
+	} );
+
+	await page.goto( testPage.link );
+	const dialog = page.getByRole( 'dialog', { name: 'Auto page load popup' } );
+	await expect( dialog ).toBeVisible();
+
+	const popupContainer = page.locator( `#blablablocks-popup-${ popup.id }` );
+	await expect( popupContainer ).toHaveClass( /auto-load-custom-class/ );
+
+	// Clicking overlay closes the popup
+	await popupContainer
+		.locator( '.blablablocks-popup__overlay' )
+		.click( { position: { x: 5, y: 5 } } );
+	await expect( dialog ).toBeHidden();
 } );

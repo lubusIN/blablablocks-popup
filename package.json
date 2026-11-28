@@ -6,24 +6,59 @@
 	"author": "lubus",
 	"authorUri": "https://lubus.in",
 	"engines": {
-		"node": "^20.19.0 || ^22.13.0 || >=24",
+		"node": ">=22.22.1",
 		"npm": ">=10.2.3"
 	},
 	"scripts": {
 		"build": "cross-env NODE_ENV=production wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
 		"start": "cross-env NODE_ENV=development wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
+		"preplugin-zip": "npm run build",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"format": "wp-scripts format",
+		"format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,yml,yaml}\"",
+		"format:php": "composer run format:php",
+		"lint": "npm run lint:js && npm run lint:css",
+		"lint:fix": "npm run lint:js:fix && npm run lint:css:fix",
 		"lint:css": "wp-scripts lint-style 'src/**/*.scss'",
+		"lint:css:fix": "wp-scripts lint-style --fix 'src/**/*.scss'",
 		"lint:js": "wp-scripts lint-js src playwright.config.js tests/e2e",
+		"lint:js:fix": "wp-scripts lint-js --fix src playwright.config.js tests/e2e",
+		"lint:php": "composer run lint:php",
+		"analyze": "composer run analyze",
+		"check:php": "composer run check:php",
+		"check:all": "npm run lint && npm run format:check && npm run test && npm run check:php",
+		"test": "npm run test:unit && npm run test:php",
 		"test:unit": "wp-scripts test-unit-js",
+		"test:php": "composer run test:php",
 		"pretest:e2e": "npm run build",
 		"test:e2e": "playwright test",
 		"pretest:e2e:7.0": "npm run build",
 		"test:e2e:7.0": "cross-env WP_VERSION=7.0 playwright test",
-		"test:e2e:matrix": "npm run test:e2e && cross-env WP_VERSION=7.0 playwright test",
+		"pretest:e2e:gutenberg": "npm run build",
+		"test:e2e:gutenberg": "cross-env GUTENBERG=true playwright test",
+		"test:e2e:matrix": "npm run test:e2e && cross-env WP_VERSION=7.0 playwright test && npm run test:e2e:gutenberg",
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:install": "playwright install chromium",
-		"serve": "wp-playground-cli start",
-		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet"
+		"serve": "wp-playground-cli start --blueprint=_playground/blueprint-local.json",
+		"serve:e2e": "wp-playground-cli server --auto-mount --login --wp=6.9 --php=8.3 --port=9401 --workers=1 --verbosity=quiet",
+		"prepare": "husky"
+	},
+	"prettier": "@wordpress/prettier-config",
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"wp-scripts lint-js --fix",
+			"wp-scripts format"
+		],
+		"*.scss": [
+			"wp-scripts lint-style --fix"
+		],
+		"*.{json,yml,yaml,md}": [
+			"wp-scripts format"
+		],
+		"*.php": [
+			"bash -c '[ ! -f vendor/bin/phpcbf ] || vendor/bin/phpcbf \"$@\" || [ $? -eq 1 ]' --",
+			"bash -c '[ ! -f vendor/bin/phpcs ] || vendor/bin/phpcs \"$@\"' --"
+		]
 	},
 	"files": [
 		"blablablocks-popup.php",
@@ -54,6 +89,8 @@
 		"@playwright/test": "^1.62.1",
 		"@wordpress/scripts": "30.26.2",
 		"@wp-playground/cli": "^3.1.48",
-		"cross-env": "^10.0.0"
+		"cross-env": "^10.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.6.2"
 	}
 }

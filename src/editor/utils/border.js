@@ -7,6 +7,7 @@ import {
 	hasFlatBorderValue,
 	isBorderSide,
 } from '../../shared/border';
+import { collapseBoxValues, parseBoxShorthand } from '../../shared/css';
 
 /**
  * Convert CSS border-radius shorthand into BorderRadiusControl corner values.
@@ -19,22 +20,13 @@ export const cssRadiusToBorderRadiusValues = ( value ) => {
 		return value;
 	}
 
-	const parts = String( value || '' )
-		.split( '/' )[ 0 ]
-		.trim()
-		.split( /\s+/ )
-		.filter( Boolean );
+	const parts = parseBoxShorthand( value );
 
-	if ( ! parts.length ) {
+	if ( ! parts ) {
 		return undefined;
 	}
 
-	const [
-		topLeft,
-		topRight = topLeft,
-		bottomRight = topLeft,
-		bottomLeft = topRight,
-	] = parts;
+	const [ topLeft, topRight, bottomRight, bottomLeft ] = parts;
 
 	return { topLeft, topRight, bottomRight, bottomLeft };
 };
@@ -59,27 +51,7 @@ export const borderRadiusValuesToCss = ( values ) => {
 	const bottomRight = values.bottomRight || '';
 	const bottomLeft = values.bottomLeft || '';
 
-	if ( ! topLeft && ! topRight && ! bottomRight && ! bottomLeft ) {
-		return '';
-	}
-
-	if (
-		topLeft === topRight &&
-		topLeft === bottomRight &&
-		topLeft === bottomLeft
-	) {
-		return topLeft;
-	}
-
-	if ( topLeft === bottomRight && topRight === bottomLeft ) {
-		return `${ topLeft } ${ topRight }`;
-	}
-
-	if ( topRight === bottomLeft ) {
-		return `${ topLeft } ${ topRight } ${ bottomRight }`;
-	}
-
-	return `${ topLeft } ${ topRight } ${ bottomRight } ${ bottomLeft }`;
+	return collapseBoxValues( topLeft, topRight, bottomRight, bottomLeft );
 };
 
 const getFlatBorder = ( border ) => {

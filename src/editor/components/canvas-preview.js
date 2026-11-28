@@ -13,6 +13,7 @@ import {
 	canvasPreviewVariables,
 	getCanvasPreviewVariables,
 } from '../utils/canvas-preview';
+import { normalizeAnimationDuration } from '../../shared/animation';
 
 const canvasClassName = 'blablablocks-popup-editor-canvas';
 const animatingCanvasClassName = 'blablablocks-popup-editor-canvas--animating';
@@ -69,7 +70,8 @@ const clearPreviewVariables = ( canvas ) => {
 };
 
 const replayPreviewAnimation = ( canvas, settings ) => {
-	const duration = Number( settings.layout?.animationDuration || 0.3 ) * 1000;
+	const duration =
+		normalizeAnimationDuration( settings.layout?.animationDuration ) * 1000;
 
 	canvas.classList.remove( animatingCanvasClassName );
 	void canvas.offsetHeight; // Force a style flush so changing controls can replay the preview.
@@ -107,7 +109,7 @@ export function CanvasPreview() {
 		const variables = getCanvasPreviewVariables( settings );
 		const animationSignature = [
 			settings.layout?.entranceAnimation || 'fade',
-			settings.layout?.animationDuration || 0.3,
+			normalizeAnimationDuration( settings.layout?.animationDuration ),
 		].join( ':' );
 		const shouldReplayAnimation =
 			animationSignature !== lastAnimationSignature.current;

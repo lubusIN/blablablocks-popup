@@ -1,4 +1,9 @@
 /**
+ * Internal dependencies
+ */
+import { safeCssValue } from '../../shared/css';
+
+/**
  * CSS variables controlled by popup settings in the editor preview.
  */
 export const canvasPreviewVariables = [
@@ -18,20 +23,6 @@ export const canvasPreviewVariables = [
 	'--blablablocks-popup-editor-close-background',
 	'--blablablocks-popup-editor-duration',
 ];
-
-const resolveCssValue = ( value ) =>
-	String( value || '' ).replace(
-		/var:preset\|(color|gradient|spacing)\|([a-zA-Z0-9_-]+)/g,
-		'var(--wp--preset--$1--$2)'
-	);
-
-const safeCssValue = ( value, fallback ) => {
-	const resolved = resolveCssValue( value || fallback );
-
-	return /^[#a-zA-Z0-9\s.,%()+*\/_-]+$/.test( resolved )
-		? resolved
-		: fallback;
-};
 
 const getFlexAlignment = ( value ) => {
 	if ( 'left' === value || 'top' === value ) {

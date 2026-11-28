@@ -1,0 +1,17 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    parallel:
+        maximumNumberOfProcesses: 0
+    bootstrapFiles:
+        - tests/phpstan/bootstrap.php
+    paths:
+        - blablablocks-popup.php
+        - includes/
+    excludePaths:
+        - vendor/
+        - node_modules (?)
+        - build (?)
+        - tests/

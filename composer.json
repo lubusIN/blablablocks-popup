@@ -1,0 +1,49 @@
+{
+	"name": "lubus/blablablocks-popup",
+	"description": "BlaBlaBlocks Popup is a powerful yet lightweight WordPress plugin to create and manage dynamic popups using the native Block Editor.",
+	"type": "wordpress-plugin",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "lubus",
+			"homepage": "https://lubus.in"
+		}
+	],
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"sort-packages": true
+	},
+	"require": {
+		"php": ">=7.4"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"BlaBlaBlocks_Popup\\Tests\\": "tests/php/"
+		}
+	},
+	"require-dev": {
+		"brain/monkey": "^2.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"mockery/mockery": "^1.6",
+		"phpcompatibility/php-compatibility": "^9.3",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpstan/phpstan": "^1.12 || ^2.0",
+		"phpunit/phpunit": "^9.6.20 || ^10.5",
+		"szepeviktor/phpstan-wordpress": "^1.3 || ^2.0",
+		"wp-coding-standards/wpcs": "^3.1",
+		"yoast/phpunit-polyfills": "^2.0 || ^3.0"
+	},
+	"scripts": {
+		"lint:php": "phpcs",
+		"format:php": "phpcbf",
+		"analyze": "phpstan analyse --memory-limit=512M",
+		"test:php": "phpunit",
+		"check:php": [
+			"@lint:php",
+			"@analyze",
+			"@test:php"
+		]
+	}
+}

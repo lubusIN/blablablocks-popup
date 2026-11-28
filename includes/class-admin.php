@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Admin page and assets.
  *
@@ -8,26 +7,25 @@
 
 namespace BlaBlaBlocks_Popup;
 
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
  * BlaBlaBlocks Popup admin app integration.
  */
-final class Admin
-{
+final class Admin {
+
 	/**
 	 * Add admin page.
 	 */
-	public static function register_page()
-	{
+	public static function register_page() {
 		add_menu_page(
-			__('BlaBlaBlocks Popup', 'blablablocks-popup'),
-			__('Popups', 'blablablocks-popup'),
+			__( 'BlaBlaBlocks Popup', 'blablablocks-popup' ),
+			__( 'Popups', 'blablablocks-popup' ),
 			'edit_posts',
 			Plugin::MENU_SLUG,
-			array(__CLASS__, 'render_page'),
+			array( __CLASS__, 'render_page' ),
 			Plugin::menu_icon(),
 			58
 		);
@@ -36,23 +34,21 @@ final class Admin
 	/**
 	 * Redirect direct list-table access to the modern app.
 	 */
-	public static function redirect_classic_list_table()
-	{
+	public static function redirect_classic_list_table() {
 		global $pagenow;
 
-		if ('edit.php' !== $pagenow || Plugin::POST_TYPE !== filter_input(INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+		if ( 'edit.php' !== $pagenow || Plugin::POST_TYPE !== filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) {
 			return;
 		}
 
-		wp_safe_redirect(admin_url('admin.php?page=' . Plugin::MENU_SLUG));
+		wp_safe_redirect( admin_url( 'admin.php?page=' . Plugin::MENU_SLUG ) );
 		exit;
 	}
 
 	/**
 	 * Render admin app shell.
 	 */
-	public static function render_page()
-	{
+	public static function render_page() {
 		echo '<div class="wrap blablablocks-popup-admin-wrap"><div id="blablablocks-popup-admin"></div></div>';
 	}
 
@@ -61,31 +57,29 @@ final class Admin
 	 *
 	 * @param string $hook Hook suffix.
 	 */
-	public static function enqueue_assets($hook)
-	{
-		if ('toplevel_page_' . Plugin::MENU_SLUG !== $hook) {
+	public static function enqueue_assets( $hook ) {
+		if ( 'toplevel_page_' . Plugin::MENU_SLUG !== $hook ) {
 			return;
 		}
 
-		Assets::enqueue_admin(self::script_data());
+		Assets::enqueue_admin( self::script_data() );
 	}
 
 	/**
 	 * Enqueue block editor sidebar assets.
 	 */
-	public static function enqueue_editor_assets()
-	{
+	public static function enqueue_editor_assets() {
 		$screen = get_current_screen();
 
-		if (! $screen || Plugin::POST_TYPE !== $screen->post_type) {
+		if ( ! $screen || Plugin::POST_TYPE !== $screen->post_type ) {
 			return;
 		}
 
 		$post_id = self::get_current_editor_post_id();
 
 		Assets::enqueue_editor(
-			self::editor_script_data($post_id),
-			self::get_editor_canvas_css($post_id)
+			self::editor_script_data( $post_id ),
+			self::get_editor_canvas_css( $post_id )
 		);
 	}
 
@@ -96,14 +90,13 @@ final class Admin
 	 * @param \WP_Block_Editor_Context $context         Editor context.
 	 * @return array
 	 */
-	public static function add_editor_canvas_styles($editor_settings, $context)
-	{
-		if (empty($context->post) || Plugin::POST_TYPE !== $context->post->post_type) {
+	public static function add_editor_canvas_styles( $editor_settings, $context ) {
+		if ( empty( $context->post ) || Plugin::POST_TYPE !== $context->post->post_type ) {
 			return $editor_settings;
 		}
 
 		$editor_settings['styles'][] = array(
-			'css'            => self::get_editor_canvas_css($context->post->ID),
+			'css'            => self::get_editor_canvas_css( $context->post->ID ),
 			'__unstableType' => 'theme',
 		);
 
@@ -115,21 +108,20 @@ final class Admin
 	 *
 	 * @return array
 	 */
-	private static function script_data()
-	{
+	private static function script_data() {
 		return array(
-			'restUrl'    => esc_url_raw(rest_url(Plugin::REST_NS)),
-			'nonce'      => wp_create_nonce('wp_rest'),
+			'restUrl'    => esc_url_raw( rest_url( Plugin::REST_NS ) ),
+			'nonce'      => wp_create_nonce( 'wp_rest' ),
 			'postType'   => Plugin::POST_TYPE,
 			'defaults'   => Settings::defaults(),
-			'newPostUrl' => admin_url('post-new.php?post_type=' . Plugin::POST_TYPE),
+			'newPostUrl' => admin_url( 'post-new.php?post_type=' . Plugin::POST_TYPE ),
 			'statuses'   => array(
-				'publish' => __('Published', 'blablablocks-popup'),
-				'draft'   => __('Draft', 'blablablocks-popup'),
-				'pending' => __('Pending', 'blablablocks-popup'),
-				'future'  => __('Scheduled', 'blablablocks-popup'),
-				'private' => __('Private', 'blablablocks-popup'),
-				'trash'   => __('Trash', 'blablablocks-popup'),
+				'publish' => __( 'Published', 'blablablocks-popup' ),
+				'draft'   => __( 'Draft', 'blablablocks-popup' ),
+				'pending' => __( 'Pending', 'blablablocks-popup' ),
+				'future'  => __( 'Scheduled', 'blablablocks-popup' ),
+				'private' => __( 'Private', 'blablablocks-popup' ),
+				'trash'   => __( 'Trash', 'blablablocks-popup' ),
 			),
 		);
 	}
@@ -140,14 +132,13 @@ final class Admin
 	 * @param int $post_id Popup post ID.
 	 * @return array
 	 */
-	private static function editor_script_data($post_id)
-	{
+	private static function editor_script_data( $post_id ) {
 		return array(
-			'postId'   => $post_id,
-			'postType' => Plugin::POST_TYPE,
-			'metaKey'  => Plugin::META_KEY,
+			'postId'    => $post_id,
+			'postType'  => Plugin::POST_TYPE,
+			'metaKey'   => Plugin::META_KEY,
 			'pluginUrl' => BLABLABLOCKS_POPUP_URL,
-			'defaults' => Settings::defaults(),
+			'defaults'  => Settings::defaults(),
 		);
 	}
 
@@ -156,11 +147,10 @@ final class Admin
 	 *
 	 * @return int
 	 */
-	private static function get_current_editor_post_id()
-	{
-		$post_id = filter_input(INPUT_GET, 'post', FILTER_VALIDATE_INT);
+	private static function get_current_editor_post_id() {
+		$post_id = filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
 
-		return $post_id ? absint($post_id) : 0;
+		return $post_id ? absint( $post_id ) : 0;
 	}
 
 	/**
@@ -169,12 +159,11 @@ final class Admin
 	 * @param int $post_id Popup post ID.
 	 * @return string
 	 */
-	private static function get_editor_canvas_css($post_id = 0)
-	{
-		$settings = $post_id ? Settings::get($post_id) : Settings::defaults();
+	private static function get_editor_canvas_css( $post_id = 0 ) {
+		$settings = $post_id ? Settings::get( $post_id ) : Settings::defaults();
 		$layout   = $settings['layout'];
 		$style    = $settings['style'];
-		$vars     = self::get_editor_canvas_variables($layout, $style);
+		$vars     = self::get_editor_canvas_variables( $layout, $style );
 
 		$css = (
 			'body.post-type-popup_block.editor-styles-wrapper, .editor-styles-wrapper.blablablocks-popup-editor-canvas {' .
@@ -324,7 +313,7 @@ final class Admin
 
 		return str_replace(
 			'__BLABLABLOCKS_POPUP_EDITOR_VARS__',
-			self::format_editor_canvas_variables($vars),
+			self::format_editor_canvas_variables( $vars ),
 			$css
 		);
 	}
@@ -336,29 +325,28 @@ final class Admin
 	 * @param array $style  Style settings.
 	 * @return array
 	 */
-	private static function get_editor_canvas_variables(array $layout, array $style)
-	{
-		$width      = self::sanitize_css_value($layout['width'] ?? '640px', '640px');
-		$height     = self::sanitize_css_value($layout['height'] ?? 'auto', 'auto');
-		$border     = self::get_editor_canvas_border($style);
-		$close_size = max(12, absint($style['closeSize'] ?? 28)) . 'px';
+	private static function get_editor_canvas_variables( array $layout, array $style ) {
+		$width      = self::sanitize_css_value( $layout['width'] ?? '640px', '640px' );
+		$height     = self::sanitize_css_value( $layout['height'] ?? 'auto', 'auto' );
+		$border     = self::get_editor_canvas_border( $style );
+		$close_size = max( 12, absint( $style['closeSize'] ?? 28 ) ) . 'px';
 
 		return array(
-			'--blablablocks-popup-editor-width'              => '100%' === $width ? 'min(100%, 960px)' : $width,
-			'--blablablocks-popup-editor-height'             => $height,
-			'--blablablocks-popup-editor-align-x'            => self::get_flex_alignment($layout['horizontal'] ?? 'center'),
-			'--blablablocks-popup-editor-align-y'            => self::get_flex_alignment($layout['vertical'] ?? 'center'),
-			'--blablablocks-popup-editor-overlay-background' => ! empty($layout['overlay']) ? self::sanitize_css_value($style['overlayBackground'] ?? 'rgba(0,0,0,.55)', 'rgba(0,0,0,.55)') : '#f0f0f0',
-			'--blablablocks-popup-editor-background'         => self::sanitize_css_value($style['popupBackground'] ?? '#ffffff', '#ffffff'),
-			'--blablablocks-popup-editor-border'             => $border,
-			'--blablablocks-popup-editor-radius'             => self::sanitize_css_value($style['borderRadius'] ?? '8px', '8px'),
-			'--blablablocks-popup-editor-margin'             => self::sanitize_css_value($style['margin'] ?? '24px', '24px'),
-			'--blablablocks-popup-editor-padding'            => self::sanitize_css_value($style['padding'] ?? '32px', '32px'),
-			'--blablablocks-popup-editor-close-display'      => ! empty($layout['closeButton']) ? 'flex' : 'none',
-			'--blablablocks-popup-editor-close-size'         => $close_size,
-			'--blablablocks-popup-editor-close-color'        => self::sanitize_css_value($style['closeColor'] ?? '#1e1e1e', '#1e1e1e'),
-			'--blablablocks-popup-editor-close-background'   => self::sanitize_css_value($style['closeBackground'] ?? 'transparent', 'transparent'),
-			'--blablablocks-popup-editor-duration'           => max(0.0, (float) ($layout['animationDuration'] ?? 0.3)) . 's',
+			'--blablablocks-popup-editor-width'            => '100%' === $width ? 'min(100%, 960px)' : $width,
+			'--blablablocks-popup-editor-height'           => $height,
+			'--blablablocks-popup-editor-align-x'          => self::get_flex_alignment( $layout['horizontal'] ?? 'center' ),
+			'--blablablocks-popup-editor-align-y'          => self::get_flex_alignment( $layout['vertical'] ?? 'center' ),
+			'--blablablocks-popup-editor-overlay-background' => ! empty( $layout['overlay'] ) ? self::sanitize_css_value( $style['overlayBackground'] ?? 'rgba(0,0,0,.55)', 'rgba(0,0,0,.55)' ) : '#f0f0f0',
+			'--blablablocks-popup-editor-background'       => self::sanitize_css_value( $style['popupBackground'] ?? '#ffffff', '#ffffff' ),
+			'--blablablocks-popup-editor-border'           => $border,
+			'--blablablocks-popup-editor-radius'           => self::sanitize_css_value( $style['borderRadius'] ?? '8px', '8px' ),
+			'--blablablocks-popup-editor-margin'           => self::sanitize_css_value( $style['margin'] ?? '24px', '24px' ),
+			'--blablablocks-popup-editor-padding'          => self::sanitize_css_value( $style['padding'] ?? '32px', '32px' ),
+			'--blablablocks-popup-editor-close-display'    => ! empty( $layout['closeButton'] ) ? 'flex' : 'none',
+			'--blablablocks-popup-editor-close-size'       => $close_size,
+			'--blablablocks-popup-editor-close-color'      => self::sanitize_css_value( $style['closeColor'] ?? '#1e1e1e', '#1e1e1e' ),
+			'--blablablocks-popup-editor-close-background' => self::sanitize_css_value( $style['closeBackground'] ?? 'transparent', 'transparent' ),
+			'--blablablocks-popup-editor-duration'         => max( 0.0, (float) ( $layout['animationDuration'] ?? 0.3 ) ) . 's',
 		);
 	}
 
@@ -368,11 +356,10 @@ final class Admin
 	 * @param array $vars CSS variable map.
 	 * @return string
 	 */
-	private static function format_editor_canvas_variables(array $vars)
-	{
+	private static function format_editor_canvas_variables( array $vars ) {
 		$css = '';
 
-		foreach ($vars as $property => $value) {
+		foreach ( $vars as $property => $value ) {
 			$css .= $property . ':' . $value . ';';
 		}
 
@@ -385,13 +372,12 @@ final class Admin
 	 * @param string $value Position keyword.
 	 * @return string
 	 */
-	private static function get_flex_alignment($value)
-	{
-		if ('left' === $value || 'top' === $value) {
+	private static function get_flex_alignment( $value ) {
+		if ( 'left' === $value || 'top' === $value ) {
 			return 'flex-start';
 		}
 
-		if ('right' === $value || 'bottom' === $value) {
+		if ( 'right' === $value || 'bottom' === $value ) {
 			return 'flex-end';
 		}
 
@@ -404,15 +390,14 @@ final class Admin
 	 * @param array $style Style settings.
 	 * @return string
 	 */
-	private static function get_editor_canvas_border(array $style)
-	{
-		if (empty($style['borderType']) || 'none' === $style['borderType']) {
+	private static function get_editor_canvas_border( array $style ) {
+		if ( empty( $style['borderType'] ) || 'none' === $style['borderType'] ) {
 			return '0 solid transparent';
 		}
 
-		$width = self::sanitize_css_value($style['borderWidth'] ?? '1px', '1px');
-		$type  = in_array($style['borderType'], array('solid', 'dashed', 'dotted', 'double'), true) ? $style['borderType'] : 'solid';
-		$color = self::sanitize_css_value($style['borderColor'] ?? '#dcdcde', '#dcdcde');
+		$width = self::sanitize_css_value( $style['borderWidth'] ?? '1px', '1px' );
+		$type  = in_array( $style['borderType'], array( 'solid', 'dashed', 'dotted', 'double' ), true ) ? $style['borderType'] : 'solid';
+		$color = self::sanitize_css_value( $style['borderColor'] ?? '#dcdcde', '#dcdcde' );
 
 		return $width . ' ' . $type . ' ' . $color;
 	}
@@ -424,11 +409,10 @@ final class Admin
 	 * @param string $fallback Fallback value.
 	 * @return string
 	 */
-	private static function sanitize_css_value($value, $fallback)
-	{
-		$value = self::resolve_css_tokens((string) $value);
+	private static function sanitize_css_value( $value, $fallback ) {
+		$value = self::resolve_css_tokens( (string) $value );
 
-		if (preg_match('/^[#a-zA-Z0-9\s.,%()+*\/_-]+$/', $value)) {
+		if ( preg_match( '/^[#a-zA-Z0-9\s.,%()+*\/_-]+$/', $value ) ) {
 			return $value;
 		}
 
@@ -441,12 +425,11 @@ final class Admin
 	 * @param string $value Raw value.
 	 * @return string
 	 */
-	private static function resolve_css_tokens($value)
-	{
+	private static function resolve_css_tokens( $value ) {
 		return preg_replace_callback(
 			'/var:preset\|(color|gradient|spacing)\|([a-zA-Z0-9_-]+)/',
-			function ($matches) {
-				return 'var(--wp--preset--' . sanitize_key($matches[1]) . '--' . sanitize_key($matches[2]) . ')';
+			function ( $matches ) {
+				return 'var(--wp--preset--' . sanitize_key( $matches[1] ) . '--' . sanitize_key( $matches[2] ) . ')';
 			},
 			$value
 		);

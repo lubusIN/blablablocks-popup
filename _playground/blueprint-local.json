@@ -1,24 +1,44 @@
 {
-    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
-    "landingPage": "/wp-admin/admin.php?page=blablablocks-popup",
-    "login": true,
-    "features": {
-        "networking": true
-    },
-    "steps": [
-        {
-            "step": "updateUserMeta",
-            "meta": {
-                "admin_color": "modern",
-                "show_welcome_panel": 0
-            },
-            "userId": 1
-        },
-        {
-            "step": "setSiteOptions",
-            "options": {
-                "blogname": "BlaBlaBlocks Popup | Local Dev 🧑‍💻"
-            }
-        }
-    ]
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/admin.php?page=blablablocks-popup",
+	"login": true,
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "updateUserMeta",
+			"meta": {
+				"admin_color": "modern",
+				"show_welcome_panel": 0
+			},
+			"userId": 1
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "BlaBlaBlocks Popup | Local Dev 🧑‍💻"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "plugin-check"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "gutenberg"
+			},
+			"options": {
+				"activate": true
+			}
+		}
+	]
 }
