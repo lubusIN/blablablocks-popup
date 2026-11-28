@@ -18,24 +18,43 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Frontend {
 	/**
-	 * Render candidate popups and enqueue frontend assets.
+	 * Cached candidate popups for the current request.
+	 *
+	 * @var \WP_Post[]|null
+	 */
+	private static $popups = null;
+
+	/**
+	 * Enqueue frontend assets if any popup matches the current page.
+	 */
+	public static function enqueue_scripts() {
+		if ( self::should_skip() || empty( self::get_popups() ) ) {
+			return;
+		}
+
+		Assets::enqueue_frontend( self::script_data() );
+	}
+
+	/**
+	 * Render candidate popups in the footer.
 	 */
 	public static function render_popups() {
-		if ( is_admin() || wp_doing_ajax() || is_feed() || is_robots() ) {
+		if ( self::should_skip() ) {
 			return;
 		}
 
-		$popups = self::get_runtime_popups();
-
-		if ( empty( $popups ) ) {
-			return;
-		}
-
-		self::enqueue_assets();
-
-		foreach ( $popups as $post ) {
+		foreach ( self::get_popups() as $post ) {
 			self::render_popup( $post );
 		}
+	}
+
+	/**
+	 * Check whether frontend execution should be skipped.
+	 *
+	 * @return bool
+	 */
+	private static function should_skip() {
+		return is_admin() || wp_doing_ajax() || is_feed() || is_robots();
 	}
 
 	/**
@@ -88,11 +107,15 @@ final class Frontend {
 	}
 
 	/**
-	 * Get frontend candidate popups.
+	 * Get candidate popups for the current request.
 	 *
 	 * @return \WP_Post[]
 	 */
-	private static function get_runtime_popups() {
+	private static function get_popups() {
+		if ( null !== self::$popups ) {
+			return self::$popups;
+		}
+
 		$query = new WP_Query(
 			array(
 				'post_type'      => Plugin::POST_TYPE,
@@ -104,7 +127,7 @@ final class Frontend {
 			)
 		);
 
-		return array_values(
+		self::$popups = array_values(
 			array_filter(
 				$query->posts,
 				function ( $post ) {
@@ -112,6 +135,8 @@ final class Frontend {
 				}
 			)
 		);
+
+		return self::$popups;
 	}
 
 	/**
@@ -199,11 +224,12 @@ final class Frontend {
 	}
 
 	/**
-	 * Enqueue frontend assets.
+	 * Reset cached runtime state.
+	 *
+	 * @internal
 	 */
-	private static function enqueue_assets() {
-		Assets::enqueue_frontend();
-		wp_interactivity_config( 'blablablocks/popup', self::script_data() );
+	public static function reset_state() {
+		self::$popups = null;
 	}
 
 	/**

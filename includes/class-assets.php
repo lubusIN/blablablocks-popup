@@ -94,8 +94,10 @@ final class Assets {
 
 	/**
 	 * Enqueue frontend styles, the viewport bridge, and Interactivity module.
+	 *
+	 * @param array $script_data Frontend runtime config data.
 	 */
-	public static function enqueue_frontend() {
+	public static function enqueue_frontend( array $script_data = array() ) {
 		$asset        = self::get_asset( 'frontend' );
 		$module_asset = self::get_asset(
 			'frontend/module',
@@ -121,6 +123,10 @@ final class Assets {
 			$module_asset['dependencies'],
 			$module_asset['version']
 		);
+
+		if ( ! empty( $script_data ) ) {
+			wp_interactivity_config( 'blablablocks/popup', $script_data );
+		}
 	}
 
 	/**

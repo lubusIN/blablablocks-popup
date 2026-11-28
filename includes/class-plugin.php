@@ -47,6 +47,7 @@ final class Plugin {
 	public static function init() {
 		add_action( 'init', array( Post_Type::class, 'init' ) );
 		add_action( 'rest_api_init', array( Rest_Controller::class, 'register_routes' ) );
+		add_action( 'wp_enqueue_scripts', array( Frontend::class, 'enqueue_scripts' ) );
 		add_action( 'wp_footer', array( Frontend::class, 'render_popups' ), 1 );
 
 		if ( is_admin() ) {
