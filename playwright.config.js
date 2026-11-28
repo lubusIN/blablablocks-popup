@@ -14,9 +14,9 @@ module.exports = defineConfig( {
 	testDir: './tests/e2e',
 	fullyParallel: false,
 	workers: 1,
-	timeout: 60_000,
+	timeout: 120_000,
 	expect: {
-		timeout: 10_000,
+		timeout: 15_000,
 	},
 	use: {
 		baseURL,

@@ -4,7 +4,7 @@ const adminPath = '/wp-admin/admin.php?page=blablablocks-popup';
 const popupRestPath = '/wp-json/blablablocks-popup/v1/popups';
 
 async function getRestNonce( page ) {
-	await page.goto( '/wp-login.php?redirect_to=%2Fwp-admin%2F' );
+	await page.goto( adminPath );
 	if (
 		page.url().includes( 'wp-login.php' ) ||
 		( await page
@@ -20,8 +20,8 @@ async function getRestNonce( page ) {
 			),
 			page.locator( '#wp-submit' ).click(),
 		] );
+		await page.goto( adminPath );
 	}
-	await page.goto( adminPath );
 	await expect(
 		page.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
 	).toBeVisible();
@@ -85,6 +85,21 @@ const getSnackbar = ( page, message ) =>
 		.filter( { hasText: message } );
 
 test.beforeEach( async ( { page } ) => {
+	await page.addInitScript( () => {
+		try {
+			window.localStorage.setItem(
+				'WP_PREFERENCES_USER_1',
+				JSON.stringify( {
+					'core/edit-post': {
+						welcomeGuide: false,
+						welcomeGuideStyles: false,
+						fullscreenMode: false,
+					},
+				} )
+			);
+		} catch {}
+	} );
+
 	const nonce = await getRestNonce( page );
 	await clearPopups( page, nonce );
 } );
@@ -165,6 +180,17 @@ test( 'creates a popup and applies a starter variation', async ( { page } ) => {
 	await createDialog.getByRole( 'button', { name: 'Create Popup' } ).click();
 
 	await expect( page ).toHaveURL( /post\.php\?post=\d+&action=edit/ );
+
+	const welcomeGuide = page.getByRole( 'dialog', {
+		name: /Welcome to the block editor/i,
+	} );
+	if ( await welcomeGuide.isVisible().catch( () => false ) ) {
+		await welcomeGuide
+			.getByRole( 'button', { name: /Close/i } )
+			.first()
+			.click();
+	}
+
 	const variationDialog = page.getByRole( 'dialog', {
 		name: 'Choose popup type',
 	} );
@@ -178,6 +204,31 @@ test( 'creates a popup and applies a starter variation', async ( { page } ) => {
 			.frameLocator( 'iframe[name="editor-canvas"]' )
 			.getByText( 'Popup headline', { exact: true } )
 	).toBeVisible();
+
+	// Verify the Document Settings panel in the sidebar.
+	const sidebarToggle = page.getByLabel( 'Settings', { exact: true } );
+	if ( ( await sidebarToggle.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await sidebarToggle.click();
+	}
+
+	const popupTab = page.getByRole( 'tab', { name: 'Popup' } );
+	if ( await popupTab.isVisible().catch( () => false ) ) {
+		await popupTab.click();
+	}
+
+	const documentSettingsPanel = page.locator(
+		'.components-panel__body.blablablocks-popup-editor-sidebar'
+	);
+	await expect( documentSettingsPanel ).toBeVisible();
+
+	const panelToggle = documentSettingsPanel.getByRole( 'button', {
+		name: 'Settings',
+	} );
+	if ( ( await panelToggle.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panelToggle.click();
+	}
+
+	await expect( documentSettingsPanel.getByText( 'Layout' ) ).toBeVisible();
 } );
 
 test( 'saves settings without closing the modal', async ( { page } ) => {

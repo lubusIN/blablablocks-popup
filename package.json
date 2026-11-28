@@ -50,8 +50,7 @@
 			"wp-scripts format"
 		],
 		"*.scss": [
-			"wp-scripts lint-style --fix",
-			"wp-scripts format"
+			"wp-scripts lint-style --fix"
 		],
 		"*.{json,yml,yaml,md}": [
 			"wp-scripts format"

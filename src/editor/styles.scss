@@ -5,11 +5,10 @@
 
 .components-panel__body.blablablocks-popup-editor-sidebar.is-opened {
 	padding: 0;
-}
 
-.components-panel__body.blablablocks-popup-editor-sidebar.is-opened
 	> .components-panel__body-title {
-	margin: 0;
+		margin: 0;
+	}
 }
 
 .blablablocks-popup-editor-inspector > .components-tab-panel__tabs {
@@ -163,6 +162,7 @@
 }
 
 @media (max-width: 782px) {
+
 	.blablablocks-popup-variation-grid {
 		grid-template-columns: 1fr;
 	}
