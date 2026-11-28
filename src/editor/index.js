@@ -10,8 +10,6 @@ import { registerPlugin } from '@wordpress/plugins';
 import { SIDEBAR_PLUGIN_NAME } from './config/constants';
 import { CanvasPreview } from './components/canvas-preview';
 import { PopupInspectorPanel } from './components/popup-inspector-panel';
-import { PopupSidebarAutoOpen } from './components/popup-sidebar-auto-open';
-import { PopupSettingsStatusAction } from './components/popup-settings-status-action';
 import { VariationChooserModal } from './components/variation-chooser-modal';
 import { popupIcon } from '../shared/icons';
 
@@ -20,8 +18,6 @@ function PopupEditorPlugin() {
 		<Fragment>
 			<CanvasPreview />
 			<PopupInspectorPanel />
-			<PopupSidebarAutoOpen />
-			<PopupSettingsStatusAction />
 			<VariationChooserModal />
 		</Fragment>
 	);

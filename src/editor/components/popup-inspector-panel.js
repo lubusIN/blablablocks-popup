@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { cog as settingsIcon, styles as stylesIcon } from '@wordpress/icons';
 import { TabPanel } from '@wordpress/components';
-import { PluginSidebar } from '@wordpress/editor';
+import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients } from '@wordpress/block-editor';
 
 /**
@@ -16,13 +16,11 @@ import { __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginC
 import { AnimationPanel } from './animation-panel';
 import { LayoutPanel } from './layout-panel';
 import { StylePanel } from './style-panel';
-import { SummaryCard } from './summary-card';
 import { config, metaKey } from '../config/wordpress';
 import { SIDEBAR_NAME, TAB_SETTINGS, TAB_STYLES } from '../config/constants';
 import { borderToLegacyValues } from '../utils/border';
 import { getPositionValue, parsePositionValue } from '../utils/layout';
 import { mergeSettings } from '../utils/settings';
-import { popupIcon } from '../../shared/icons';
 
 const inspectorTabs = [
 	{
@@ -40,7 +38,7 @@ const inspectorTabs = [
 ];
 
 /**
- * BlaBlaBlocks Popup block editor sidebar.
+ * BlaBlaBlocks Popup block editor document settings panel.
  */
 export function PopupInspectorPanel() {
 	const postType = useSelect(
@@ -161,14 +159,11 @@ export function PopupInspectorPanel() {
 	].filter( Boolean );
 
 	return (
-		<PluginSidebar
+		<PluginDocumentSettingPanel
 			name={ SIDEBAR_NAME }
-			title={ __( 'Popup', 'blablablocks-popup' ) }
-			icon={ popupIcon }
+			title={ __( 'Settings', 'blablablocks-popup' ) }
 			className="blablablocks-popup-editor-sidebar"
-			isActiveByDefault
 		>
-			<SummaryCard />
 			<TabPanel
 				className="blablablocks-popup-editor-inspector"
 				initialTabName={ TAB_SETTINGS }
@@ -185,6 +180,7 @@ export function PopupInspectorPanel() {
 										updateGroup( 'layout', key, value )
 									}
 									onChangePosition={ updatePosition }
+									onResetLayout={ updateLayoutValues }
 								/>
 								<AnimationPanel
 									layout={ layout }
@@ -215,6 +211,6 @@ export function PopupInspectorPanel() {
 					</>
 				) }
 			</TabPanel>
-		</PluginSidebar>
+		</PluginDocumentSettingPanel>
 	);
 }
