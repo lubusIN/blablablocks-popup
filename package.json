@@ -56,8 +56,8 @@
 			"wp-scripts format"
 		],
 		"*.php": [
-			"bash -c 'vendor/bin/phpcbf \"$@\" || [ $? -eq 1 ]' --",
-			"vendor/bin/phpcs"
+			"bash -c '[ ! -f vendor/bin/phpcbf ] || vendor/bin/phpcbf \"$@\" || [ $? -eq 1 ]' --",
+			"bash -c '[ ! -f vendor/bin/phpcs ] || vendor/bin/phpcs \"$@\"' --"
 		]
 	},
 	"files": [

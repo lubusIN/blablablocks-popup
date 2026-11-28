@@ -4,24 +4,47 @@ const adminPath = '/wp-admin/admin.php?page=blablablocks-popup';
 const popupRestPath = '/wp-json/blablablocks-popup/v1/popups';
 
 async function getRestNonce( page ) {
-	await page.goto( adminPath );
-	if (
-		page.url().includes( 'wp-login.php' ) ||
-		( await page
-			.locator( '#user_login' )
-			.isVisible()
-			.catch( () => false ) )
-	) {
-		await page.locator( '#user_login' ).fill( 'admin' );
-		await page.locator( '#user_pass' ).fill( 'password' );
-		await Promise.all( [
-			page.waitForURL(
-				( url ) => ! url.pathname.includes( 'wp-login.php' )
-			),
-			page.locator( '#wp-submit' ).click(),
-		] );
+	const startTime = Date.now();
+	while ( Date.now() - startTime < 60_000 ) {
 		await page.goto( adminPath );
+		if (
+			page.url().includes( 'wp-login.php' ) ||
+			( await page
+				.locator( '#user_login' )
+				.isVisible()
+				.catch( () => false ) )
+		) {
+			await page.locator( '#user_login' ).fill( 'admin' );
+			await page.locator( '#user_pass' ).fill( 'password' );
+			await Promise.all( [
+				page.waitForURL(
+					( url ) => ! url.pathname.includes( 'wp-login.php' )
+				),
+				page.locator( '#wp-submit' ).click(),
+			] );
+			await page.goto( adminPath );
+		}
+
+		const notAllowed = await page
+			.getByText( 'Sorry, you are not allowed to access this page.' )
+			.isVisible()
+			.catch( () => false );
+		if ( notAllowed ) {
+			await page.waitForTimeout( 3000 );
+			continue;
+		}
+
+		const headingVisible = await page
+			.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
+			.isVisible()
+			.catch( () => false );
+		if ( headingVisible ) {
+			break;
+		}
+
+		await page.waitForTimeout( 1000 );
 	}
+
 	await expect(
 		page.getByRole( 'heading', { name: 'BlaBlaBlocks Popup' } )
 	).toBeVisible();
