@@ -12,6 +12,8 @@
 	"scripts": {
 		"build": "cross-env NODE_ENV=production wp-scripts build --webpack-src-dir=src --output-path=build --experimental-modules",
 		"start": "cross-env NODE_ENV=development wp-scripts start --webpack-src-dir=src --output-path=build --experimental-modules",
+		"preplugin-zip": "npm run build",
+		"plugin-zip": "wp-scripts plugin-zip",
 		"format": "wp-scripts format",
 		"format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,yml,yaml}\"",
 		"format:php": "composer run format:php",
