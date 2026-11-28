@@ -1,0 +1,1 @@
+(()=>{"use strict";const t=window.wp.data,w=window.wp.viewport,{isViewportMatch:o}=(0,t.select)(w.store);window.blablablocksPopupViewport={isViewportMatch:o}})();
